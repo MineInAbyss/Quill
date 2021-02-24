@@ -1,0 +1,11 @@
+name: AbyssalChronicle
+main: com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.AbyssalChronicle
+version: 0.0.1
+description: Bondrewd's Books
+author: BananaPuncher714
+api-version: 1.13
+
+commands:
+  chronicle:
+    description: Read the chronicles
+    aliases: []

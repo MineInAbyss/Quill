@@ -1,0 +1,23 @@
+<stylesheet id="a_stylesheet">
+  <includes>
+    <include type="stylesheet">another stylesheet id</include>
+  </includes>
+  <styles>
+    <style id="body">
+      <formatting>
+        <format type="color">0xFF0000</format>
+        <format type="italic">true</format>
+        <format type="bold">true</format>
+      </formatting>
+      <properties>{
+        "A key":"Some JSON value or something"
+      }</properties>
+      <defaults>{
+      }</defaults>
+    </style>
+    <style id="name" extends="body">
+    </style>
+    <style id="test">
+    </style>
+  </styles>
+</stylesheet>

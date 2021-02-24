@@ -1,0 +1,37 @@
+<book id="beast_bestiary" title="Boy's Bestiary" author="Bondrewd">
+  <content header="header" footer="beast_bestiary:footer" styles="body test">
+    Some regular text with <color value="0xFFFFFF"/>colored and <italic/><bold/><underline/>very something<derline/><unbold/><unitalic/> text.
+    It needs to <br/>support <hover component="custom something"><click action="RUN_COMMAND" value="/kill">custom events</click></hover> too.
+    Hello, <div styles="name">{player.name}</div>.
+    <insert id="custom something"/>
+  </content>
+  <components>
+    <component id="custom something">
+      This is a separate insertable component!
+    </component>
+    <!-- Maybe make the header and footer default properties if they're called header and footer? -->
+    <component id="header">
+      Some sort of header... I guess this should go on its own lines?
+    </component>
+    <component id="footer">
+      Stuff that should go in the bottom of the page...
+    </component>
+  </components>
+  <styles>
+    <style id="body">
+      <properties>{
+        "A key":"Some JSON value or something"
+      }</properties>
+      <defaults>{
+      }</defaults>
+    </style>
+    <style id="name" extends="body">
+      <formatting>
+        <format type="bold">true</format>
+      </formatting>
+    </style>
+  </styles>
+  <includes>
+    <include type="stylesheet">a_stylesheet</include>
+  </includes>
+</book>
