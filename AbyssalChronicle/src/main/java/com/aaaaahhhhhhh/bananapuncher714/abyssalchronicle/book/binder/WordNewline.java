@@ -18,4 +18,9 @@ public class WordNewline extends Word {
 	public TextComponent getComponent() {
 		return component;
 	}
+	
+	@Override
+	public String toString() {
+		return component.toPlainText();
+	}
 }

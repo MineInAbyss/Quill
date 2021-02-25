@@ -11,7 +11,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
-import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.Util;
+import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.util.Util;
 
 public class StyleSheetParserFileXML implements StyleSheetParserFile {
 	protected StyleSheetParser< Element > parser;

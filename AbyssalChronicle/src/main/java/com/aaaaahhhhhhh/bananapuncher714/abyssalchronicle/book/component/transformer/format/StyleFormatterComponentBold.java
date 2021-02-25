@@ -10,7 +10,7 @@ public class StyleFormatterComponentBold implements StyleFormatter< BookComponen
 		if ( component.getTagName().equalsIgnoreCase( "bold" ) || component.getTagName().equalsIgnoreCase( "b" ) ) {
 			style.getValues().put( "bold", "true" );
 		} else if ( component.getTagName().equalsIgnoreCase( "unbold" ) || component.getTagName().equalsIgnoreCase( "ub" ) ) {
-			style.getValues().put( "bold", "false" );
+			style.getValues().remove( "bold" );
 		} else {
 			return false;
 		}

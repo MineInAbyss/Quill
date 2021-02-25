@@ -5,8 +5,8 @@ import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.JetpImageUtil;
 import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.resourcepack.font.FontIndex;
+import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.util.JetpImageUtil;
 
 public class ResourcePack {
 	protected PackDescription packMcmeta = new PackDescription();

@@ -53,6 +53,7 @@ import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.book.component.transfo
 import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.book.component.transformer.format.StyleFormatterComponentStrikethrough;
 import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.book.component.transformer.format.StyleFormatterComponentUnderline;
 import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.catalog.CatalogBuildable;
+import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.catalog.CatalogCallbackPlugin;
 import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.font.BananaFont;
 import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.font.BananaFontFactory;
 import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.font.BananaFontProvider;
@@ -188,7 +189,7 @@ public class AbyssalChronicle extends JavaPlugin {
 		catalog.getTransformers().add( formatSupplier );
 		catalog.getTransformers().add( styleSupplier );
 		catalog.getTransformers().add( textSupplier );
-		catalog.getTransformers().add( ComponentTransformerTail::new );
+//		catalog.getTransformers().add( ComponentTransformerTail::new );
 		
 		// Add the include source suppliers
 		catalog.getStyleIncludeSuppliers().add( IncludeSourceSupplierStyleSheet::new );
@@ -198,7 +199,7 @@ public class AbyssalChronicle extends JavaPlugin {
 		catalog.setCallback( new CatalogCallbackPlugin( this ) );
 		
 		// Set the bookbinder
-		catalog.setBookbinder( new BookBinderIndexMinecraft( 30, 10, str -> fonts.getOrDefault( str, fonts.get( "default" ) ) ) );
+		catalog.setBookbinder( new BookBinderIndexMinecraft( str -> fonts.getOrDefault( str, fonts.get( "default" ) ) ) );
 		
 		// Start the monitoring
 		catalog.start();
@@ -273,14 +274,29 @@ public class AbyssalChronicle extends JavaPlugin {
 				sender.sendMessage( "Unknown book!" );
 			}
 		} else if ( args.length > 1 ) {
-			StringBuilder builder = new StringBuilder();
-			for ( String s : args ) {
-				builder.append( s );
-				builder.append( " " );
+			if ( args[ 0 ].equalsIgnoreCase( "doom" ) && sender instanceof Player ) {
+				Player player = ( Player ) sender;
+				ItemStack bookItem = new ItemStack( Material.WRITTEN_BOOK );
+				BookMeta meta = ( BookMeta ) bookItem.getItemMeta();
+				meta.setAuthor( "Bug Dev" );
+				meta.setTitle( "Buggy underline" );
+				TextComponent comp = new TextComponent( "Some text" );
+				comp.setUnderlined( true );
+				meta.spigot().addPage( new BaseComponent[] { comp } );
+
+				bookItem.setItemMeta( meta );
+
+				player.getInventory().addItem( bookItem );
+			} else {
+				StringBuilder builder = new StringBuilder();
+				for ( String s : args ) {
+					builder.append( s );
+					builder.append( " " );
+				}
+				String finStr = builder.toString().trim();
+				int length = getLength( new TextComponent( finStr ) );
+				sender.sendMessage( "Length is " + length + " for '" + finStr + "'" );
 			}
-			String finStr = builder.toString().trim();
-			int length = getLength( new TextComponent( finStr ) );
-			sender.sendMessage( "Length is " + length + " for '" + finStr + "'" );
 		}
 		
 		return false;

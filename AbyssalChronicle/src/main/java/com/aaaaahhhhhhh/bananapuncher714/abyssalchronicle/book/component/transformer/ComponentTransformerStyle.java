@@ -67,6 +67,8 @@ public class ComponentTransformerStyle implements ComponentTransformer {
 					// Push it onto the stack
 					styles.push( finalStyle );
 				}
+			} else if ( styles.isEmpty() ) {
+				push( object, new Style( "blank" ) );
 			}
 		} else if ( component.isEndComponent() ) {
 			BookComponentTail tail = component.getAsEndComponent();

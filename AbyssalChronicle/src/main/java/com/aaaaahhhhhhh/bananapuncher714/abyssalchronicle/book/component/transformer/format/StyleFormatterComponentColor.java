@@ -15,7 +15,8 @@ public class StyleFormatterComponentColor implements StyleFormatter< BookCompone
 			}
 			
 			if ( value == null ) {
-				return false;
+				style.getValues().remove( "color" );
+				return true;
 			}
 			
 			style.getValues().put( "color", value );

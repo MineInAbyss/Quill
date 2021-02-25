@@ -42,7 +42,7 @@ public class BookPartParserXML implements BookPartParser< Element > {
 				book.setHeaderId( contentElement.getAttribute( "header" ) );
 			}
 			if ( contentElement.hasAttribute( "footer" ) ) {
-				book.setHeaderId( contentElement.getAttribute( "footer" ) );
+				book.setFooterId( contentElement.getAttribute( "footer" ) );
 			}
 			
 			book.setContent( componentParser.parse( contentElement ) );

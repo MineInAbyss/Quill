@@ -35,13 +35,30 @@ public class ComponentTransformerText implements ComponentTransformer, Consumer<
 			
 			Style currentStyle = styleSupplier.get().getCurrentStyle();
 			if ( currentStyle != null ) {
-				textComponent.setBold( Boolean.valueOf( currentStyle.getValues().getOrDefault( "bold", "false" ).toLowerCase() ) );
-				textComponent.setItalic( Boolean.valueOf( currentStyle.getValues().getOrDefault( "italic", "false" ).toLowerCase() ) );
-				textComponent.setUnderlined( Boolean.valueOf( currentStyle.getValues().getOrDefault( "underline", "false" ).toLowerCase() ) );
-				textComponent.setObfuscated( Boolean.valueOf( currentStyle.getValues().getOrDefault( "magic", "false" ).toLowerCase() ) );
-				textComponent.setStrikethrough( Boolean.valueOf( currentStyle.getValues().getOrDefault( "strikethrough", "false" ).toLowerCase() ) );
-				textComponent.setFont( currentStyle.getValues().get( "font" ) );
-				
+				String boldStr = currentStyle.getValues().get( "bold" );
+				if ( boldStr != null ) {
+					textComponent.setBold( Boolean.valueOf( boldStr ) );
+				}
+				String italicStr = currentStyle.getValues().get( "italic" );
+				if ( italicStr != null ) {
+					textComponent.setItalic( Boolean.valueOf( italicStr ) );
+				}
+				String underStr = currentStyle.getValues().get( "underline" );
+				if ( underStr != null ) {
+					textComponent.setUnderlined( Boolean.valueOf( underStr ) );
+				}
+				String magicStr = currentStyle.getValues().get( "magic" );
+				if ( magicStr != null ) {
+					textComponent.setObfuscated( Boolean.valueOf( magicStr ) );
+				}
+				String strikeStr = currentStyle.getValues().get( "strikethrough" );
+				if ( strikeStr != null ) {
+					textComponent.setStrikethrough( Boolean.valueOf( strikeStr ) );
+				}
+				String fontStr = currentStyle.getValues().get( "font" );
+				if ( fontStr != null ) {
+					textComponent.setFont( fontStr );
+				}
 				String colorStr = currentStyle.getValues().get( "color" );
 				if ( colorStr != null ) {
 					Optional< Color > optionalColor = ColorType.fromString( colorStr );

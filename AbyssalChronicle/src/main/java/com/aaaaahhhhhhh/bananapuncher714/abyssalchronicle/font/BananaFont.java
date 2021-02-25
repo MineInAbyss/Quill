@@ -22,7 +22,7 @@ public class BananaFont {
 	}
 	
 	public int getStringWidth( String string, boolean bold ) {
-		char[] arr = ChatColor.stripColor( string ).toCharArray();
+		char[] arr = ChatColor.stripColor( string ).replace( "\n", "" ).toCharArray();
 		int length = 0;
 		for ( char c : arr ) {
 			for ( BananaFontProvider provider : providers ) {

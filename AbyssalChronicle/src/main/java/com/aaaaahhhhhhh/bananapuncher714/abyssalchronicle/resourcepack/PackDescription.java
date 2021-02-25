@@ -1,6 +1,6 @@
 package com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.resourcepack;
 
-import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.Util;
+import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.util.Util;
 import com.google.gson.JsonObject;
 
 public class PackDescription {

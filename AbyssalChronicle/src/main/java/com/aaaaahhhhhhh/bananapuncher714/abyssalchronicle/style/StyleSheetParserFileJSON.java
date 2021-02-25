@@ -2,7 +2,7 @@ package com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.style;
 
 import java.nio.file.Path;
 
-import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.Util;
+import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.util.Util;
 import com.google.gson.JsonObject;
 
 public class StyleSheetParserFileJSON implements StyleSheetParserFile {

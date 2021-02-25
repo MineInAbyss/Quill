@@ -1,9 +1,0 @@
-id: something
-include: []
-styles:
-  body:
-    inherits: []
-    properties:
-      something: value
-    defaults:
-      something: value2

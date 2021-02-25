@@ -11,11 +11,13 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.bukkit.plugin.java.JavaPlugin;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
-import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.Util;
+import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.AbyssalChronicle;
+import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.util.Util;
 
 public class BookComponentHeadParserFileXML implements BookComponentHeadParserFile {
 	private BookComponentHeadParser< Element > parser;
@@ -46,9 +48,11 @@ public class BookComponentHeadParserFileXML implements BookComponentHeadParserFi
 		contentBuilder.append( "</component>" );
 		
 		try {
-			Document doc = builder.parse( new ByteArrayInputStream( contentBuilder.toString().getBytes() ) );
+			Document doc = builder.parse( new ByteArrayInputStream( contentBuilder.toString().getBytes( StandardCharsets.UTF_8 ) ) );
 			return parser.parse( doc.getDocumentElement() );
-		} catch (SAXException | IOException e) {
+		} catch ( SAXException | IOException e ) {
+			// TODO Add some logger thing?
+			JavaPlugin.getPlugin( AbyssalChronicle.class ).getLogger().severe( String.format( "Error parsing file '%s'", path.toString() ) );
 			e.printStackTrace();
 		}
 

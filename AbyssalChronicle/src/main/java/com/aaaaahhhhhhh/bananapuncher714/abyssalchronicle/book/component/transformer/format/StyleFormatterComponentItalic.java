@@ -10,7 +10,7 @@ public class StyleFormatterComponentItalic implements StyleFormatter< BookCompon
 		if ( component.getTagName().equalsIgnoreCase( "italic" ) || component.getTagName().equalsIgnoreCase( "i" ) ) {
 			style.getValues().put( "italic", "true" );
 		} else if ( component.getTagName().equalsIgnoreCase( "unitalic" ) || component.getTagName().equalsIgnoreCase( "ui" ) ) {
-			style.getValues().put( "italic", "false" );
+			style.getValues().remove( "italic" );
 		} else {
 			return false;
 		}

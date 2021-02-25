@@ -7,7 +7,7 @@ import java.nio.file.Path;
 
 import org.yaml.snakeyaml.Yaml;
 
-import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.Util;
+import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.util.Util;
 
 public class StyleSheetParserFileYaml implements StyleSheetParserFile {
 	protected static final Yaml YAML = new Yaml();

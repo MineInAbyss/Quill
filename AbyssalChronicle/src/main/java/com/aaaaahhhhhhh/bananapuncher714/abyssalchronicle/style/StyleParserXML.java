@@ -5,8 +5,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.Util;
 import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.api.NamespacedKey;
+import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.util.Util;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 

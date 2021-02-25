@@ -297,10 +297,10 @@ public class CatalogBuildable extends Catalog {
 	
 	public BookComponentHead findComponent( BookPart part, NamespacedKey key ) {
 		String id = key.namespace;
-		if ( id == null ) {
+		if ( id == null || id.equals( part.getId() ) ) {
 			// Nothing was specified, check the book, and if nothing is found, then the list of public components
 			BookComponentHead component = part.getComponents().get( key.key );
-			if ( component == null ) {
+			if ( component == null && id == null ) {
 				component = components.get( componentCachePath.resolve( key.key ) );
 			}
 			

@@ -10,7 +10,7 @@ public class StyleFormatterComponentUnderline implements StyleFormatter< BookCom
 		if ( component.getTagName().equalsIgnoreCase( "underline" ) || component.getTagName().equalsIgnoreCase( "u" ) ) {
 			style.getValues().put( "underline", "true" );
 		} else if ( component.getTagName().equalsIgnoreCase( "derline" ) || component.getTagName().equalsIgnoreCase( "n" ) ) {
-			style.getValues().put( "underline", "false" );
+			style.getValues().remove( "underline" );
 		} else {
 			return false;
 		}

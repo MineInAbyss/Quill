@@ -10,7 +10,7 @@ public class StyleFormatterComponentMagic implements StyleFormatter< BookCompone
 		if ( component.getTagName().equalsIgnoreCase( "magic" ) || component.getTagName().equalsIgnoreCase( "m" ) ) {
 			style.getValues().put( "magic", "true" );
 		} else if ( component.getTagName().equalsIgnoreCase( "unmagic" ) || component.getTagName().equalsIgnoreCase( "um" ) ) {
-			style.getValues().put( "magic", "false" );
+			style.getValues().remove( "magic" );
 		} else {
 			return false;
 		}

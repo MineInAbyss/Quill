@@ -84,7 +84,7 @@ public class AbyssalChronicleTest {
 	private static File base = new File( System.getProperty( "user.dir" ) );
 
 	public static void main( String[] args ) throws ParserConfigurationException, SAXException, IOException, InterruptedException {
-		testImageParse();
+		testComponent();
 	}
 
 	private static void testDocumentParse() throws ParserConfigurationException, SAXException, IOException {
@@ -192,6 +192,11 @@ public class AbyssalChronicleTest {
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	private static void testComponent() {
+		TextComponent component = new TextComponent( "Hello, world!" );
+		System.out.println( component.toString() );
 	}
 	
 	private static void testImageParse() throws JsonSyntaxException, JsonIOException, FileNotFoundException {

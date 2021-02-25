@@ -10,7 +10,7 @@ public class StyleFormatterComponentStrikethrough implements StyleFormatter< Boo
 		if ( component.getTagName().equalsIgnoreCase( "strikethrough" ) || component.getTagName().equalsIgnoreCase( "s" ) ) {
 			style.getValues().put( "strikethrough", "true" );
 		} else if ( component.getTagName().equalsIgnoreCase( "unstrikethrough" ) || component.getTagName().equalsIgnoreCase( "us" ) ) {
-			style.getValues().put( "strikethrough", "false" );
+			style.getValues().remove( "strikethrough" );
 		} else {
 			return false;
 		}
