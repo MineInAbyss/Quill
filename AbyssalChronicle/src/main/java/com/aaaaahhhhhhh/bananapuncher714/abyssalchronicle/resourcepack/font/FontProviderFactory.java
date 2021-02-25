@@ -22,7 +22,7 @@ public final class FontProviderFactory {
 		NamespacedKey file = NamespacedKey.fromString( object.get( "file" ).getAsString() );
 		
 		int ascent = object.has( "ascent" ) ? object.get( "ascent" ).getAsInt() : 0;		
-		int height = object.has( "height" ) ? object.get( "height" ).getAsInt() : 256;
+		int height = object.has( "height" ) ? object.get( "height" ).getAsInt() : 0;
 
 		JsonArray charArr = object.get( "chars" ).getAsJsonArray();
 		String[] arr = new String[ charArr.size() ];

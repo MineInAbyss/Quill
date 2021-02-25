@@ -10,14 +10,13 @@ import org.apache.commons.lang.Validate;
 public class BananaFontProviderBitmap implements BananaFontProvider {
 	protected Map< Character, Integer > widths = new HashMap< Character, Integer >();
 	
-	public BananaFontProviderBitmap( BufferedImage image, String[] characters, int bitmapWidth ) {
-		this( image, characters, bitmapWidth, true );
-	}
-	
-	public BananaFontProviderBitmap( BufferedImage image, String[] characters, int bitmapWidth, boolean uniform ) {
+	public BananaFontProviderBitmap( BufferedImage image, String[] characters, int bitmapHeight ) {
 		Validate.isTrue( characters.length > 0, "Must include at least 1 character!" );
 		int width = image.getWidth() / characters[ 0 ].length();
 		int height = image.getHeight() / characters.length;
+		if ( bitmapHeight == 0 ) {
+			bitmapHeight = height;
+		}
 		// Scan the columns
 		for ( int i = 0; i < characters.length; i++ ) {
 			int yStart = i * height;
@@ -41,22 +40,16 @@ public class BananaFontProviderBitmap implements BananaFontProvider {
 				}
 				
 				if ( charWidth > 0 ) {
-					if ( uniform ) {
-						widths.put( characters[ i ].charAt( j ), charWidth + 1 );
-					} else {
-						// TODO I'm not entirely sure what this section was for, or if it even worked
-						// But I think it was for images with rectangular dimensions or something strange.
-						
-						// How wide it is in relation to the max width of the character
-						double percentageWidth = charWidth / width;
-						// Get the per pixels that it really appears to be
-						double pixels = bitmapWidth * percentageWidth;
-						int finWidth = ( int ) Math.ceil( pixels + 1 );
-						
-						widths.put( characters[ i ].charAt( j ), finWidth );
-					}
+					// Get the height ratio of the image to the actual height
+					double scale = bitmapHeight / ( double ) height;
+
+					// Get the per pixels that it really appears to be
+					double pixels = charWidth * scale;
+					int finWidth = ( int ) Math.ceil( pixels + 1 );
+
+					widths.put( characters[ i ].charAt( j ), finWidth );
 				} else {
-					widths.put( characters[ i ].charAt( j ), bitmapWidth );
+					widths.put( characters[ i ].charAt( j ), bitmapHeight );
 				}
 				
 			}
