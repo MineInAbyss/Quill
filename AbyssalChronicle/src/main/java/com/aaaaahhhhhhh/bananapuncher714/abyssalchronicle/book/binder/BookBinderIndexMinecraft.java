@@ -233,10 +233,10 @@ public class BookBinderIndexMinecraft implements Bookbinder< BookIndex > {
 			// Expand the base component if it contains any subcomponents
 			List< BaseComponent > extra = parsing.getExtra();
 			if ( extra != null ) {
-				for ( int i = extra.size() - 1; i >= 0; i++ ) {
+				for ( int i = extra.size() - 1; i >= 0; i-- ) {
 					queue.addFirst( extra.get( i ) );
 				}
-				extra.clear();
+				parsing.setExtra( new ArrayList< BaseComponent >() );
 			}
 			
 			if ( parsing instanceof TextComponent ) {

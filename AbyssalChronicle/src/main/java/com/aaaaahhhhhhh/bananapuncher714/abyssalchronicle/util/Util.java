@@ -152,10 +152,10 @@ public class Util {
 			
 			List< BaseComponent > extra = base.getExtra();
 			if ( extra != null ) {
-				for ( int i = extra.size() - 1; i >= 0; i++ ) {
+				for ( int i = extra.size() - 1; i >= 0; i-- ) {
 					queue.addFirst( extra.get( i ) );
 				}
-				extra.clear();
+				base.setExtra( new ArrayList< BaseComponent >() );
 			}
 			
 			if ( base instanceof TextComponent ) {
@@ -253,5 +253,17 @@ public class Util {
 	
 	public static boolean isSame( TextComponent c1, TextComponent c2 ) {
 		return isSimilar( c1, c2 ) && c1.getText().equals( c2.getText() );
+	}
+	
+	public static void merge( BaseComponent original, BaseComponent other ) {
+		original.setBold( original.isBoldRaw() == null ? other.isBoldRaw() : original.isBoldRaw() );
+		original.setItalic( original.isItalicRaw() == null ? other.isItalicRaw() : original.isItalicRaw() );
+		original.setUnderlined( original.isUnderlinedRaw() == null ? other.isUnderlinedRaw() : original.isUnderlinedRaw() );
+		original.setStrikethrough( original.isStrikethroughRaw() == null ? other.isStrikethroughRaw() : original.isStrikethroughRaw() );
+		original.setObfuscated( original.isObfuscatedRaw() == null ? other.isObfuscatedRaw() : original.isObfuscatedRaw() );
+		original.setColor( original.getColorRaw() == null ? other.getColorRaw() : original.getColorRaw() );
+		original.setFont( original.getFontRaw() == null ? other.getFontRaw() : original.getFontRaw() );
+		original.setClickEvent( original.getClickEvent() == null ? other.getClickEvent() : original.getClickEvent() );
+		original.setHoverEvent( original.getHoverEvent() == null ? other.getHoverEvent() : original.getHoverEvent() );
 	}
 }

@@ -43,6 +43,7 @@ import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.book.component.transfo
 import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.book.component.transformer.ComponentTransformerFormat;
 import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.book.component.transformer.ComponentTransformerHover;
 import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.book.component.transformer.ComponentTransformerInsert;
+import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.book.component.transformer.ComponentTransformerMineDown;
 import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.book.component.transformer.ComponentTransformerTail;
 import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.book.component.transformer.ComponentTransformerText;
 import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.book.component.transformer.StyleSupplierConsumingComponentTransformerSupplier;
@@ -189,6 +190,7 @@ public class AbyssalChronicle extends JavaPlugin {
 		catalog.getTransformers().add( formatSupplier );
 		catalog.getTransformers().add( styleSupplier );
 		catalog.getTransformers().add( textSupplier );
+		catalog.getTransformers().add( ComponentTransformerMineDown::new );
 //		catalog.getTransformers().add( ComponentTransformerTail::new );
 		
 		// Add the include source suppliers
