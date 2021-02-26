@@ -2,10 +2,11 @@ package com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.book.component.transf
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Deque;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.WeakHashMap;
 
 import org.bukkit.command.CommandSender;
 
@@ -20,7 +21,7 @@ import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
 
 public class ComponentTransformerMineDown implements ComponentTransformer {
-	private Set< TextComponent > parsed = new HashSet< TextComponent >();
+	private Set< TextComponent > parsed = Collections.newSetFromMap( new WeakHashMap< TextComponent, Boolean >() );
 	
 	public ComponentTransformerMineDown( CommandSender sender, CatalogBuildable cache, BookPart part ) {
 	}

@@ -57,6 +57,7 @@ import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.book.component.transfo
 import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.book.component.transformer.format.StyleFormatterComponentUnderline;
 import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.catalog.CatalogBuildable;
 import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.catalog.CatalogCallbackPlugin;
+import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.dependencies.ComponentTransformerEmotes;
 import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.dependencies.TextTransformerPlaceholderAPI;
 import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.font.BananaFont;
 import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.font.BananaFontFactory;
@@ -192,6 +193,7 @@ public class AbyssalChronicle extends JavaPlugin {
 		catalog.getTransformers().add( ComponentTransformerInsert::new );
 		catalog.getTransformers().add( formatSupplier );
 		catalog.getTransformers().add( styleSupplier );
+		catalog.getTransformers().add( ComponentTransformerEmotes::new );
 		catalog.getTransformers().add( ( sender, catalog, part ) ->  {
 			ComponentTransformerText textTransformer = textSupplier.createTransformer( sender, catalog, part );
 			
