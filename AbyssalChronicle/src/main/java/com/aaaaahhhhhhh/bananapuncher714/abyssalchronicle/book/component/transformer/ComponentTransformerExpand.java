@@ -13,7 +13,6 @@ import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.book.component.BookCom
 import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.catalog.CatalogBuildable;
 
 public class ComponentTransformerExpand implements ComponentTransformer {
-
 	public ComponentTransformerExpand( CommandSender sender, CatalogBuildable cache, BookPart part ) {
 	}
 	
@@ -30,5 +29,4 @@ public class ComponentTransformerExpand implements ComponentTransformer {
 		
 		return false;
 	}
-
 }

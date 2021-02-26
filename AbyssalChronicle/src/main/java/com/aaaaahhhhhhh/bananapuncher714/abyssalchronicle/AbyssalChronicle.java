@@ -17,6 +17,7 @@ import java.util.Optional;
 import javax.imageio.ImageIO;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -56,6 +57,7 @@ import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.book.component.transfo
 import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.book.component.transformer.format.StyleFormatterComponentUnderline;
 import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.catalog.CatalogBuildable;
 import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.catalog.CatalogCallbackPlugin;
+import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.dependencies.TextTransformerPlaceholderAPI;
 import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.font.BananaFont;
 import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.font.BananaFontFactory;
 import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.font.BananaFontProvider;
@@ -190,7 +192,16 @@ public class AbyssalChronicle extends JavaPlugin {
 		catalog.getTransformers().add( ComponentTransformerInsert::new );
 		catalog.getTransformers().add( formatSupplier );
 		catalog.getTransformers().add( styleSupplier );
-		catalog.getTransformers().add( textSupplier );
+		catalog.getTransformers().add( ( sender, catalog, part ) ->  {
+			ComponentTransformerText textTransformer = textSupplier.createTransformer( sender, catalog, part );
+			
+			if ( Bukkit.getPluginManager().isPluginEnabled( "PlaceholderAPI" ) ) {
+				// Add the placeholder api text transformer
+				textTransformer.addTextTransformer( new TextTransformerPlaceholderAPI() );
+			}
+			
+			return textTransformer;
+		} );
 		catalog.getTransformers().add( ComponentTransformerMineDown::new );
 		catalog.getTransformers().add( ComponentTransformerNegativeSpaces::new );
 //		catalog.getTransformers().add( ComponentTransformerTail::new );
@@ -278,29 +289,14 @@ public class AbyssalChronicle extends JavaPlugin {
 				sender.sendMessage( "Unknown book!" );
 			}
 		} else if ( args.length > 1 ) {
-			if ( args[ 0 ].equalsIgnoreCase( "doom" ) && sender instanceof Player ) {
-				Player player = ( Player ) sender;
-				ItemStack bookItem = new ItemStack( Material.WRITTEN_BOOK );
-				BookMeta meta = ( BookMeta ) bookItem.getItemMeta();
-				meta.setAuthor( "Bug Dev" );
-				meta.setTitle( "Buggy underline" );
-				TextComponent comp = new TextComponent( "Some text" );
-				comp.setUnderlined( true );
-				meta.spigot().addPage( new BaseComponent[] { comp } );
-
-				bookItem.setItemMeta( meta );
-
-				player.getInventory().addItem( bookItem );
-			} else {
-				StringBuilder builder = new StringBuilder();
-				for ( String s : args ) {
-					builder.append( s );
-					builder.append( " " );
-				}
-				String finStr = builder.toString().trim();
-				int length = getLength( new TextComponent( finStr ) );
-				sender.sendMessage( "Length is " + length + " for '" + finStr + "'" );
+			StringBuilder builder = new StringBuilder();
+			for ( String s : args ) {
+				builder.append( s );
+				builder.append( " " );
 			}
+			String finStr = builder.toString().trim();
+			int length = getLength( new TextComponent( finStr ) );
+			sender.sendMessage( "Length is " + length + " for '" + finStr + "'" );
 		}
 		
 		return false;

@@ -8,9 +8,10 @@ import org.bukkit.command.CommandSender;
 import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.book.BookPart;
 import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.catalog.CatalogBuildable;
 
-public class StyleSupplierConsumingComponentTransformerSupplier< T extends ComponentTransformer & Consumer< Supplier< ? extends ComponentTransformerStyle > > > implements TransformerSupplier< ComponentTransformer > {
+public class StyleSupplierConsumingComponentTransformerSupplier< T extends ComponentTransformer & Consumer< Supplier< ? extends ComponentTransformerStyle > > > implements TransformerSupplier< ComponentTransformer >, Supplier< ComponentTransformer > {
 	private TransformerSupplier< T > supplier;
 	private Supplier< Supplier< ? extends ComponentTransformerStyle > > styleSupplier;
+	private T consumingTransformer;
 	
 	public StyleSupplierConsumingComponentTransformerSupplier( TransformerSupplier< T > supplier, Supplier< Supplier< ? extends ComponentTransformerStyle > > styleSupplier ) {
 		this.supplier = supplier;
@@ -19,10 +20,14 @@ public class StyleSupplierConsumingComponentTransformerSupplier< T extends Compo
 	
 	@Override
 	public T createTransformer( CommandSender sender, CatalogBuildable buildable, BookPart part ) {
-		T consumingTransformer = supplier.createTransformer( sender, buildable, part );
+		consumingTransformer = supplier.createTransformer( sender, buildable, part );
 
 		consumingTransformer.accept( styleSupplier.get() );
 		
+		return consumingTransformer;
+	}
+	
+	public T get() {
 		return consumingTransformer;
 	}
 }

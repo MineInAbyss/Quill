@@ -1,6 +1,7 @@
 package com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.book.component.transformer;
 
 import java.awt.Color;
+import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
 import java.util.Optional;
@@ -10,6 +11,7 @@ import java.util.function.Supplier;
 import org.bukkit.command.CommandSender;
 
 import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.api.ColorType;
+import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.api.TextTransformer;
 import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.book.BookPage;
 import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.book.BookPart;
 import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.book.component.BookComponent;
@@ -22,15 +24,22 @@ import net.md_5.bungee.api.chat.TextComponent;
 
 public class ComponentTransformerText implements ComponentTransformer, Consumer< Supplier< ? extends ComponentTransformerStyle > > {
 	private Supplier< ? extends ComponentTransformerStyle > styleSupplier;
+	private List< TextTransformer > transformers = new ArrayList< TextTransformer >();
+	private CommandSender sender;
 	
 	public ComponentTransformerText( CommandSender sender, CatalogBuildable cache, BookPart part ) {
+		this.sender = sender;
 	}
 	
 	@Override
 	public boolean transform( List< BookPage > pages, BookComponent component, Deque< BookComponent > components ) {
 		if ( component instanceof BookComponentText ) {
 			BookComponentText text = component.getAsTextComponent();
-			TextComponent textComponent = new TextComponent( text.getText() );
+			String content = text.getText();
+			for ( TextTransformer transformer : transformers ) {
+				content = transformer.transform( sender, content );
+			}
+			TextComponent textComponent = new TextComponent( content );
 			pages.get( pages.size() - 1 ).getComponents().add( textComponent );
 			
 			Style currentStyle = styleSupplier.get().getCurrentStyle();
@@ -73,6 +82,10 @@ public class ComponentTransformerText implements ComponentTransformer, Consumer<
 		return false;
 	}
 
+	public void addTextTransformer( TextTransformer transformer ) {
+		transformers.add( transformer );
+	}
+	
 	@Override
 	public void accept( Supplier< ? extends ComponentTransformerStyle > supplier ) {
 		styleSupplier = supplier;
