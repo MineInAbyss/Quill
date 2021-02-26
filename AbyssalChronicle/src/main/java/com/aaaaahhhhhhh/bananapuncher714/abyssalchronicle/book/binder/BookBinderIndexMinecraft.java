@@ -72,7 +72,6 @@ public class BookBinderIndexMinecraft implements Bookbinder< BookIndex > {
 			int line = 0;
 			
 			boolean lastNewline = true;
-			boolean eol = false;
 			
 			Deque< Word > contentQueue = new ArrayDeque< Word >( splitToWords( page.getComponents() ) );
 			while ( !contentQueue.isEmpty() ) {
@@ -84,39 +83,44 @@ public class BookBinderIndexMinecraft implements Bookbinder< BookIndex > {
 				int nextLine = line;
 				if ( word instanceof WordNewline ) {
 					nextPos = 0;
-					// If it's a new line, then advance but not really
-					if ( !eol ) {
-						nextLine++;
-					}
-					eol = false;
+					nextLine++;
 				} else if ( word instanceof WordSpace ) {
 					WordSpace space = ( WordSpace ) word;
 					List< TextComponent > components = space.getComponents();
-					int length = getLength( components );
 
-					if ( nextPos != 0 && nextPos + length > width ) {
-						// Check if this word is not first, and exceeds the total length
-						// If it does, then move it onto its own line and reset the pos
-						nextPos = 0;
-						nextLine++;
-					}
-					
-					// Check if this word is now the first, and subtract a space worth of whatever
-					if ( nextPos == 0 && length > 0 && !components.isEmpty() && !lastNewline ) {
-						TextComponent first = components.get( 0 );
-						String fontId = first.getFont();
-						BananaFont font = fontFetcher.apply( fontId );
+					/*
+					 * Space behavior:
+					 * If it exceeds the width, then move onto the next line and don't add it to the length
+					 * Otherwise, add the space to the total length
+					 */
+					Deque< BaseComponent > queue = new ArrayDeque< BaseComponent >( components );
+					while ( !queue.isEmpty() ) {
+						BaseComponent base = queue.poll().duplicate();
 						
-						// Subtract a space if it's the first character
-						length -= font.getCharWidth( ' ', first.isBold() );
-					}
+						List< BaseComponent > extra = base.getExtra();
+						if ( extra != null ) {
+							for ( int i = extra.size() - 1; i >= 0; i-- ) {
+								queue.addFirst( extra.get( i ) );
+							}
+							base.setExtra( new ArrayList< BaseComponent >() );
+						}
+						
+						if ( base instanceof TextComponent ) {
+							TextComponent text = ( TextComponent ) base;
+							String textContent = text.getText();
+							BananaFont font = fontFetcher.apply( text.getFont() );
+							
+							for ( char c : textContent.toCharArray() ) {
+								int charLength = font.getCharWidth( c, text.isBold() );
+								nextPos += charLength;
 
-					nextPos += length;
-					eol = nextPos >= width && nextPos % width == 0;
-					
-					// Get the final position
-					nextLine += nextPos / width;
-					nextPos = nextPos % width;
+								if ( nextPos > width ) {
+									nextPos = 0;
+									nextLine++;
+								}
+							}
+						}
+					}
 				} else if ( word instanceof WordNonSpace ) {
 					WordNonSpace space = ( WordNonSpace ) word;
 					List< TextComponent > components = space.getComponents();
@@ -129,12 +133,39 @@ public class BookBinderIndexMinecraft implements Bookbinder< BookIndex > {
 						nextLine++;
 					}
 					
-					nextPos += length;
-					eol = nextPos >= width && nextPos % width == 0;
-					
-					// Get the final position
-					nextLine += nextPos / width;
-					nextPos = nextPos % width;
+					/*
+					 * Word behavior
+					 * If the pos exceeds the width, then move it onto a newline
+					 * Keep adding each char until it exceeds the width and pos != char length
+					 */
+					Deque< BaseComponent > queue = new ArrayDeque< BaseComponent >( components );
+					while ( !queue.isEmpty() ) {
+						BaseComponent base = queue.poll().duplicate();
+						
+						List< BaseComponent > extra = base.getExtra();
+						if ( extra != null ) {
+							for ( int i = extra.size() - 1; i >= 0; i-- ) {
+								queue.addFirst( extra.get( i ) );
+							}
+							base.setExtra( new ArrayList< BaseComponent >() );
+						}
+						
+						if ( base instanceof TextComponent ) {
+							TextComponent text = ( TextComponent ) base;
+							String textContent = text.getText();
+							BananaFont font = fontFetcher.apply( text.getFont() );
+							
+							for ( char c : textContent.toCharArray() ) {
+								int charLength = font.getCharWidth( c, text.isBold() );
+								nextPos += charLength;
+
+								if ( nextPos > width && nextPos != charLength ) {
+									nextPos = charLength;
+									nextLine++;
+								}
+							}
+						}
+					}
 				}
 				
 				lastNewline = word instanceof WordNewline;
