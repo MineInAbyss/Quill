@@ -28,9 +28,22 @@ public class ComponentTransformerFormat implements ComponentTransformer, Consume
 		if ( component.isObjectComponent() ) {
 			BookComponentObject object = component.getAsObjectComponent();
 			Style style = supplier.get().getCurrentStyle();
-			boolean formatted = true;
-			for ( int i = 0; i < formatters.size() && ( formatted = !formatters.get( i ).applyStyle( style, object ) ); i++ );
-			return !formatted;
+			if ( style != null ) {
+				if ( object.getSubElements().isEmpty() ) {
+					// Apply the format to the current style
+					boolean formatted = false;
+					for ( int i = 0; i < formatters.size() && !( formatted = formatters.get( i ).applyStyle( style, object ) ); i++ );
+					return formatted;
+				} else {
+					// Apply the format to all elements within
+					Style copy = style.copyOf();
+					boolean formatted = false;
+					for ( int i = 0; i < formatters.size() && !( formatted = formatters.get( i ).applyStyle( copy, object ) ); i++ );
+					if ( formatted ) {
+						supplier.get().push( object, copy );
+					}
+				}
+			}
 		}
 		
 		return false;

@@ -57,15 +57,16 @@ public class ComponentTransformerStyle implements ComponentTransformer {
 					}
 				}
 				
-				if ( finalStyle != null && !components.contains( object ) ) {
-					// Add the current component
-					components.add( object );
+				if ( finalStyle != null && this.components.add( object ) ) {
+					// Add the current component and
 					// Merge the style with the old style
 					if ( !styles.isEmpty() ) {
 						finalStyle.merge( styles.peek() );
 					}
 					// Push it onto the stack
 					styles.push( finalStyle );
+				} else if ( styles.isEmpty() ) {
+					push( object, new Style( "blank" ) );
 				}
 			} else if ( styles.isEmpty() ) {
 				push( object, new Style( "blank" ) );
@@ -73,13 +74,7 @@ public class ComponentTransformerStyle implements ComponentTransformer {
 		} else if ( component.isEndComponent() ) {
 			BookComponentTail tail = component.getAsEndComponent();
 			BookComponentObject head = tail.getHead();
-			if ( components.contains( tail.getHead() ) ) {
-				// Remove the current component
-				components.remove( head );
-				
-				// Pop the current style, too
-				styles.pop();
-			}
+			pop( head );
 		}
 		return false;
 	}
@@ -93,8 +88,7 @@ public class ComponentTransformerStyle implements ComponentTransformer {
 	}
 	
 	public boolean push( BookComponent component, Style style ) {
-		if ( !components.contains( component ) ) {
-			components.add( component );
+		if ( components.add( component ) ) {
 			styles.push( style );
 			return true;
 		}
