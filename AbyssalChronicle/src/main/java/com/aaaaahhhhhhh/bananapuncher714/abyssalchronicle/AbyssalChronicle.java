@@ -94,6 +94,10 @@ public class AbyssalChronicle extends JavaPlugin {
 	
 	@Override
 	public void onEnable() {
+		if ( !getDataFolder().exists() ) {
+			
+		}
+		
 		saveResource( "config.yml", false );
 		
 		loadConfig();
@@ -112,6 +116,10 @@ public class AbyssalChronicle extends JavaPlugin {
 		if ( catalog.isRunning() ) {
 			catalog.stop();
 		}
+	}
+	
+	private void initialize() {
+		// TODO Write and add the book here
 	}
 	
 	private void loadConfig() {
