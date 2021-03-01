@@ -8,8 +8,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.api.command.CommandContext;
-
 public class InputValidatorPlayer implements InputValidator< Player > {
 	@Override
 	public Collection< String > getTabCompletes( CommandSender sender, String[] input ) {

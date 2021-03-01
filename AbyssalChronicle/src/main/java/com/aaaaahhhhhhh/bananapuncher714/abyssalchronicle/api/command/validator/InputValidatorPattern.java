@@ -4,8 +4,6 @@ import java.util.Collection;
 
 import org.bukkit.command.CommandSender;
 
-import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.api.command.CommandContext;
-
 public class InputValidatorPattern implements InputValidator< String > {
 	protected String pattern;
 	

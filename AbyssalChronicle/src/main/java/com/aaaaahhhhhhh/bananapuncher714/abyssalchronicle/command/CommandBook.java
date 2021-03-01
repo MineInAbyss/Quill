@@ -27,7 +27,6 @@ import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.api.command.validator.
 import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.api.command.validator.sender.SenderValidatorPlayer;
 import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.book.Book;
 import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.catalog.Catalog;
-import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.catalog.CatalogBuildable;
 
 import net.md_5.bungee.api.chat.BaseComponent;
 
@@ -52,6 +51,10 @@ public class CommandBook {
 						.addSenderValidator( new SenderValidatorPermission( "abyssalchronicle.book.command.update" ) )
 						.whenUnknown( new CommandExecutableMessage( ChatColor.RED + "Usage: /book update" ) )
 						.defaultTo( this::update ) )
+				.add( new SubCommand( "updateassets" )
+						.addSenderValidator( new SenderValidatorPermission( "abyssalchronicle.book.command.updateassets" ) )
+						.whenUnknown( new CommandExecutableMessage( ChatColor.RED + "Usage: /book updateassets" ) )
+						.defaultTo( this::updateAssets ) )
 				.add( new SubCommand( "list" )
 						.addSenderValidator( new SenderValidatorPermission( "abyssalchronicle.book.command.list" ) )
 						.addSenderValidator( new SenderValidatorPlayer() )
@@ -83,7 +86,7 @@ public class CommandBook {
 								.add( new SubCommand( new InputValidatorPlayer() )
 										.addSenderValidator( new SenderValidatorPermission( "abyssalchronicle.book.command.read.other" ) )
 										.whenUnknown( new CommandExecutableMessage( ChatColor.RED + "Usage: /book read <book> [player]" ) )
-										.defaultTo( this::readForOther ) )
+										.defaultTo( this::readForOtherWithSelf ) )
 								.whenUnknown( ( sender, args, parameters ) -> {
 									if ( sender.hasPermission( "abyssalchronicle.book.command.read.other" ) ) {
 										sender.sendMessage( ChatColor.RED + "Invalid player!" );
@@ -91,7 +94,7 @@ public class CommandBook {
 										sender.sendMessage( ChatColor.RED + "Usage: /book read <book>" );
 									}
 								} )
-								.defaultTo( this::readSelf ) )
+								.defaultTo( this::readForSelf ) )
 						.whenUnknown( new CommandExecutableMessage( ChatColor.RED + "Invalid book!" ) )
 						.defaultTo( ( sender, args, parameters ) -> {
 							if ( sender.hasPermission( "abyssalchronicle.book.command.read.other" ) ) {
@@ -107,7 +110,7 @@ public class CommandBook {
 								.add( new SubCommand( new InputValidatorPlayer() )
 										.addSenderValidator( new SenderValidatorPermission( "abyssalchronicle.book.command.readother.other" ) )
 										.whenUnknown( new CommandExecutableMessage( ChatColor.RED + "Usage: /book readother <player> <book> [player]" ) )
-										.defaultTo( this::readOtherOther ) )
+										.defaultTo( this::readForOtherWithOther ) )
 								.whenUnknown( ( sender, args, parameters ) -> {
 									if ( sender.hasPermission( "abyssalchronicle.book.command.readother.other" ) ) {
 										sender.sendMessage( ChatColor.RED + "Invalid player!" );
@@ -115,7 +118,7 @@ public class CommandBook {
 										sender.sendMessage( ChatColor.RED + "Usage: /book readother <player> <book>" );
 									}
 								} )
-								.defaultTo( this::readSelfOther ) )
+								.defaultTo( this::readForSelfWithOther ) )
 						.whenUnknown( new CommandExecutableMessage( ChatColor.RED + "Invalid player or book!" ) )
 						.defaultTo( ( sender, args, parameters ) -> {
 							if ( sender.hasPermission( "abyssalchronicle.book.command.readother.other" ) ) {
@@ -131,7 +134,7 @@ public class CommandBook {
 								.add( new SubCommand( new InputValidatorPlayer() )
 										.addSenderValidator( new SenderValidatorPermission( "abyssalchronicle.book.command.openfor.other" ) )
 										.whenUnknown( new CommandExecutableMessage( ChatColor.RED + "Usage: /book openfor <player> <book> [player]" ) )
-										.defaultTo( this::readOtherOther ) )
+										.defaultTo( this::readForOtherWithOther ) )
 								.whenUnknown( ( sender, args, parameters ) -> {
 									if ( sender.hasPermission( "abyssalchronicle.book.command.openfor.other" ) ) {
 										sender.sendMessage( ChatColor.RED + "Invalid player!" );
@@ -146,6 +149,78 @@ public class CommandBook {
 								sender.sendMessage( ChatColor.RED + "Usage: /book openfor <player> <book> [player]" );
 							} else {
 								sender.sendMessage( ChatColor.RED + "Usage: /book openfor <player> <book>" );
+							}
+						} ) )
+				.add( new SubCommand( "give" )
+						.addSenderValidator( new SenderValidatorPermission( "abyssalchronicle.book.command.give" ) )
+						.addSenderValidator( new SenderValidatorPlayer() )
+						.add( new SubCommand( new InputValidatorBook( AbyssalChronicle.DEFAULT_CATALOG_NAMESPACE, plugin::getLibrary ) )
+								.add( new SubCommand( new InputValidatorPlayer() )
+										.addSenderValidator( new SenderValidatorPermission( "abyssalchronicle.book.command.give.other" ) )
+										.whenUnknown( new CommandExecutableMessage( ChatColor.RED + "Usage: /book give <book> [player]" ) )
+										.defaultTo( this::giveToOtherFromSelf ) )
+								.whenUnknown( ( sender, args, parameters ) -> {
+									if ( sender.hasPermission( "abyssalchronicle.book.command.give.other" ) ) {
+										sender.sendMessage( ChatColor.RED + "Invalid player!" );
+									} else {
+										sender.sendMessage( ChatColor.RED + "Usage: /book give <book>" );
+									}
+								} )
+								.defaultTo( this::giveSelf ) )
+						.whenUnknown( new CommandExecutableMessage( ChatColor.RED + "Invalid book!" ) )
+						.defaultTo( ( sender, args, parameters ) -> {
+							if ( sender.hasPermission( "abyssalchronicle.book.command.give.other" ) ) {
+								sender.sendMessage( ChatColor.RED + "Usage: /book give <book> [player]" );
+							} else {
+								sender.sendMessage( ChatColor.RED + "Usage: /book give <book>" );
+							}
+						} ) )
+				.add( new SubCommand( "giveother" )
+						.addSenderValidator( new SenderValidatorPermission( "abyssalchronicle.book.command.giveother" ) )
+						.addSenderValidator( new SenderValidatorPlayer() )
+						.add( new SubCommand( new InputValidatorPlayerBook( AbyssalChronicle.DEFAULT_CATALOG_NAMESPACE, plugin::getLibrary ) )
+								.add( new SubCommand( new InputValidatorPlayer() )
+										.addSenderValidator( new SenderValidatorPermission( "abyssalchronicle.book.command.giveother.other" ) )
+										.whenUnknown( new CommandExecutableMessage( ChatColor.RED + "Usage: /book giveother <player> <book> [player]" ) )
+										.defaultTo( this::giveToOtherFromOther ) )
+								.whenUnknown( ( sender, args, parameters ) -> {
+									if ( sender.hasPermission( "abyssalchronicle.book.command.giveother.other" ) ) {
+										sender.sendMessage( ChatColor.RED + "Invalid player!" );
+									} else {
+										sender.sendMessage( ChatColor.RED + "Usage: /book giveother <player> <book>" );
+									}
+								} )
+								.defaultTo( this::giveToSelfFromOther ) )
+						.whenUnknown( new CommandExecutableMessage( ChatColor.RED + "Invalid player or book!" ) )
+						.defaultTo( ( sender, args, parameters ) -> {
+							if ( sender.hasPermission( "abyssalchronicle.book.command.giveother.other" ) ) {
+								sender.sendMessage( ChatColor.RED + "Usage: /book giveother <player> <book> [player]" );
+							} else {
+								sender.sendMessage( ChatColor.RED + "Usage: /book giveother <player> <book>" );
+							}
+						} ) )
+				.add( new SubCommand( "give" )
+						.addSenderValidator( new SenderValidatorPermission( "abyssalchronicle.book.command.give" ) )
+						.addSenderValidator( new SenderValidatorNotPlayer() )
+						.add( new SubCommand( new InputValidatorPlayerBook( AbyssalChronicle.DEFAULT_CATALOG_NAMESPACE, plugin::getLibrary ) )
+								.add( new SubCommand( new InputValidatorPlayer() )
+										.addSenderValidator( new SenderValidatorPermission( "abyssalchronicle.book.command.give.other" ) )
+										.whenUnknown( new CommandExecutableMessage( ChatColor.RED + "Usage: /book give <player> <book> [player]" ) )
+										.defaultTo( this::giveToOtherFromOther ) )
+								.whenUnknown( ( sender, args, parameters ) -> {
+									if ( sender.hasPermission( "abyssalchronicle.book.command.give.other" ) ) {
+										sender.sendMessage( ChatColor.RED + "Invalid player!" );
+									} else {
+										sender.sendMessage( ChatColor.RED + "Usage: /book give <player> <book>" );
+									}
+								} )
+								.defaultTo( this::giveFromConsole ) )
+						.whenUnknown( new CommandExecutableMessage( ChatColor.RED + "Invalid player or book!" ) )
+						.defaultTo( ( sender, args, parameters ) -> {
+							if ( sender.hasPermission( "abyssalchronicle.book.command.give.other" ) ) {
+								sender.sendMessage( ChatColor.RED + "Usage: /book give <player> <book> [player]" );
+							} else {
+								sender.sendMessage( ChatColor.RED + "Usage: /book give <player> <book>" );
 							}
 						} ) )
 				.whenUnknown( new CommandExecutableMessage( ChatColor.RED + "Invalid argument!" ) )
@@ -180,6 +255,12 @@ public class CommandBook {
 		} else {
 			sender.sendMessage( ChatColor.RED + "The library does not exist!" );
 		}
+	}
+	
+	private void updateAssets( CommandSender sender, String[] args, CommandContext parameters ) {
+		sender.sendMessage( ChatColor.DARK_AQUA + "Updating assets..." );
+		plugin.reloadAssets();
+		sender.sendMessage( ChatColor.AQUA + "Updated assets successfully!" );
 	}
 	
 	private void list( CommandSender sender, String[] args, CommandContext parameters ) {
@@ -230,11 +311,11 @@ public class CommandBook {
 		}
 	}
 	
-	private void readSelf( CommandSender sender, String[] args, CommandContext parameters ) {
+	private void readForSelf( CommandSender sender, String[] args, CommandContext parameters ) {
 		readFor( sender, sender, parameters.getLast( NamespacedKey.class ) );
 	}
 	
-	private void readForOther( CommandSender sender, String[] args, CommandContext parameters ) {
+	private void readForOtherWithSelf( CommandSender sender, String[] args, CommandContext parameters ) {
 		readFor( parameters.getLast( Player.class ), sender, parameters.getLast( NamespacedKey.class ) );
 	}
 	
@@ -243,20 +324,20 @@ public class CommandBook {
 		readFor( pair.getPlayer(), pair.getPlayer(), pair.getBook() );
 	}
 	
-	private void readSelfOther( CommandSender sender, String[] args, CommandContext parameters ) {
+	private void readForSelfWithOther( CommandSender sender, String[] args, CommandContext parameters ) {
 		PlayerBookPair pair = parameters.getLast( PlayerBookPair.class );
-		readFor( sender, pair.getPlayer(), pair.getBook() );
+		readFor( pair.getPlayer(), sender, pair.getBook() );
 	}
 	
-	private void readOtherOther( CommandSender sender, String[] args, CommandContext parameters ) {
+	private void readForOtherWithOther( CommandSender sender, String[] args, CommandContext parameters ) {
 		PlayerBookPair pair = parameters.getLast( PlayerBookPair.class );
 		readFor( parameters.getLast( Player.class ), pair.getPlayer(), pair.getBook() );
 	}
 	
-	private void readFor( CommandSender sender, CommandSender reader, NamespacedKey key ) {
+	private void readFor( CommandSender lender, CommandSender reader, NamespacedKey key ) {
 		Library library = plugin.getLibrary();
 		if ( library != null ) {
-			Optional< Book > optionalBook = library.getBook( sender, key );
+			Optional< Book > optionalBook = library.getBook( lender, key );
 			if ( optionalBook.isPresent() ) {
 				Book book = optionalBook.get();
 				if ( reader instanceof Player ) {
@@ -274,6 +355,59 @@ public class CommandBook {
 					player.openBook( bookItem );
 				} else {
 					reader.sendMessage( ChatColor.RED + "Can only display books to players!" );
+				}
+			} else {
+				reader.sendMessage( ChatColor.RED + "Unknown book!" );
+			}
+		} else {
+			reader.sendMessage( ChatColor.RED + "The library does not exist!" );
+		}
+	}
+	
+	private void giveSelf( CommandSender sender, String[] args, CommandContext parameters ) {
+		giveFor( sender, sender, parameters.getLast( NamespacedKey.class ) );
+	}
+	
+	private void giveToOtherFromSelf( CommandSender sender, String[] args, CommandContext parameters ) {
+		giveFor( sender, sender, parameters.getLast( NamespacedKey.class ) );
+	}
+	
+	private void giveFromConsole( CommandSender sender, String[] args, CommandContext parameters ) {
+		PlayerBookPair pair = parameters.getLast( PlayerBookPair.class );
+		giveFor( pair.getPlayer(), pair.getPlayer(), pair.getBook() );
+	}
+	
+	private void giveToSelfFromOther( CommandSender sender, String[] args, CommandContext parameters ) {
+		PlayerBookPair pair = parameters.getLast( PlayerBookPair.class );
+		giveFor( pair.getPlayer(), sender, pair.getBook() );
+	}
+	
+	private void giveToOtherFromOther( CommandSender sender, String[] args, CommandContext parameters ) {
+		PlayerBookPair pair = parameters.getLast( PlayerBookPair.class );
+		giveFor( parameters.getLast( Player.class ), pair.getPlayer(), pair.getBook() );
+	}
+	
+	private void giveFor( CommandSender lender, CommandSender reader, NamespacedKey key ) {
+		Library library = plugin.getLibrary();
+		if ( library != null ) {
+			Optional< Book > optionalBook = library.getBook( lender, key );
+			if ( optionalBook.isPresent() ) {
+				Book book = optionalBook.get();
+				if ( reader instanceof Player ) {
+					Player player = ( Player ) reader;
+					
+					ItemStack bookItem = new ItemStack( Material.WRITTEN_BOOK );
+					BookMeta meta = ( BookMeta ) bookItem.getItemMeta();
+					meta.setAuthor( book.getAuthor() );
+					meta.setTitle( book.getTitle() );
+					for ( BaseComponent page : book.getPages() ) {
+						meta.spigot().addPage( new BaseComponent[] { page } );
+					}
+					bookItem.setItemMeta( meta );
+
+					player.getInventory().addItem( bookItem );
+				} else {
+					reader.sendMessage( ChatColor.RED + "Can only give books to players!" );
 				}
 			} else {
 				reader.sendMessage( ChatColor.RED + "Unknown book!" );

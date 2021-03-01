@@ -4,8 +4,6 @@ import java.util.Collection;
 
 import org.bukkit.command.CommandSender;
 
-import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.api.command.CommandContext;
-
 public class InputValidatorInt implements InputValidator< Integer > {
 	protected int min = Integer.MIN_VALUE;
 	protected int max = Integer.MAX_VALUE;

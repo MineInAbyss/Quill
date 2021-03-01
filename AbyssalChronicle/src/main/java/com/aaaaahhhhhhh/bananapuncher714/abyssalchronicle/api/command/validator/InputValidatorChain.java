@@ -6,8 +6,6 @@ import java.util.List;
 
 import org.bukkit.command.CommandSender;
 
-import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.api.command.CommandContext;
-
 public class InputValidatorChain< T > implements InputValidator< T > {
 	protected InputValidator< T > primaryValidator;
 	protected List< InputValidator< ? > > validators = new ArrayList< InputValidator< ? > >();

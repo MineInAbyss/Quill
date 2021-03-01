@@ -13,25 +13,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Optional;
 
 import javax.imageio.ImageIO;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.api.NamespacedKey;
 import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.api.configuration.YamlFileConfiguration;
-import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.book.Book;
 import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.book.BookPartParserFileXML;
 import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.book.BookPartParserXML;
 import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.book.IncludeSourceSupplierBookPart;
@@ -160,6 +151,10 @@ public class AbyssalChronicle extends JavaPlugin {
 		catalogUpdateInterval = config.getLong( "cache.update-interval", 10_000 );
 	}
 	
+	public void reloadAssets() {
+		loadAssets();
+	}
+	
 	private void loadAssets() {
 		fonts.clear();
 		if ( Files.exists( resourcePackPath ) ) {
@@ -250,7 +245,7 @@ public class AbyssalChronicle extends JavaPlugin {
 		catalog.setCallback( new CatalogCallbackPlugin( this ) );
 		
 		// Set the bookbinder
-		catalog.setBookbinder( new BookBinderIndexMinecraft( str -> fonts.getOrDefault( str, fonts.get( "default" ) ) ) );
+		catalog.setBookbinder( new BookBinderIndexMinecraft( str -> getFonts().getOrDefault( str, getFonts().get( "default" ) ) ) );
 		
 		// Start the monitoring
 		if ( catalogAutoUpdate ) {
@@ -295,49 +290,6 @@ public class AbyssalChronicle extends JavaPlugin {
 				font.addProvider( container );
 			}
 		}
-	}
-	
-	@Override
-	public boolean onCommand( CommandSender sender, Command command, String label, String[] args ) {
-		if ( args.length == 1 ) {
-			Optional< Book > optionalBook = library.getBook( sender, NamespacedKey.of( DEFAULT_CATALOG_NAMESPACE, args[ 0 ] ) );
-			if ( optionalBook.isPresent() ) {
-				Book book = optionalBook.get();
-				
-				if ( sender instanceof Player ) {
-					Player player = ( Player ) sender;
-
-					ItemStack bookItem = new ItemStack( Material.WRITTEN_BOOK );
-					BookMeta meta = ( BookMeta ) bookItem.getItemMeta();
-					meta.setAuthor( book.getAuthor() );
-					meta.setTitle( book.getTitle() );
-					for ( BaseComponent page : book.getPages() ) {
-						meta.spigot().addPage( new BaseComponent[] { page } );
-					}
-					bookItem.setItemMeta( meta );
-					
-					player.getInventory().addItem( bookItem );
-				} else {
-					for ( int i = 0; i < book.getPages().size(); i++ ) {
-						sender.sendMessage( "Page " + i );
-						sender.sendMessage( book.getPages().get( i ).toPlainText() );
-					}
-				}
-			} else {
-				sender.sendMessage( "Unknown book!" );
-			}
-		} else if ( args.length > 1 ) {
-			StringBuilder builder = new StringBuilder();
-			for ( String s : args ) {
-				builder.append( s );
-				builder.append( " " );
-			}
-			String finStr = builder.toString().trim();
-			int length = getLength( new TextComponent( finStr ) );
-			sender.sendMessage( "Length is " + length + " for '" + finStr + "'" );
-		}
-		
-		return false;
 	}
 	
 	public Library getLibrary() {

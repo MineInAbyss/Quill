@@ -6,8 +6,6 @@ import java.util.Set;
 
 import org.bukkit.command.CommandSender;
 
-import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.api.command.CommandContext;
-
 public class InputValidatorBoolean implements InputValidator< Boolean > {
 	protected Set< String > trueVals = new HashSet< String >();
 	protected Set< String > falseVals = new HashSet< String >();
