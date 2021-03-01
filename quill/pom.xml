@@ -21,6 +21,7 @@
 							<shadedPattern>com.aaaaahhhhhhh.bananapuncher714.quill.libraries.minedown</shadedPattern>
 						</relocation>
 					</relocations>
+					<outputFile>final/${project.artifactId}-${project.version}.jar</outputFile>
 				</configuration>
 				<executions>
 					<execution>

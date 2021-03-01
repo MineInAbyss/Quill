@@ -2,6 +2,7 @@
 .project
 .settings/
 target/
+final/
 doc/
 dependency-reduced-pom.xml
 /bin/

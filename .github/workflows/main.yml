@@ -17,5 +17,4 @@ jobs:
     - name: Upload artifact
       uses: actions/upload-artifact@v2
       with:
-        name: package
-        path: quill/target/quill-1.0.0.jar
+        path: quill/final
