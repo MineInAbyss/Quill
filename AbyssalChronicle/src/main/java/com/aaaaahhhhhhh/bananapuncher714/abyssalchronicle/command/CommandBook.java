@@ -12,6 +12,8 @@ import org.bukkit.command.PluginCommand;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataType;
 
 import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.AbyssalChronicle;
 import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.Library;
@@ -223,6 +225,27 @@ public class CommandBook {
 								sender.sendMessage( ChatColor.RED + "Usage: /book give <player> <book>" );
 							}
 						} ) )
+				.add( new SubCommand( "set" )
+						.addSenderValidator( new SenderValidatorPermission( "abyssalchronicle.book.command.set" ) )
+						.addSenderValidator( new SenderValidatorPlayer() )
+						.add( new SubCommand( new InputValidatorBook( AbyssalChronicle.DEFAULT_CATALOG_NAMESPACE, plugin::getLibrary ) )
+								.whenUnknown( new CommandExecutableMessage( ChatColor.RED + "Usage: /book set <book>" ) )
+								.defaultTo( this::setSelf ) )
+						.whenUnknown( new CommandExecutableMessage( ChatColor.RED + "Invalid book!" ) )
+						.defaultTo( new CommandExecutableMessage( ChatColor.RED + "Usage: /book set <book>" ) ) )
+				.add( new SubCommand( "setother" )
+						.addSenderValidator( new SenderValidatorPermission( "abyssalchronicle.book.command.setother" ) )
+						.addSenderValidator( new SenderValidatorPlayer() )
+						.add( new SubCommand( new InputValidatorPlayerBook( AbyssalChronicle.DEFAULT_CATALOG_NAMESPACE, plugin::getLibrary ) )
+								.whenUnknown( new CommandExecutableMessage( ChatColor.RED + "Usage: /book setother <player> <book>" ) )
+								.defaultTo( this::setOther ) )
+						.whenUnknown( new CommandExecutableMessage( ChatColor.RED + "Invalid player or book!" ) )
+						.defaultTo( new CommandExecutableMessage( ChatColor.RED + "Usage: /book setother <player> <book>" ) ) )
+				.add( new SubCommand( "unset" )
+						.addSenderValidator( new SenderValidatorPermission( "abyssalchronicle.book.command.unset" ) )
+						.addSenderValidator( new SenderValidatorPlayer() )
+						.whenUnknown( new CommandExecutableMessage( ChatColor.RED + "Usage: /book unset" ) )
+						.defaultTo( this::unset ) )
 				.whenUnknown( new CommandExecutableMessage( ChatColor.RED + "Invalid argument!" ) )
 				.defaultTo( new CommandExecutableMessage( ChatColor.RED + "You must provide an argument!" ) )
 				.applyTo( pluginCommand );
@@ -414,6 +437,51 @@ public class CommandBook {
 			}
 		} else {
 			reader.sendMessage( ChatColor.RED + "The library does not exist!" );
+		}
+	}
+	
+	private void setSelf( CommandSender sender, String[] args, CommandContext parameters ) {
+		set( sender, parameters.getLast( NamespacedKey.class ) );
+	}
+	
+	private void setOther( CommandSender sender, String[] args, CommandContext parameters ) {
+		PlayerBookPair pair = parameters.getLast( PlayerBookPair.class );
+		set( sender, pair.getBook() );
+	}
+	
+	private void set( CommandSender sender, NamespacedKey key ) {
+		if ( sender instanceof Player ) {
+			Player player = ( Player ) sender;
+			
+			ItemStack item = player.getEquipment().getItemInMainHand();
+			if ( item != null && item.getType() != Material.AIR ) {
+				ItemMeta meta = item.getItemMeta();
+				meta.getPersistentDataContainer().set( plugin.getBookId(), PersistentDataType.STRING, key.toString() );
+				item.setItemMeta( meta );
+				player.sendMessage( ChatColor.AQUA + "Item set to book '" + key + "'!" );
+			} else {
+				player.sendMessage( ChatColor.RED + "You must be holding an item!" );
+			}
+		} else {
+			sender.sendMessage( ChatColor.RED + "You must be a player to run this command!" );
+		}
+	}
+	
+	private void unset( CommandSender sender, String[] args, CommandContext parameters ) {
+		if ( sender instanceof Player ) {
+			Player player = ( Player ) sender;
+			
+			ItemStack item = player.getEquipment().getItemInMainHand();
+			if ( item != null && item.getType() != Material.AIR ) {
+				ItemMeta meta = item.getItemMeta();
+				meta.getPersistentDataContainer().remove( plugin.getBookId() );
+				item.setItemMeta( meta );
+				player.sendMessage( ChatColor.AQUA + "Item unset!" );
+			} else {
+				player.sendMessage( ChatColor.RED + "You must be holding a book item!" );
+			}
+		} else {
+			sender.sendMessage( ChatColor.RED + "You must be a player to run this command!" );
 		}
 	}
 }

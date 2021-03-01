@@ -10,7 +10,6 @@ import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -18,6 +17,8 @@ import javax.imageio.ImageIO;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.bukkit.Bukkit;
+import org.bukkit.NamespacedKey;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -73,9 +74,6 @@ import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.style.StyleSheetParser
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
-import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.TextComponent;
-
 public class AbyssalChronicle extends JavaPlugin {
 	public static final String DEFAULT_CATALOG_NAMESPACE = "abyssal";
 	
@@ -92,6 +90,8 @@ public class AbyssalChronicle extends JavaPlugin {
 	
 	private CommandBook command;
 	
+	private Map< String, String > messages = new HashMap< String, String >();
+	
 	@Override
 	public void onEnable() {
 		saveResource( "config.yml", false );
@@ -103,6 +103,8 @@ public class AbyssalChronicle extends JavaPlugin {
 		loadLibrary();
 		
 		command = new CommandBook( this, getCommand( "book" ) );
+		
+		Bukkit.getPluginManager().registerEvents( new BookListener( this ), this );
 	}
 	
 	@Override
@@ -110,26 +112,6 @@ public class AbyssalChronicle extends JavaPlugin {
 		if ( catalog.isRunning() ) {
 			catalog.stop();
 		}
-	}
-	
-	private int getLength( BaseComponent component ) {
-		int length = 0;
-		if ( component instanceof TextComponent ) {
-			TextComponent text = ( TextComponent ) component;
-			String fontId = text.getFont();
-			BananaFont font = fonts.getOrDefault( fontId, fonts.get( "default" ) );
-			
-			if ( font != null ) {
-				length += font.getStringWidth( text.getText(), text.isBold() );
-			}
-		}
-		List< BaseComponent > extra = component.getExtra();
-		if ( extra != null ) {
-			for ( BaseComponent subComponent : extra ) {
-				length += getLength( subComponent );
-			}
-		}
-		return length;
 	}
 	
 	private void loadConfig() {
@@ -149,6 +131,11 @@ public class AbyssalChronicle extends JavaPlugin {
 		resourcePackPath = getDataFolder().toPath().resolve( config.getString( "resource-pack", "resourcepack.zip" ) );
 		catalogAutoUpdate = config.getBoolean( "cache.auto-update", true );
 		catalogUpdateInterval = config.getLong( "cache.update-interval", 10_000 );
+		
+		ConfigurationSection messages = config.getConfigurationSection( "messages" );
+		for ( String key : messages.getKeys( true ) ) {
+			this.messages.put( key, messages.getString( key ) );
+		}
 	}
 	
 	public void reloadAssets() {
@@ -302,5 +289,13 @@ public class AbyssalChronicle extends JavaPlugin {
 	
 	public Map< String, BananaFont > getFonts() {
 		return fonts;
+	}
+	
+	public NamespacedKey getBookId() {
+		return new NamespacedKey( this, "book-id" );
+	}
+	
+	public String getMessage( String key ) {
+		return messages.get( key );
 	}
 }
