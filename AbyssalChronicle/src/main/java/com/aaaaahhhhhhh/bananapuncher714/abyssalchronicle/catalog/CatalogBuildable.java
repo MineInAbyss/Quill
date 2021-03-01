@@ -24,6 +24,7 @@ import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.api.DirectoryCache.Dir
 import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.api.IncludeSource;
 import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.api.IncludeSourceSupplier;
 import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.api.NamespacedKey;
+import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.api.Updateable;
 import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.book.Book;
 import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.book.BookPage;
 import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.book.BookPart;
@@ -43,7 +44,7 @@ import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.style.StyleSheetParser
 /*
  * Uses some sort of XML based configuration for creating books dynamically.
  */
-public class CatalogBuildable extends Catalog {
+public class CatalogBuildable extends Catalog implements Updateable {
 	private Path baseDir;
 	
 	private final long delay;
@@ -103,6 +104,10 @@ public class CatalogBuildable extends Catalog {
 		thread.start();
 	}
 	
+	public boolean isRunning() {
+		return running;
+	}
+	
 	public void stop() {
 		if ( running ) {
 			running = false;
@@ -121,7 +126,7 @@ public class CatalogBuildable extends Catalog {
 		}
 	}
 	
-	private void update() {
+	public boolean update() {
 		// Seems like bad design here, it's just 3 copied and pasted methods
 		
 		// Update the styles
@@ -139,6 +144,8 @@ public class CatalogBuildable extends Catalog {
 			callback.onUpdateComponents( updatedComponents );
 			callback.onUpdateBooks( updatedBooks );
 		}
+		
+		return !( updatedSheets.isEmpty() && updatedComponents.isEmpty() && updatedBooks.isEmpty() );
 	}
 
 	private Map< String, UpdateState > updateStylesheets() {

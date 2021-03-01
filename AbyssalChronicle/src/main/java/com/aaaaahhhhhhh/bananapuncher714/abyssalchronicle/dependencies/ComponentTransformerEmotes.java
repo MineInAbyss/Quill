@@ -75,12 +75,20 @@ public class ComponentTransformerEmotes implements ComponentTransformer {
 											newQueue.add( plainComp );
 										}
 										if ( i < notEmotes.length - 1 ) {
-											// Add the emote in
+											// Add the emote and set the color to 0xFFFFFF so that it actually shows up
 											BookComponentText emoteText = new BookComponentText( String.valueOf( entry.getValue() ) );
 											BookComponentObject colorWrap = new BookComponentObject( "color" );
 											colorWrap.getAttributes().put( "value", "0xFFFFFF" );
 											colorWrap.getSubElements().add( emoteText );
-											newQueue.add( colorWrap );
+											
+											BookComponentObject fontWrap = new BookComponentObject( "font" );
+											fontWrap.getSubElements().add( colorWrap );
+											
+											
+											BookComponentObject boldWrap = new BookComponentObject( "unbold" );
+											boldWrap.getSubElements().add( fontWrap );
+											
+											newQueue.add( boldWrap );
 										}
 									}
 								} else {

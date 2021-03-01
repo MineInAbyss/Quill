@@ -47,6 +47,29 @@ public class Util {
 	public static final PathMatcher FILE_MATCHER_YAML = FileSystems.getDefault().getPathMatcher( "regex:.+\\.ya?ml" );
 	public static final PathMatcher FILE_MATCHER_JSON = FileSystems.getDefault().getPathMatcher( "regex:.+\\.json" );
 	
+	/**
+	 * Get a valid enum value no matter what.
+	 * 
+	 * @param clazz
+	 * The enum class.
+	 * @param values
+	 * The name of the enums.
+	 * @return
+	 * The enum with the name provided, or the first enum available.
+	 */
+	@SuppressWarnings("unchecked")
+	public static < T extends Enum<?> > T getEnum( Class< T > clazz, String... values ) {
+		if ( !clazz.isEnum() ) return null;
+		T[] constants = clazz.getEnumConstants();
+		if ( values == null || values.length == 0 ) return constants[ 0 ];
+		for ( Object object : constants ) {
+			if ( object.toString().equals( values[ 0 ] ) ) {
+				return ( T ) object;
+			}
+		}
+		return getEnum( clazz, pop( values ) );
+	}
+	
 	public static String nodeToString( Node node ) {
 		// TODO Don't create new objects each time
 		StringWriter sw = new StringWriter();

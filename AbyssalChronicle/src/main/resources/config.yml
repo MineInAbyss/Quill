@@ -1,1 +1,5 @@
-resource-pack: "resourcepack.zip"
+resource-pack: "resource-pack.zip"
+
+cache:
+  auto-update: true
+  update-interval: 10000

@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
@@ -21,14 +22,15 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.api.NamespacedKey;
+import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.api.configuration.YamlFileConfiguration;
 import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.book.Book;
 import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.book.BookPartParserFileXML;
 import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.book.BookPartParserXML;
@@ -46,7 +48,6 @@ import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.book.component.transfo
 import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.book.component.transformer.ComponentTransformerInsert;
 import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.book.component.transformer.ComponentTransformerMineDown;
 import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.book.component.transformer.ComponentTransformerNegativeSpaces;
-import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.book.component.transformer.ComponentTransformerTail;
 import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.book.component.transformer.ComponentTransformerText;
 import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.book.component.transformer.StyleSupplierConsumingComponentTransformerSupplier;
 import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.book.component.transformer.format.StyleFormatterComponentBold;
@@ -57,6 +58,8 @@ import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.book.component.transfo
 import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.book.component.transformer.format.StyleFormatterComponentUnderline;
 import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.catalog.CatalogBuildable;
 import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.catalog.CatalogCallbackPlugin;
+import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.command.CommandBook;
+import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.configuration.YamlMerger;
 import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.dependencies.ComponentTransformerEmotes;
 import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.dependencies.TextTransformerPlaceholderAPI;
 import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.font.BananaFont;
@@ -89,10 +92,14 @@ public class AbyssalChronicle extends JavaPlugin {
 	
 	private Library library;
 	private CatalogBuildable catalog;
+	private boolean catalogAutoUpdate;
+	private long catalogUpdateInterval;
 	
 	private Path resourcePackPath;
 	private ResourcePackZip resourcePack;
 	private Map< String, BananaFont > fonts = new HashMap< String, BananaFont >();
+	
+	private CommandBook command;
 	
 	@Override
 	public void onEnable() {
@@ -103,11 +110,15 @@ public class AbyssalChronicle extends JavaPlugin {
 		loadAssets();
 		
 		loadLibrary();
+		
+		command = new CommandBook( this, getCommand( "book" ) );
 	}
 	
 	@Override
 	public void onDisable() {
-		catalog.stop();
+		if ( catalog.isRunning() ) {
+			catalog.stop();
+		}
 	}
 	
 	private int getLength( BaseComponent component ) {
@@ -131,32 +142,55 @@ public class AbyssalChronicle extends JavaPlugin {
 	}
 	
 	private void loadConfig() {
-		FileConfiguration config = YamlConfiguration.loadConfiguration( new File( getDataFolder(), "config.yml" ) );
+		YamlFileConfiguration configuration = new YamlFileConfiguration( new File( getDataFolder() + "/" + "config.yml" ).toPath() );
+		try {
+			configuration.load();
+			YamlMerger merger = new YamlMerger( configuration, getResource( "config.yml" ) );
+			merger.updateHeader( false );
+			merger.updateKeys();
+			merger.trimKeys();
+			merger.updateComments( false );
+		} catch ( IOException | InvalidConfigurationException e ) {
+			e.printStackTrace();
+		}
+		
+		FileConfiguration config = configuration.getConfiguration();
 		resourcePackPath = getDataFolder().toPath().resolve( config.getString( "resource-pack", "resourcepack.zip" ) );
+		catalogAutoUpdate = config.getBoolean( "cache.auto-update", true );
+		catalogUpdateInterval = config.getLong( "cache.update-interval", 10_000 );
 	}
 	
 	private void loadAssets() {
-		Path resourcePackPath = getDataFolder().toPath().resolve( "resource-pack.zip" );
-		try {
-			resourcePack = new ResourcePackZip( resourcePackPath );
-			
-			for ( Entry< String, FontIndex > entry : resourcePack.getFonts().entrySet() ) {
-				BananaFont font = BananaFontFactory.constructFrom( resourcePack, entry.getValue() );
+		fonts.clear();
+		if ( Files.exists( resourcePackPath ) ) {
+			try {
+				resourcePack = new ResourcePackZip( resourcePackPath );
 				
-				enhanceFont( font );
+				for ( Entry< String, FontIndex > entry : resourcePack.getFonts().entrySet() ) {
+					BananaFont font = BananaFontFactory.constructFrom( resourcePack, entry.getValue() );
+					
+					enhanceFont( font );
+					
+					fonts.put( entry.getKey(), font );
+				}
 				
-				fonts.put( entry.getKey(), font );
+				resourcePack.close();
+			} catch ( IOException e ) {
+				e.printStackTrace();
 			}
-			
-		} catch ( IOException e ) {
-			e.printStackTrace();
+		}
+		
+		if ( !fonts.containsKey( "default" ) ) {
+			BananaFont font = new BananaFont();
+			enhanceFont( font );
+			fonts.put( "default", font );
 		}
 	}
 	
 	private void loadLibrary() {
 		library = new Library();
 		Path libraryPath = getDataFolder().toPath().resolve( "catalogs/" + DEFAULT_CATALOG_NAMESPACE + "/" );
-		catalog = new CatalogBuildable( DEFAULT_CATALOG_NAMESPACE, libraryPath, 10_000 );
+		catalog = new CatalogBuildable( DEFAULT_CATALOG_NAMESPACE, libraryPath, catalogUpdateInterval );
 		library.addCatalog( catalog );
 		
 		// Construct the component, style and book parsers
@@ -219,7 +253,9 @@ public class AbyssalChronicle extends JavaPlugin {
 		catalog.setBookbinder( new BookBinderIndexMinecraft( str -> fonts.getOrDefault( str, fonts.get( "default" ) ) ) );
 		
 		// Start the monitoring
-		catalog.start();
+		if ( catalogAutoUpdate ) {
+			catalog.start();
+		}
 	}
 	
 	private void enhanceFont( BananaFont font ) {
@@ -302,5 +338,17 @@ public class AbyssalChronicle extends JavaPlugin {
 		}
 		
 		return false;
+	}
+	
+	public Library getLibrary() {
+		return library;
+	}
+	
+	public CatalogBuildable getDefaultCatalog() {
+		return catalog;
+	}
+	
+	public Map< String, BananaFont > getFonts() {
+		return fonts;
 	}
 }

@@ -9,6 +9,6 @@ softdepend:
 - "BondrewdLikesHisEmotes"
 
 commands:
-  chronicle:
-    description: Read the chronicles
+  book:
+    description: Read some books
     aliases: []
