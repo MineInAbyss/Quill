@@ -1,0 +1,113 @@
+name: Quill
+main: com.aaaaahhhhhhh.bananapuncher714.quill.Quill
+version: 0.0.1
+description: A flexible and expandable system for creating Minecraft books
+author: BananaPuncher714
+api-version: 1.13
+softdepend:
+- "PlaceholderAPI"
+- "BondrewdLikesHisEmotes"
+
+commands:
+  book:
+    description: Read some books
+
+permissions:
+  quill.admin:
+    description: "Admin permission"
+    default: op
+    children:
+    - quill.book.command.update
+    - quill.book.command.updateassets
+    - quill.book.command.update.list.other
+    - quill.book.command.openfor.other
+    - quill.book.command.giveother.other
+    - quill.book.command.setother
+  quill.book.command:
+    description: "Basic command permission"
+    default: op
+  quill.book.command.update:
+    description: "Update the cache"
+    default: op
+    children:
+    - quill.book.command
+  quill.book.command.updateassets:
+    description: "Update the assets"
+    default: op
+    children:
+    - quill.book.command
+  quill.book.command.list:
+    description: "List all available books"
+    default: op
+    children:
+    - quill.book.command
+  quill.book.command.list.other:
+    description: "List all available books for a player"
+    default: op
+    children:
+    - quill.book.command.list
+  quill.book.command.read:
+    description: "Read a book"
+    default: op
+    children:
+    - quill.book.command
+  quill.book.command.read.other:
+    description: "Let another player read your books"
+    default: op
+    children:
+    - quill.book.command.read
+  quill.book.command.readother:
+    description: "Read another player's books"
+    default: op
+    children:
+    - quill.book.command.read.other
+  quill.book.command.readother.other:
+    description: "Let other people read each others' books"
+    default: op
+    children:
+    - quill.book.command.readother
+  quill.book.command.openfor:
+    description: "Open a book for a player"
+    default: op
+    children:
+    - quill.book.command.readother.other
+  quill.book.command.openfor.other:
+    description: "Open someone else's book for a player"
+    default: op
+    children:
+    - quill.book.command.openfor
+  quill.book.command.give:
+    description: "Give yourself a book"
+    default: op
+    children:
+    - quill.book.command
+  quill.book.command.give.other:
+    description: "Give a book to another player"
+    default: op
+    children:
+    - quill.book.command.give
+  quill.book.command.giveother:
+    description: "Give yourself someone else's book"
+    default: op
+    children:
+    - quill.book.command.give.other
+  quill.book.command.giveother.other:
+    description: "Give someone else another person's book"
+    default: op
+    children:
+    - quill.book.command.giveother
+  quill.book.command.set:
+    description: "Set the current item to a book"
+    default: op
+    children:
+    - quill.book.command.unset
+  quill.book.command.setother:
+    description: "Set the current item to someone else's book"
+    default: op
+    children:
+    - quill.book.command.set
+  quill.book.command.unset:
+    description: "Unset the current item"
+    default: op
+    children:
+    - quill.book.command
