@@ -71,6 +71,7 @@ import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.style.IncludeSourceSup
 import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.style.StyleParserXML;
 import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.style.StyleSheetParserFileXML;
 import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.style.StyleSheetParserXML;
+import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.util.FileUtil;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
@@ -95,10 +96,11 @@ public class AbyssalChronicle extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		if ( !getDataFolder().exists() ) {
-			
+			initialize();
 		}
 		
 		saveResource( "config.yml", false );
+		saveResource( "README.md", false );
 		
 		loadConfig();
 		
@@ -119,7 +121,10 @@ public class AbyssalChronicle extends JavaPlugin {
 	}
 	
 	private void initialize() {
-		// TODO Write and add the book here
+		FileUtil.saveToFile( getResource( "data/example/base_stylesheet.xml" ), new File( getDataFolder(), "catalogs/" + DEFAULT_CATALOG_NAMESPACE + "/styles/base_stylesheet.xml" ), false );
+		FileUtil.saveToFile( getResource( "data/example/guide_stylesheet.xml" ), new File( getDataFolder(), "catalogs/" + DEFAULT_CATALOG_NAMESPACE + "/styles/guide_stylesheet.xml" ), false );
+		FileUtil.saveToFile( getResource( "data/example/guide_content.xml" ), new File( getDataFolder(), "catalogs/" + DEFAULT_CATALOG_NAMESPACE + "/components/guide_content.xml" ), false );
+		FileUtil.saveToFile( getResource( "data/example/plugin_guidebook.xml" ), new File( getDataFolder(), "catalogs/" + DEFAULT_CATALOG_NAMESPACE + "/books/plugin_guidebook.xml" ), false );
 	}
 	
 	private void loadConfig() {
@@ -141,18 +146,21 @@ public class AbyssalChronicle extends JavaPlugin {
 		catalogUpdateInterval = config.getLong( "cache.update-interval", 10_000 );
 		
 		ConfigurationSection messages = config.getConfigurationSection( "messages" );
+		this.messages.clear();
 		for ( String key : messages.getKeys( true ) ) {
 			this.messages.put( key, messages.getString( key ) );
 		}
 	}
 	
 	public void reloadAssets() {
+		loadConfig();
 		loadAssets();
 	}
 	
 	private void loadAssets() {
 		fonts.clear();
 		if ( Files.exists( resourcePackPath ) ) {
+			getLogger().info( "Found resource pack!" );
 			try {
 				resourcePack = new ResourcePackZip( resourcePackPath );
 				
@@ -168,6 +176,8 @@ public class AbyssalChronicle extends JavaPlugin {
 			} catch ( IOException e ) {
 				e.printStackTrace();
 			}
+		} else {
+			getLogger().warning( "Resource pack not found!" );
 		}
 		
 		if ( !fonts.containsKey( "default" ) ) {

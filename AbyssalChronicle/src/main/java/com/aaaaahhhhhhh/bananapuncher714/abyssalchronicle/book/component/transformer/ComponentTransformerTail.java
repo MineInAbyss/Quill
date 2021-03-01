@@ -20,7 +20,7 @@ public class ComponentTransformerTail implements ComponentTransformer {
 		if ( component.isEndComponent() ) {
 			BookComponentTail tail = component.getAsEndComponent();
 			
-			System.out.print( String.format( "</%s>", tail.getHead().getTagName() ) );
+			System.out.println( "Reached the end of " + tail.getHead().getTagName() );
 		}
 		return false;
 	}

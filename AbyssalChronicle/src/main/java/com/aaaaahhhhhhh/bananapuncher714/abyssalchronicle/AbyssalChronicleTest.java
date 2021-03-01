@@ -1,7 +1,5 @@
 package com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle;
 
-import java.awt.Font;
-import java.awt.FontFormatException;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
@@ -57,15 +55,11 @@ import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.font.BananaFont;
 import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.font.BananaFontFactory;
 import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.font.BananaFontProvider;
 import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.font.BananaFontProviderBitmap;
-import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.font.BananaFontProviderNegativeSpace;
-import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.font.BananaFontProviderTTF;
 import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.font.MinecraftFontContainer;
 import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.resourcepack.ResourcePackZip;
 import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.resourcepack.font.FontIndex;
 import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.resourcepack.font.FontProvider;
 import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.resourcepack.font.FontProviderBitmap;
-import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.resourcepack.font.FontProviderLegacy;
-import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.resourcepack.font.FontProviderTTF;
 import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.style.IncludeSourceSupplierStyleSheet;
 import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.style.Style;
 import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.style.StyleParserXML;

@@ -4,6 +4,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.w3c.dom.Text;
 
 public class BookComponentParserXML implements BookComponentParser< Node > {
 	protected BookComponentParser< Node > parser;
@@ -31,13 +32,16 @@ public class BookComponentParserXML implements BookComponentParser< Node > {
 			NodeList subNodes = element.getChildNodes();
 			for ( int i = 0; i < subNodes.getLength(); i++ ) {
 				Node subNode = subNodes.item( i );
-				object.getSubElements().add( parser.parse( subNode ) );
+				BookComponent component = parser.parse( subNode );
+				if ( component != null ) {
+					object.getSubElements().add( component );
+				}
 			}
 			
 			return object;
-		} else {
-			// Not sure what it is, just convert it to a text component for now
+		} else if ( node instanceof Text ) {
 			return new BookComponentText( node.getTextContent() );
 		}
+		return null;
 	}
 }

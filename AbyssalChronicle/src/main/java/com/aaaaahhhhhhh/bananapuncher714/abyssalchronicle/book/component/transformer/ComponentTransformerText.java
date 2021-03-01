@@ -68,6 +68,7 @@ public class ComponentTransformerText implements ComponentTransformer, Consumer<
 				if ( fontStr != null ) {
 					textComponent.setFont( fontStr );
 				}
+
 				String colorStr = currentStyle.getValues().get( "color" );
 				if ( colorStr != null ) {
 					Optional< Color > optionalColor = ColorType.fromString( colorStr );

@@ -14,6 +14,6 @@ public class StyleFormatterComponentStrikethrough implements StyleFormatter< Boo
 		} else {
 			return false;
 		}
-		return false;
+		return true;
 	}
 }

@@ -68,7 +68,7 @@ The header and footer are automatically placed at the top and bottom, and the co
 Components are files that contain content which is copy and pasted automatically into books. They are stored under `components/` in the catalog directory. To be included in a book, they can be referenced by their path relative to the `components/` directory. Components can also be placed directly in the book file as well.
 
 ### Stylesheets
-Stylesheets can be used to format the contents of books and be reused. They can affect the formatting, inherit other styles, and contain properties which may be used by certain component transformers when building the book.
+Stylesheets can be used to format the contents of books and be reused. They can affect the formatting, inherit other styles, and contain properties which may be used by certain component transformers when building the book. Stylesheets are stored under `styles/` in the catalog directory.
 
 ### Formatting
 AbyssalChronicles comes with a few built in formatting features. It also supports [Minedown](https://github.com/Phoenix616/MineDown).

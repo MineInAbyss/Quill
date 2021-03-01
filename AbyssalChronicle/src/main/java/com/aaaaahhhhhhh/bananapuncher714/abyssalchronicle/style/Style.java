@@ -40,7 +40,7 @@ public class Style {
 	
 	public Style merge( Style other ) {
 		inherits.addAll( other.getParents() );
-		for ( Entry< String, String > entry : values.entrySet() ) {
+		for ( Entry< String, String > entry : other.values.entrySet() ) {
 			String key = entry.getKey();
 			if ( !values.containsKey( key ) ) {
 				values.put( key, entry.getValue() );

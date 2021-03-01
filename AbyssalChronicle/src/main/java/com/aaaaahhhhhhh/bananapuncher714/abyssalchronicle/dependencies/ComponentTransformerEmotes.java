@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.WeakHashMap;
+import java.util.regex.Pattern;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -24,7 +25,7 @@ import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.book.component.transfo
 import com.aaaaahhhhhhh.bananapuncher714.abyssalchronicle.catalog.CatalogBuildable;
 
 public class ComponentTransformerEmotes implements ComponentTransformer {
-	private static Map< String, Character > emotes;
+	private static Map< String, Character > EMOTES;
 	
 	static {
 		Plugin plugin = Bukkit.getPluginManager().getPlugin( "BondrewdLikesHisEmotes" );
@@ -34,13 +35,13 @@ public class ComponentTransformerEmotes implements ComponentTransformer {
 				emoteField = plugin.getClass().getDeclaredField( "emotes" );
 				emoteField.setAccessible( true );
 				
-				emotes = ( Map< String, Character > ) emoteField.get( plugin );
+				EMOTES = ( Map< String, Character > ) emoteField.get( plugin );
 			} catch ( NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e ) {
-				emotes = new HashMap< String, Character >();
+				EMOTES = new HashMap< String, Character >();
 				e.printStackTrace();
 			}
 		} else {
-			emotes = new HashMap< String, Character >();
+			EMOTES = new HashMap< String, Character >();
 		}
 	}
 	
@@ -51,14 +52,14 @@ public class ComponentTransformerEmotes implements ComponentTransformer {
 	
 	@Override
 	public boolean transform( List< BookPage > pages, BookComponent component, Deque< BookComponent > components ) {
-		if ( !emotes.isEmpty() ) {
+		if ( !EMOTES.isEmpty() ) {
 			if ( component.isTextComponent() ) {
 				BookComponentText text = component.getAsTextComponent();
 				if ( !processed.contains( text ) ) {
 					Deque< BookComponent > oldQueue = new ArrayDeque< BookComponent >();
 					oldQueue.add( text );
-					for ( Entry< String, Character > entry : emotes.entrySet() ) {
-						String key = String.format( ":%s:" , entry.getKey() );
+					for ( Entry< String, Character > entry : EMOTES.entrySet() ) {
+						String key = String.format( Pattern.quote( ":%s:" ), entry.getKey() );
 						
 						Deque< BookComponent > newQueue = new ArrayDeque< BookComponent >();
 						// Scan through each book component
@@ -66,7 +67,7 @@ public class ComponentTransformerEmotes implements ComponentTransformer {
 							if ( comp.isTextComponent() ) {
 								BookComponentText textComp = comp.getAsTextComponent();
 								String content = textComp.getText();
-								String[] notEmotes = content.split( "(?<!\\\\)" + key );
+								String[] notEmotes = content.split( "(?<!\\\\)" + key, -1 );
 								if ( notEmotes.length > 1 ) {
 									for ( int i = 0; i < notEmotes.length; i++ ) {
 										String plain = notEmotes[ i ];
@@ -84,11 +85,13 @@ public class ComponentTransformerEmotes implements ComponentTransformer {
 											BookComponentObject fontWrap = new BookComponentObject( "font" );
 											fontWrap.getSubElements().add( colorWrap );
 											
-											
 											BookComponentObject boldWrap = new BookComponentObject( "unbold" );
 											boldWrap.getSubElements().add( fontWrap );
 											
-											newQueue.add( boldWrap );
+											BookComponentObject underlineWrap = new BookComponentObject( "derline" );
+											underlineWrap.getSubElements().add( boldWrap );
+											
+											newQueue.add( underlineWrap );
 										}
 									}
 								} else {

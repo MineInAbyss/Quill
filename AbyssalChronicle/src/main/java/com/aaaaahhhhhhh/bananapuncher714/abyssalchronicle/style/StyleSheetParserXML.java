@@ -21,10 +21,6 @@ public class StyleSheetParserXML implements StyleSheetParser< Element > {
 		NodeList includesList = document.getElementsByTagName( "includes" );
 		for ( int i = 0; i < includesList.getLength(); i++ ) {
 			Node includes = includesList.item( i );
-			if ( includes instanceof Element ) {
-				Element includesElement = ( Element ) includes;
-				includesElement.getElementsByTagName( "include" );
-			}
 			NodeList includeList = includes.getChildNodes();
 			for ( int j = 0; j < includeList.getLength(); j++ ) {
 				Node include = includeList.item( j );

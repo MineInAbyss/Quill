@@ -347,7 +347,7 @@ public class CatalogBuildable extends Catalog implements Updateable {
 		
 		List< IncludeSourceSupplier< ? extends StyleSheet > > suppliers = styleIncludeSuppliers.stream().map( f -> f.apply( this ) ).collect( Collectors.toList() );
 		Deque< IncludeSource > includeQueue = new ArrayDeque< IncludeSource >( sources );
-
+		Set< IncludeSource > included = new HashSet< IncludeSource >();
 		while ( !includeQueue.isEmpty() ) {
 			IncludeSource source = includeQueue.poll();
 			for ( IncludeSourceSupplier< ? extends StyleSheet > supplier : suppliers ) {
@@ -355,6 +355,12 @@ public class CatalogBuildable extends Catalog implements Updateable {
 				if ( supplied != null && !sheetSet.contains( supplied ) ) {
 					sheets.add( supplied );
 					sheetSet.add( supplied );
+					
+					for ( IncludeSource newInclude : supplied.getIncludes() ) {
+						if ( included.add( newInclude ) ) {
+							includeQueue.add( newInclude );
+						}
+					}
 				}
 			}
 		}
@@ -368,6 +374,16 @@ public class CatalogBuildable extends Catalog implements Updateable {
 		Map< String, StyleSheet > sheetMap = new HashMap< String, StyleSheet >();
 		for ( StyleSheet sheet : sheets ) {
 			sheetMap.put( sheet.getId(), sheet );
+		}
+
+		Map< String, Style > allStyles = new HashMap< String, Style >();
+		for ( StyleSheet sheet : sheets ) {
+			for ( Entry< String, Style > entry: sheet.getStyles().entrySet() ) {
+				String id = entry.getKey();
+				if ( !allStyles.containsKey( id ) ) {
+					allStyles.put( id, entry.getValue() );
+				}
+			}
 		}
 		
 		// So, we have a list of stylesheets
@@ -394,6 +410,10 @@ public class CatalogBuildable extends Catalog implements Updateable {
 						}
 						
 						Style parentStyle = parentSheet.getStyles().get( styleId );
+						if ( parentStyle == null && sheetId == null ) {
+							parentStyle = allStyles.get( styleId );
+						}
+						
 						if ( parentStyle == null ) {
 							throw new NullPointerException( String.format( "Missing style '%s' from stylesheet '%s'!", styleId, parentSheet.getId() ) );
 						}
