@@ -39,13 +39,15 @@ public class ResourcePackZip extends ResourcePack {
 			zip.addElement( "pack.mcmeta", GSON.toJson( object ).getBytes(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.WRITE );
 		}
 		
-		for ( String path : zip.listElements( "assets/minecraft/font" ) ) {
-			if ( path.endsWith( ".json" ) ) {
-				JsonObject obj = GSON.fromJson( new InputStreamReader( zip.readElement( "assets/minecraft/font/" + path ), "UTF-8" ), JsonObject.class );
-				FontIndex font = new FontIndex( obj );
-				String fontName = path.substring( 0, path.length() - 5 );
-				
-				fonts.put( fontName, font );
+		if ( zip.contains( "assets/minecraft/font" ) ) {
+			for ( String path : zip.walkElements( "assets/minecraft/font" ) ) {
+				if ( path.endsWith( ".json" ) ) {
+					JsonObject obj = GSON.fromJson( new InputStreamReader( zip.readElement( "assets/minecraft/font/" + path ), "UTF-8" ), JsonObject.class );
+					FontIndex font = new FontIndex( obj );
+					String fontName = path.substring( 0, path.length() - 5 );
+					
+					fonts.put( fontName, font );
+				}
 			}
 		}
 	}

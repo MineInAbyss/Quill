@@ -7,7 +7,7 @@ import com.aaaaahhhhhhh.bananapuncher714.quill.api.TextTransformer;
 
 import me.clip.placeholderapi.PlaceholderAPI;
 
-public class TextTransformerPlaceholderAPI implements TextTransformer {
+public class TextTransformerPlaceholderAPI implements TextTransformer< String, String > {
 	@Override
 	public String transform( CommandSender sender, String text ) {
 		if ( sender instanceof OfflinePlayer ) {

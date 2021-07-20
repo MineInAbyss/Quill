@@ -12,6 +12,8 @@ import com.aaaaahhhhhhh.bananapuncher714.quill.book.component.BookComponentObjec
 import com.aaaaahhhhhhh.bananapuncher714.quill.catalog.CatalogBuildable;
 import com.aaaaahhhhhhh.bananapuncher714.quill.font.Space;
 
+import net.md_5.bungee.api.chat.TextComponent;
+
 public class ComponentTransformerNegativeSpaces implements ComponentTransformer {
 	public ComponentTransformerNegativeSpaces( CommandSender sender, CatalogBuildable cache, BookPart part ) {
 	}
@@ -24,13 +26,17 @@ public class ComponentTransformerNegativeSpaces implements ComponentTransformer 
 			if ( tagName.matches( "_add\\d+" ) ) {
 				int value = Integer.parseInt( tagName.substring( 4 ) );
 				
-				pages.get( pages.size() - 1 ).addNewComponent().setText( Space.getSpaceFor( value ) );
+				TextComponent spaceComp = pages.get( pages.size() - 1 ).addNewComponent();
+				spaceComp.setText( Space.getSpaceFor( value ) );
+				spaceComp.setFont( "gifs/space" );
 				
 				return true;
 			} else if ( tagName.matches( "_sub\\d+" ) ) {
 				int value = Integer.parseInt( tagName.substring( 4 ) );
 				
-				pages.get( pages.size() - 1 ).addNewComponent().setText( Space.getSpaceFor( -value ) );
+				TextComponent spaceComp = pages.get( pages.size() - 1 ).addNewComponent();
+				spaceComp.setText( Space.getSpaceFor( -value ) );
+				spaceComp.setFont( "gifs/space" );
 				
 				return true;
 			}

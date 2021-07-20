@@ -38,7 +38,7 @@ import com.aaaaahhhhhhh.bananapuncher714.quill.book.component.transformer.Compon
 import com.aaaaahhhhhhh.bananapuncher714.quill.book.component.transformer.ComponentTransformerFormat;
 import com.aaaaahhhhhhh.bananapuncher714.quill.book.component.transformer.ComponentTransformerHover;
 import com.aaaaahhhhhhh.bananapuncher714.quill.book.component.transformer.ComponentTransformerInsert;
-import com.aaaaahhhhhhh.bananapuncher714.quill.book.component.transformer.ComponentTransformerMineDown;
+import com.aaaaahhhhhhh.bananapuncher714.quill.book.component.transformer.TextTransformerMineDown;
 import com.aaaaahhhhhhh.bananapuncher714.quill.book.component.transformer.ComponentTransformerNegativeSpaces;
 import com.aaaaahhhhhhh.bananapuncher714.quill.book.component.transformer.ComponentTransformerText;
 import com.aaaaahhhhhhh.bananapuncher714.quill.book.component.transformer.StyleSupplierConsumingComponentTransformerSupplier;
@@ -52,7 +52,7 @@ import com.aaaaahhhhhhh.bananapuncher714.quill.catalog.CatalogBuildable;
 import com.aaaaahhhhhhh.bananapuncher714.quill.catalog.CatalogCallbackPlugin;
 import com.aaaaahhhhhhh.bananapuncher714.quill.command.CommandBook;
 import com.aaaaahhhhhhh.bananapuncher714.quill.configuration.YamlMerger;
-import com.aaaaahhhhhhh.bananapuncher714.quill.dependencies.ComponentTransformerEmotes;
+import com.aaaaahhhhhhh.bananapuncher714.quill.dependencies.TextTransformerEmotes;
 import com.aaaaahhhhhhh.bananapuncher714.quill.dependencies.TextTransformerPlaceholderAPI;
 import com.aaaaahhhhhhh.bananapuncher714.quill.font.BananaFont;
 import com.aaaaahhhhhhh.bananapuncher714.quill.font.BananaFontFactory;
@@ -86,7 +86,6 @@ public class Quill extends JavaPlugin {
 	private long catalogUpdateInterval;
 	
 	private Path resourcePackPath;
-	private ResourcePackZip resourcePack;
 	private Map< String, BananaFont > fonts = new HashMap< String, BananaFont >();
 	
 	private CommandBook command;
@@ -95,7 +94,7 @@ public class Quill extends JavaPlugin {
 	
 	@Override
 	public void onEnable() {
-		if ( !getDataFolder().exists() ) {
+		if ( !new File( getDataFolder(), "README.md" ).exists() ) {
 			initialize();
 		}
 		
@@ -164,33 +163,39 @@ public class Quill extends JavaPlugin {
 	}
 	
 	private void loadAssets() {
-		fonts.clear();
-		if ( Files.exists( resourcePackPath ) ) {
-			getLogger().info( "Found resource pack!" );
-			try {
-				resourcePack = new ResourcePackZip( resourcePackPath );
-				
-				for ( Entry< String, FontIndex > entry : resourcePack.getFonts().entrySet() ) {
-					BananaFont font = BananaFontFactory.constructFrom( resourcePack, entry.getValue() );
+		Bukkit.getScheduler().runTaskAsynchronously( this , () -> {
+			if ( Files.exists( resourcePackPath ) ) {
+				getLogger().info( "Found resource pack!" );
+				Map< String, BananaFont > fonts = new HashMap< String, BananaFont >();
+				try  {
+					ResourcePackZip resourcePack = new ResourcePackZip( resourcePackPath );
 					
-					enhanceFont( font );
+					for ( Entry< String, FontIndex > entry : resourcePack.getFonts().entrySet() ) {
+						BananaFont font = BananaFontFactory.constructFrom( resourcePack, entry.getValue() );
+						
+						enhanceFont( font );
+						
+						fonts.put( entry.getKey(), font );
+					}
 					
-					fonts.put( entry.getKey(), font );
+					resourcePack.close();
+				} catch ( IOException e ) {
+					e.printStackTrace();
 				}
 				
-				resourcePack.close();
-			} catch ( IOException e ) {
-				e.printStackTrace();
+				Bukkit.getScheduler().runTask( this, () -> {
+					this.fonts.clear();
+					this.fonts.putAll( fonts );
+					if ( !this.fonts.containsKey( "default" ) ) {
+						BananaFont font = new BananaFont();
+						enhanceFont( font );
+						this.fonts.put( "default", font );
+					}
+				} );
+			} else {
+				getLogger().warning( "Resource pack not found!" );
 			}
-		} else {
-			getLogger().warning( "Resource pack not found!" );
-		}
-		
-		if ( !fonts.containsKey( "default" ) ) {
-			BananaFont font = new BananaFont();
-			enhanceFont( font );
-			fonts.put( "default", font );
-		}
+		} );
 	}
 	
 	private void loadLibrary() {
@@ -233,7 +238,6 @@ public class Quill extends JavaPlugin {
 		catalog.getTransformers().add( ComponentTransformerInsert::new );
 		catalog.getTransformers().add( formatSupplier );
 		catalog.getTransformers().add( styleSupplier );
-		catalog.getTransformers().add( ComponentTransformerEmotes::new );
 		catalog.getTransformers().add( ( sender, catalog, part ) ->  {
 			ComponentTransformerText textTransformer = textSupplier.createTransformer( sender, catalog, part );
 			
@@ -242,9 +246,13 @@ public class Quill extends JavaPlugin {
 				textTransformer.addTextTransformer( new TextTransformerPlaceholderAPI() );
 			}
 			
+			textTransformer.addComponentTransformer( new TextTransformerMineDown() );
+			if ( Bukkit.getPluginManager().isPluginEnabled( "BondrewdLikesHisEmotes" ) ) {
+				textTransformer.addComponentTransformer( new TextTransformerEmotes() );
+			}
+			
 			return textTransformer;
 		} );
-		catalog.getTransformers().add( ComponentTransformerMineDown::new );
 		catalog.getTransformers().add( ComponentTransformerNegativeSpaces::new );
 //		catalog.getTransformers().add( ComponentTransformerTail::new );
 		

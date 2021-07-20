@@ -33,5 +33,4 @@ public class InputValidatorArguments implements InputValidator< Void > {
 	public Void get( CommandSender sender, String input[] ) {
 		return null;
 	}
-
 }

@@ -20,11 +20,13 @@ import com.aaaaahhhhhhh.bananapuncher714.quill.catalog.CatalogBuildable;
 import com.aaaaahhhhhhh.bananapuncher714.quill.style.Style;
 
 import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
 
 public class ComponentTransformerText implements ComponentTransformer, Consumer< Supplier< ? extends ComponentTransformerStyle > > {
 	private Supplier< ? extends ComponentTransformerStyle > styleSupplier;
-	private List< TextTransformer > transformers = new ArrayList< TextTransformer >();
+	private List< TextTransformer< String, String > > transformers = new ArrayList< TextTransformer< String, String > >();
+	private List< TextTransformer< TextComponent, TextComponent[] > > componentTransformers = new ArrayList< TextTransformer< TextComponent, TextComponent[] > >();
 	private CommandSender sender;
 	
 	public ComponentTransformerText( CommandSender sender, CatalogBuildable cache, BookPart part ) {
@@ -36,59 +38,88 @@ public class ComponentTransformerText implements ComponentTransformer, Consumer<
 		if ( component instanceof BookComponentText ) {
 			BookComponentText text = component.getAsTextComponent();
 			String content = text.getText();
-			for ( TextTransformer transformer : transformers ) {
+			for ( TextTransformer< String, String > transformer : transformers ) {
 				content = transformer.transform( sender, content );
 			}
 			TextComponent textComponent = new TextComponent( content );
-			pages.get( pages.size() - 1 ).getComponents().add( textComponent );
-			
 			Style currentStyle = styleSupplier.get().getCurrentStyle();
-			if ( currentStyle != null ) {
-				String boldStr = currentStyle.getValues().get( "bold" );
-				if ( boldStr != null ) {
-					textComponent.setBold( Boolean.valueOf( boldStr ) );
-				}
-				String italicStr = currentStyle.getValues().get( "italic" );
-				if ( italicStr != null ) {
-					textComponent.setItalic( Boolean.valueOf( italicStr ) );
-				}
-				String underStr = currentStyle.getValues().get( "underline" );
-				if ( underStr != null ) {
-					textComponent.setUnderlined( Boolean.valueOf( underStr ) );
-				}
-				String magicStr = currentStyle.getValues().get( "magic" );
-				if ( magicStr != null ) {
-					textComponent.setObfuscated( Boolean.valueOf( magicStr ) );
-				}
-				String strikeStr = currentStyle.getValues().get( "strikethrough" );
-				if ( strikeStr != null ) {
-					textComponent.setStrikethrough( Boolean.valueOf( strikeStr ) );
-				}
-				String fontStr = currentStyle.getValues().get( "font" );
-				if ( fontStr != null ) {
-					textComponent.setFont( fontStr );
-				}
-
-				String colorStr = currentStyle.getValues().get( "color" );
-				if ( colorStr != null ) {
-					Optional< Color > optionalColor = ColorType.fromString( colorStr );
-					if ( !optionalColor.isPresent() ) {
-						throw new IllegalArgumentException( String.format( "Cannot convert '%s' to a color!", colorStr ) );
+			applyStyle( currentStyle, textComponent );
+			
+			List< TextComponent > textComponents = new ArrayList< TextComponent >();
+			textComponents.add( textComponent );
+			for ( TextTransformer< TextComponent, TextComponent[] > componentTransformer : componentTransformers ) {
+				List< TextComponent > additional = new ArrayList< TextComponent >();
+				for ( TextComponent sub : textComponents ) {
+					for ( TextComponent res : componentTransformer.transform( sender, sub ) ) {
+						additional.add( res );
 					}
-					textComponent.setColor( ChatColor.of( optionalColor.get() ) );
 				}
+				textComponents = additional;
+			}
+			
+			for ( TextComponent parsed : textComponents ) {
+				applyStyle( currentStyle, parsed );
+				pages.get( pages.size() - 1 ).getComponents().add( parsed );
 			}
 		}
 		
 		return false;
 	}
 
-	public void addTextTransformer( TextTransformer transformer ) {
+	public void addTextTransformer( TextTransformer< String, String > transformer ) {
 		transformers.add( transformer );
+	}
+	
+	public void addComponentTransformer( TextTransformer< TextComponent, TextComponent[] > transformer ) {
+		componentTransformers.add( transformer );
 	}
 	
 	@Override
 	public void accept( Supplier< ? extends ComponentTransformerStyle > supplier ) {
 		styleSupplier = supplier;
+	}
+	
+	private void applyStyle( Style style, BaseComponent component ) {
+		if ( style != null ) {
+			String boldStr = style.getValues().get( "bold" );
+			if ( boldStr != null && component.isBoldRaw() == null ) {
+				component.setBold( Boolean.valueOf( boldStr ) );
+			}
+			String italicStr = style.getValues().get( "italic" );
+			if ( italicStr != null && component.isItalicRaw() == null ) {
+				component.setItalic( Boolean.valueOf( italicStr ) );
+			}
+			String underStr = style.getValues().get( "underline" );
+			if ( underStr != null && component.isUnderlinedRaw() == null ) {
+				component.setUnderlined( Boolean.valueOf( underStr ) );
+			}
+			String magicStr = style.getValues().get( "magic" );
+			if ( magicStr != null && component.isObfuscatedRaw() == null ) {
+				component.setObfuscated( Boolean.valueOf( magicStr ) );
+			}
+			String strikeStr = style.getValues().get( "strikethrough" );
+			if ( strikeStr != null && component.isStrikethroughRaw() == null ) {
+				component.setStrikethrough( Boolean.valueOf( strikeStr ) );
+			}
+			String fontStr = style.getValues().get( "font" );
+			if ( fontStr != null && component.getFontRaw() == null ) {
+				component.setFont( fontStr );
+			}
+
+			String colorStr = style.getValues().get( "color" );
+			if ( colorStr != null && component.getColorRaw() == null ) {
+				Optional< Color > optionalColor = ColorType.fromString( colorStr );
+				if ( !optionalColor.isPresent() ) {
+					throw new IllegalArgumentException( String.format( "Cannot convert '%s' to a color!", colorStr ) );
+				}
+				component.setColor( ChatColor.of( optionalColor.get() ) );
+			}
+			
+			if ( component.getExtra() != null ) {
+				for ( BaseComponent extra : component.getExtra() ) {
+					applyStyle( style, extra );
+				}
+			}
+		}
 	}
 }

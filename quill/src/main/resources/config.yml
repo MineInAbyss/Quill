@@ -3,7 +3,7 @@
 ########################
 
 # The location of the resource pack relative to the plugin directory
-resource-pack: "resource-pack.zip"
+resource-pack: "resourcepack.zip"
 
 # The cache of components, books and stylesheets
 cache:

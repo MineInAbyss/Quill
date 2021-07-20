@@ -74,6 +74,15 @@ public class ZipWrapper {
 		Files.copy( external, internal, options );
 	}
 	
+	public void addElement( String path, Path file, CopyOption... options ) throws IOException {
+		FileSystem zipfs = getZipfs();
+		Path internal = zipfs.getPath( path );
+		if ( internal.getParent() != null ) {
+			Files.createDirectories( internal.getParent() );
+		}
+		Files.copy( file, internal, options );
+	}
+	
 	public InputStream readElement( String path, OpenOption... options  ) throws IOException {
 		FileSystem zipfs = getZipfs();
 		Path internal = zipfs.getPath( path );
@@ -112,6 +121,23 @@ public class ZipWrapper {
 			for ( Path file: Files.newDirectoryStream( internal ) ) {
 				files.add( file.getFileName().toString() );
 			}
+			return files;
+		}
+		return null;
+	}
+	
+	public List< String > walkElements( String path ) throws IOException {
+		FileSystem zipfs = getZipfs();
+		Path internal = zipfs.getPath( path );
+		if ( internal != null ) {
+			if ( !Files.exists( internal ) ) {
+				return null;
+			}
+			List< String > files = new ArrayList< String >();
+			Files.walk( internal ).forEach( file -> {
+				files.add( internal.relativize( file ).toString() );
+			} );
+				
 			return files;
 		}
 		return null;
