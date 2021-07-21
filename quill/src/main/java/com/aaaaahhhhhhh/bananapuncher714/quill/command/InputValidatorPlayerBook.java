@@ -19,12 +19,12 @@ public class InputValidatorPlayerBook implements InputValidator< PlayerBookPair 
 	private InputValidator< ? extends Player > playerValidator;
 	private InputValidator< ? extends NamespacedKey > namespaceValidator;
 	
-	public InputValidatorPlayerBook( String defaultCatalogId, Supplier< Library > supplier ) {
+	public InputValidatorPlayerBook( String defaultCatalogId, Supplier< Library > supplier, boolean usePerms ) {
 		this.defaultCatalogId = defaultCatalogId;
 		librarySupplier = supplier;
 		
 		playerValidator = new InputValidatorPlayer();
-		namespaceValidator = new InputValidatorBook( this.defaultCatalogId, librarySupplier );
+		namespaceValidator = new InputValidatorBook( this.defaultCatalogId, librarySupplier, usePerms );
 	}
 	
 	@Override

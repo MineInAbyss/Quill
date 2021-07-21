@@ -40,6 +40,7 @@ import com.aaaaahhhhhhh.bananapuncher714.quill.book.component.transformer.Compon
 import com.aaaaahhhhhhh.bananapuncher714.quill.book.component.transformer.ComponentTransformerInsert;
 import com.aaaaahhhhhhh.bananapuncher714.quill.book.component.transformer.TextTransformerMineDown;
 import com.aaaaahhhhhhh.bananapuncher714.quill.book.component.transformer.ComponentTransformerNegativeSpaces;
+import com.aaaaahhhhhhh.bananapuncher714.quill.book.component.transformer.ComponentTransformerRedirect;
 import com.aaaaahhhhhhh.bananapuncher714.quill.book.component.transformer.ComponentTransformerText;
 import com.aaaaahhhhhhh.bananapuncher714.quill.book.component.transformer.StyleSupplierConsumingComponentTransformerSupplier;
 import com.aaaaahhhhhhh.bananapuncher714.quill.book.component.transformer.format.StyleFormatterComponentBold;
@@ -191,6 +192,7 @@ public class Quill extends JavaPlugin {
 						enhanceFont( font );
 						this.fonts.put( "default", font );
 					}
+					getLogger().info( "Done loading the resource pack!" );
 				} );
 			} else {
 				getLogger().warning( "Resource pack not found!" );
@@ -232,6 +234,7 @@ public class Quill extends JavaPlugin {
 		}, styleSupplier );
 		
 		catalog.getTransformers().add( ComponentTransformerBreak::new );
+		catalog.getTransformers().add( ComponentTransformerRedirect::new );
 		catalog.getTransformers().add( ComponentTransformerExpand::new );
 		catalog.getTransformers().add( hoverSupplier );
 		catalog.getTransformers().add( ComponentTransformerClick::new );

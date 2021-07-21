@@ -18,6 +18,10 @@ import net.md_5.bungee.api.chat.ClickEvent.Action;
 import net.md_5.bungee.api.chat.TextComponent;
 
 public class ComponentTransformerClick implements ComponentTransformer {
+	public static final String ID = "click";
+	public static final String ACTION = "action";
+	public static final String VALUE = "value";
+	
 	private BookComponentObject currentComponent;
 	private List< BookPage > oldPages;
 	private ClickEvent clickEvent;
@@ -29,7 +33,7 @@ public class ComponentTransformerClick implements ComponentTransformer {
 	public boolean transform( List< BookPage > pages, BookComponent component, Deque< BookComponent > components ) {
 		if ( component.isObjectComponent() && currentComponent == null ) {
 			BookComponentObject object = component.getAsObjectComponent();
-			if ( object.getTagName().equalsIgnoreCase( "click" ) ) {
+			if ( object.getTagName().equalsIgnoreCase( ID ) ) {
 				currentComponent = object;
 
 				// Clear and re-fill the current list of pages
@@ -40,15 +44,15 @@ public class ComponentTransformerClick implements ComponentTransformer {
 				
 				// Set the current click actions
 				Action action;
-				if ( object.getAttributes().containsKey( "action" ) ) {
-					action = Action.valueOf( object.getAttributes().get( "action" ) );
+				if ( object.getAttributes().containsKey( ACTION ) ) {
+					action = Action.valueOf( object.getAttributes().get( ACTION ) );
 				} else {
 					throw new NullPointerException( "Missing click event action!" );
 				}
 				
 				String option;
-				if ( object.getAttributes().containsKey( "value" ) ) {
-					option = object.getAttributes().get( "value" );
+				if ( object.getAttributes().containsKey( VALUE ) ) {
+					option = object.getAttributes().get( VALUE );
 				} else {
 					throw new NullPointerException( "Missing click event value!" );
 				}

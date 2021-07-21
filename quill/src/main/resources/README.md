@@ -33,6 +33,7 @@ A flexible and expandable system for creating Minecraft books.
 - `quill.book.command.set`
 - `quill.book.command.setother`
 - `quill.book.command.unset`
+- `quill.book.read.<catalog>.<id>`
 
 ## How to create a book
 ### Catalogs

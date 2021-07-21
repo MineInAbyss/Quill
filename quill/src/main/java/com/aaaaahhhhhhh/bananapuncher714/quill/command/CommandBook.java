@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -48,24 +49,24 @@ public class CommandBook {
 	
 	private void applyToCommand() {
 		this.command = new SubCommand( "book" )
-				.addSenderValidator( new SenderValidatorPermission( "abyssalchronicle.book.command" ) )
+				.addSenderValidator( new SenderValidatorPermission( "quill.book.command" ) )
 				.add( new SubCommand( "update" )
-						.addSenderValidator( new SenderValidatorPermission( "abyssalchronicle.book.command.update" ) )
+						.addSenderValidator( new SenderValidatorPermission( "quill.book.command.update" ) )
 						.whenUnknown( new CommandExecutableMessage( ChatColor.RED + "Usage: /book update" ) )
 						.defaultTo( this::update ) )
 				.add( new SubCommand( "updateassets" )
-						.addSenderValidator( new SenderValidatorPermission( "abyssalchronicle.book.command.updateassets" ) )
+						.addSenderValidator( new SenderValidatorPermission( "quill.book.command.updateassets" ) )
 						.whenUnknown( new CommandExecutableMessage( ChatColor.RED + "Usage: /book updateassets" ) )
 						.defaultTo( this::updateAssets ) )
 				.add( new SubCommand( "list" )
-						.addSenderValidator( new SenderValidatorPermission( "abyssalchronicle.book.command.list" ) )
+						.addSenderValidator( new SenderValidatorPermission( "quill.book.command.list" ) )
 						.addSenderValidator( new SenderValidatorPlayer() )
 						.add( new SubCommand( new InputValidatorPlayer() )
-								.addSenderValidator( new SenderValidatorPermission( "abyssalchronicle.book.command.list.other" ) )
+								.addSenderValidator( new SenderValidatorPermission( "quill.book.command.list.other" ) )
 								.whenUnknown( new CommandExecutableMessage( ChatColor.RED + "Usage: /book list [player]" ) )
 								.defaultTo( this::listOther ) )
 						.whenUnknown( ( sender, args, parameters ) -> {
-							if ( sender.hasPermission( "abyssalchronicle.book.command.list.other" ) ) {
+							if ( sender.hasPermission( "quill.book.command.list.other" ) ) {
 								sender.sendMessage( ChatColor.RED + "Invalid player!" );
 							} else {
 								sender.sendMessage( ChatColor.RED + "Usage: /book list" );
@@ -73,24 +74,24 @@ public class CommandBook {
 						} )
 						.defaultTo( this::list ) )
 				.add( new SubCommand( "list" )
-						.addSenderValidator( new SenderValidatorPermission( "abyssalchronicle.book.command.list" ) )
+						.addSenderValidator( new SenderValidatorPermission( "quill.book.command.list" ) )
 						.addSenderValidator( new SenderValidatorNotPlayer() )
 						.add( new SubCommand( new InputValidatorPlayer() )
-								.addSenderValidator( new SenderValidatorPermission( "abyssalchronicle.book.command.list.other" ) )
+								.addSenderValidator( new SenderValidatorPermission( "quill.book.command.list.other" ) )
 								.whenUnknown( new CommandExecutableMessage( ChatColor.RED + "Usage: /book list <player>" ) )
 								.defaultTo( this::listOther ) )
 						.whenUnknown( INVALID_PLAYER )
 						.defaultTo( new CommandExecutableMessage( ChatColor.RED + "Usage: /book list <player>" ) ) )
 				.add( new SubCommand( "read" )
-						.addSenderValidator( new SenderValidatorPermission( "abyssalchronicle.book.command.read" ) )
+						.addSenderValidator( new SenderValidatorPermission( "quill.book.command.read" ) )
 						.addSenderValidator( new SenderValidatorPlayer() )
-						.add( new SubCommand( new InputValidatorBook( Quill.DEFAULT_CATALOG_NAMESPACE, plugin::getLibrary ) )
+						.add( new SubCommand( new InputValidatorBook( Quill.DEFAULT_CATALOG_NAMESPACE, plugin::getLibrary, true ) )
 								.add( new SubCommand( new InputValidatorPlayer() )
-										.addSenderValidator( new SenderValidatorPermission( "abyssalchronicle.book.command.read.other" ) )
+										.addSenderValidator( new SenderValidatorPermission( "quill.book.command.read.other" ) )
 										.whenUnknown( new CommandExecutableMessage( ChatColor.RED + "Usage: /book read <book> [player]" ) )
 										.defaultTo( this::readForOtherWithSelf ) )
 								.whenUnknown( ( sender, args, parameters ) -> {
-									if ( sender.hasPermission( "abyssalchronicle.book.command.read.other" ) ) {
+									if ( sender.hasPermission( "quill.book.command.read.other" ) ) {
 										sender.sendMessage( ChatColor.RED + "Invalid player!" );
 									} else {
 										sender.sendMessage( ChatColor.RED + "Usage: /book read <book>" );
@@ -99,22 +100,22 @@ public class CommandBook {
 								.defaultTo( this::readForSelf ) )
 						.whenUnknown( new CommandExecutableMessage( ChatColor.RED + "Invalid book!" ) )
 						.defaultTo( ( sender, args, parameters ) -> {
-							if ( sender.hasPermission( "abyssalchronicle.book.command.read.other" ) ) {
+							if ( sender.hasPermission( "quill.book.command.read.other" ) ) {
 								sender.sendMessage( ChatColor.RED + "Usage: /book read <book> [player]" );
 							} else {
 								sender.sendMessage( ChatColor.RED + "Usage: /book read <book>" );
 							}
 						} ) )
 				.add( new SubCommand( "readother" )
-						.addSenderValidator( new SenderValidatorPermission( "abyssalchronicle.book.command.readother" ) )
+						.addSenderValidator( new SenderValidatorPermission( "quill.book.command.readother" ) )
 						.addSenderValidator( new SenderValidatorPlayer() )
-						.add( new SubCommand( new InputValidatorPlayerBook( Quill.DEFAULT_CATALOG_NAMESPACE, plugin::getLibrary ) )
+						.add( new SubCommand( new InputValidatorPlayerBook( Quill.DEFAULT_CATALOG_NAMESPACE, plugin::getLibrary, false ) )
 								.add( new SubCommand( new InputValidatorPlayer() )
-										.addSenderValidator( new SenderValidatorPermission( "abyssalchronicle.book.command.readother.other" ) )
+										.addSenderValidator( new SenderValidatorPermission( "quill.book.command.readother.other" ) )
 										.whenUnknown( new CommandExecutableMessage( ChatColor.RED + "Usage: /book readother <player> <book> [player]" ) )
 										.defaultTo( this::readForOtherWithOther ) )
 								.whenUnknown( ( sender, args, parameters ) -> {
-									if ( sender.hasPermission( "abyssalchronicle.book.command.readother.other" ) ) {
+									if ( sender.hasPermission( "quill.book.command.readother.other" ) ) {
 										sender.sendMessage( ChatColor.RED + "Invalid player!" );
 									} else {
 										sender.sendMessage( ChatColor.RED + "Usage: /book readother <player> <book>" );
@@ -123,22 +124,22 @@ public class CommandBook {
 								.defaultTo( this::readForSelfWithOther ) )
 						.whenUnknown( new CommandExecutableMessage( ChatColor.RED + "Invalid player or book!" ) )
 						.defaultTo( ( sender, args, parameters ) -> {
-							if ( sender.hasPermission( "abyssalchronicle.book.command.readother.other" ) ) {
+							if ( sender.hasPermission( "quill.book.command.readother.other" ) ) {
 								sender.sendMessage( ChatColor.RED + "Usage: /book readother <player> <book> [player]" );
 							} else {
 								sender.sendMessage( ChatColor.RED + "Usage: /book readother <player> <book>" );
 							}
 						} ) )
 				.add( new SubCommand( "openfor" )
-						.addSenderValidator( new SenderValidatorPermission( "abyssalchronicle.book.command.openfor" ) )
+						.addSenderValidator( new SenderValidatorPermission( "quill.book.command.openfor" ) )
 						.addSenderValidator( new SenderValidatorNotPlayer() )
-						.add( new SubCommand( new InputValidatorPlayerBook( Quill.DEFAULT_CATALOG_NAMESPACE, plugin::getLibrary ) )
+						.add( new SubCommand( new InputValidatorPlayerBook( Quill.DEFAULT_CATALOG_NAMESPACE, plugin::getLibrary, false ) )
 								.add( new SubCommand( new InputValidatorPlayer() )
-										.addSenderValidator( new SenderValidatorPermission( "abyssalchronicle.book.command.openfor.other" ) )
+										.addSenderValidator( new SenderValidatorPermission( "quill.book.command.openfor.other" ) )
 										.whenUnknown( new CommandExecutableMessage( ChatColor.RED + "Usage: /book openfor <player> <book> [player]" ) )
 										.defaultTo( this::readForOtherWithOther ) )
 								.whenUnknown( ( sender, args, parameters ) -> {
-									if ( sender.hasPermission( "abyssalchronicle.book.command.openfor.other" ) ) {
+									if ( sender.hasPermission( "quill.book.command.openfor.other" ) ) {
 										sender.sendMessage( ChatColor.RED + "Invalid player!" );
 									} else {
 										sender.sendMessage( ChatColor.RED + "Usage: /book openfor <player> <book>" );
@@ -147,22 +148,22 @@ public class CommandBook {
 								.defaultTo( this::readFromConsole ) )
 						.whenUnknown( new CommandExecutableMessage( ChatColor.RED + "Invalid player or book!" ) )
 						.defaultTo( ( sender, args, parameters ) -> {
-							if ( sender.hasPermission( "abyssalchronicle.book.command.openfor.other" ) ) {
+							if ( sender.hasPermission( "quill.book.command.openfor.other" ) ) {
 								sender.sendMessage( ChatColor.RED + "Usage: /book openfor <player> <book> [player]" );
 							} else {
 								sender.sendMessage( ChatColor.RED + "Usage: /book openfor <player> <book>" );
 							}
 						} ) )
 				.add( new SubCommand( "give" )
-						.addSenderValidator( new SenderValidatorPermission( "abyssalchronicle.book.command.give" ) )
+						.addSenderValidator( new SenderValidatorPermission( "quill.book.command.give" ) )
 						.addSenderValidator( new SenderValidatorPlayer() )
-						.add( new SubCommand( new InputValidatorBook( Quill.DEFAULT_CATALOG_NAMESPACE, plugin::getLibrary ) )
+						.add( new SubCommand( new InputValidatorBook( Quill.DEFAULT_CATALOG_NAMESPACE, plugin::getLibrary, false ) )
 								.add( new SubCommand( new InputValidatorPlayer() )
-										.addSenderValidator( new SenderValidatorPermission( "abyssalchronicle.book.command.give.other" ) )
+										.addSenderValidator( new SenderValidatorPermission( "quill.book.command.give.other" ) )
 										.whenUnknown( new CommandExecutableMessage( ChatColor.RED + "Usage: /book give <book> [player]" ) )
 										.defaultTo( this::giveToOtherFromSelf ) )
 								.whenUnknown( ( sender, args, parameters ) -> {
-									if ( sender.hasPermission( "abyssalchronicle.book.command.give.other" ) ) {
+									if ( sender.hasPermission( "quill.book.command.give.other" ) ) {
 										sender.sendMessage( ChatColor.RED + "Invalid player!" );
 									} else {
 										sender.sendMessage( ChatColor.RED + "Usage: /book give <book>" );
@@ -171,22 +172,22 @@ public class CommandBook {
 								.defaultTo( this::giveSelf ) )
 						.whenUnknown( new CommandExecutableMessage( ChatColor.RED + "Invalid book!" ) )
 						.defaultTo( ( sender, args, parameters ) -> {
-							if ( sender.hasPermission( "abyssalchronicle.book.command.give.other" ) ) {
+							if ( sender.hasPermission( "quill.book.command.give.other" ) ) {
 								sender.sendMessage( ChatColor.RED + "Usage: /book give <book> [player]" );
 							} else {
 								sender.sendMessage( ChatColor.RED + "Usage: /book give <book>" );
 							}
 						} ) )
 				.add( new SubCommand( "giveother" )
-						.addSenderValidator( new SenderValidatorPermission( "abyssalchronicle.book.command.giveother" ) )
+						.addSenderValidator( new SenderValidatorPermission( "quill.book.command.giveother" ) )
 						.addSenderValidator( new SenderValidatorPlayer() )
-						.add( new SubCommand( new InputValidatorPlayerBook( Quill.DEFAULT_CATALOG_NAMESPACE, plugin::getLibrary ) )
+						.add( new SubCommand( new InputValidatorPlayerBook( Quill.DEFAULT_CATALOG_NAMESPACE, plugin::getLibrary, false ) )
 								.add( new SubCommand( new InputValidatorPlayer() )
-										.addSenderValidator( new SenderValidatorPermission( "abyssalchronicle.book.command.giveother.other" ) )
+										.addSenderValidator( new SenderValidatorPermission( "quill.book.command.giveother.other" ) )
 										.whenUnknown( new CommandExecutableMessage( ChatColor.RED + "Usage: /book giveother <player> <book> [player]" ) )
 										.defaultTo( this::giveToOtherFromOther ) )
 								.whenUnknown( ( sender, args, parameters ) -> {
-									if ( sender.hasPermission( "abyssalchronicle.book.command.giveother.other" ) ) {
+									if ( sender.hasPermission( "quill.book.command.giveother.other" ) ) {
 										sender.sendMessage( ChatColor.RED + "Invalid player!" );
 									} else {
 										sender.sendMessage( ChatColor.RED + "Usage: /book giveother <player> <book>" );
@@ -195,22 +196,22 @@ public class CommandBook {
 								.defaultTo( this::giveToSelfFromOther ) )
 						.whenUnknown( new CommandExecutableMessage( ChatColor.RED + "Invalid player or book!" ) )
 						.defaultTo( ( sender, args, parameters ) -> {
-							if ( sender.hasPermission( "abyssalchronicle.book.command.giveother.other" ) ) {
+							if ( sender.hasPermission( "quill.book.command.giveother.other" ) ) {
 								sender.sendMessage( ChatColor.RED + "Usage: /book giveother <player> <book> [player]" );
 							} else {
 								sender.sendMessage( ChatColor.RED + "Usage: /book giveother <player> <book>" );
 							}
 						} ) )
 				.add( new SubCommand( "give" )
-						.addSenderValidator( new SenderValidatorPermission( "abyssalchronicle.book.command.give" ) )
+						.addSenderValidator( new SenderValidatorPermission( "quill.book.command.give" ) )
 						.addSenderValidator( new SenderValidatorNotPlayer() )
-						.add( new SubCommand( new InputValidatorPlayerBook( Quill.DEFAULT_CATALOG_NAMESPACE, plugin::getLibrary ) )
+						.add( new SubCommand( new InputValidatorPlayerBook( Quill.DEFAULT_CATALOG_NAMESPACE, plugin::getLibrary, false ) )
 								.add( new SubCommand( new InputValidatorPlayer() )
-										.addSenderValidator( new SenderValidatorPermission( "abyssalchronicle.book.command.give.other" ) )
+										.addSenderValidator( new SenderValidatorPermission( "quill.book.command.give.other" ) )
 										.whenUnknown( new CommandExecutableMessage( ChatColor.RED + "Usage: /book give <player> <book> [player]" ) )
 										.defaultTo( this::giveToOtherFromOther ) )
 								.whenUnknown( ( sender, args, parameters ) -> {
-									if ( sender.hasPermission( "abyssalchronicle.book.command.give.other" ) ) {
+									if ( sender.hasPermission( "quill.book.command.give.other" ) ) {
 										sender.sendMessage( ChatColor.RED + "Invalid player!" );
 									} else {
 										sender.sendMessage( ChatColor.RED + "Usage: /book give <player> <book>" );
@@ -219,30 +220,30 @@ public class CommandBook {
 								.defaultTo( this::giveFromConsole ) )
 						.whenUnknown( new CommandExecutableMessage( ChatColor.RED + "Invalid player or book!" ) )
 						.defaultTo( ( sender, args, parameters ) -> {
-							if ( sender.hasPermission( "abyssalchronicle.book.command.give.other" ) ) {
+							if ( sender.hasPermission( "quill.book.command.give.other" ) ) {
 								sender.sendMessage( ChatColor.RED + "Usage: /book give <player> <book> [player]" );
 							} else {
 								sender.sendMessage( ChatColor.RED + "Usage: /book give <player> <book>" );
 							}
 						} ) )
 				.add( new SubCommand( "set" )
-						.addSenderValidator( new SenderValidatorPermission( "abyssalchronicle.book.command.set" ) )
+						.addSenderValidator( new SenderValidatorPermission( "quill.book.command.set" ) )
 						.addSenderValidator( new SenderValidatorPlayer() )
-						.add( new SubCommand( new InputValidatorBook( Quill.DEFAULT_CATALOG_NAMESPACE, plugin::getLibrary ) )
+						.add( new SubCommand( new InputValidatorBook( Quill.DEFAULT_CATALOG_NAMESPACE, plugin::getLibrary, false ) )
 								.whenUnknown( new CommandExecutableMessage( ChatColor.RED + "Usage: /book set <book>" ) )
 								.defaultTo( this::setSelf ) )
 						.whenUnknown( new CommandExecutableMessage( ChatColor.RED + "Invalid book!" ) )
 						.defaultTo( new CommandExecutableMessage( ChatColor.RED + "Usage: /book set <book>" ) ) )
 				.add( new SubCommand( "setother" )
-						.addSenderValidator( new SenderValidatorPermission( "abyssalchronicle.book.command.setother" ) )
+						.addSenderValidator( new SenderValidatorPermission( "quill.book.command.setother" ) )
 						.addSenderValidator( new SenderValidatorPlayer() )
-						.add( new SubCommand( new InputValidatorPlayerBook( Quill.DEFAULT_CATALOG_NAMESPACE, plugin::getLibrary ) )
+						.add( new SubCommand( new InputValidatorPlayerBook( Quill.DEFAULT_CATALOG_NAMESPACE, plugin::getLibrary, false ) )
 								.whenUnknown( new CommandExecutableMessage( ChatColor.RED + "Usage: /book setother <player> <book>" ) )
 								.defaultTo( this::setOther ) )
 						.whenUnknown( new CommandExecutableMessage( ChatColor.RED + "Invalid player or book!" ) )
 						.defaultTo( new CommandExecutableMessage( ChatColor.RED + "Usage: /book setother <player> <book>" ) ) )
 				.add( new SubCommand( "unset" )
-						.addSenderValidator( new SenderValidatorPermission( "abyssalchronicle.book.command.unset" ) )
+						.addSenderValidator( new SenderValidatorPermission( "quill.book.command.unset" ) )
 						.addSenderValidator( new SenderValidatorPlayer() )
 						.whenUnknown( new CommandExecutableMessage( ChatColor.RED + "Usage: /book unset" ) )
 						.defaultTo( this::unset ) )
@@ -287,14 +288,14 @@ public class CommandBook {
 	}
 	
 	private void list( CommandSender sender, String[] args, CommandContext parameters ) {
-		listFor( sender, sender );
+		listFor( sender, sender, true );
 	}
 	
 	private void listOther( CommandSender sender, String[] args, CommandContext parameters ) {
-		listFor( sender, parameters.getLast( Player.class ) );
+		listFor( sender, parameters.getLast( Player.class ), false );
 	}
 	
-	private void listFor( CommandSender sender, CommandSender other ) {
+	private void listFor( CommandSender sender, CommandSender other, boolean usePerms ) {
 		Library library = plugin.getLibrary();
 		if ( library != null ) {
 			StringBuilder builder = new StringBuilder( ChatColor.AQUA + "Available books:" + ChatColor.RESET + "\n" );
@@ -303,6 +304,9 @@ public class CommandBook {
 			for ( Iterator< Catalog > catalogIt = catalogs.iterator(); catalogIt.hasNext(); ) {
 				Catalog catalog = catalogIt.next();
 				Set< String > books = catalog.getAvailableBooks( other );
+				if ( usePerms ) {
+					books = books.stream().filter( id -> sender.hasPermission( "quill.book.read." + catalog.getId() + "." + id ) ).collect( Collectors.toSet() );
+				}
 				if ( !books.isEmpty() ) {
 					hasBook = true;
 					if ( catalog.getId().equals( Quill.DEFAULT_CATALOG_NAMESPACE ) ) {

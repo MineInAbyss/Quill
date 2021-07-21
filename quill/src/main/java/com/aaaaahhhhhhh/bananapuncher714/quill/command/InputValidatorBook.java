@@ -15,10 +15,12 @@ import com.aaaaahhhhhhh.bananapuncher714.quill.catalog.Catalog;
 public class InputValidatorBook implements InputValidator< NamespacedKey > {
 	private Supplier< Library > librarySupplier;
 	private String defaultCatalogId;
+	private boolean usePerms = true;
 	
-	public InputValidatorBook( String defaultCatalogId, Supplier< Library > supplier ) {
+	public InputValidatorBook( String defaultCatalogId, Supplier< Library > supplier, boolean usePerms ) {
 		this.defaultCatalogId = defaultCatalogId;
 		librarySupplier = supplier;
+		this.usePerms = usePerms;
 	}
 	
 	@Override
@@ -28,7 +30,9 @@ public class InputValidatorBook implements InputValidator< NamespacedKey > {
 		if ( library != null ) {
 			for ( Catalog catalog : library.getCatalogs() ) {
 				for ( String str : catalog.getAvailableBooks( sender ) ) {
-					completions.add( NamespacedKey.of( catalog.getId(), str ).toString() );
+					if ( !usePerms || sender.hasPermission( "quill.book.read." + catalog.getId() + "." + str ) ) {
+						completions.add( NamespacedKey.of( catalog.getId(), str ).toString() );
+					}
 				}
 			}
 		}
@@ -43,7 +47,10 @@ public class InputValidatorBook implements InputValidator< NamespacedKey > {
 			String catalogId = key.namespace == null ? defaultCatalogId : key.namespace;
 			Catalog catalog = library.getCatalog( catalogId );
 			if ( catalog != null ) {
-				return catalog.getAvailableBooks( sender ).contains( key.key );
+				if ( !usePerms || sender.hasPermission( "quill.book.read." + catalog.getId() + "." + key.key ) ) {
+					return catalog.getAvailableBooks( sender ).contains( key.key );
+				}
+				return false;
 			}
 		}
 		return false;
