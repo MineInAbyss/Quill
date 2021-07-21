@@ -34,7 +34,7 @@ public class ComponentTransformerStyle implements ComponentTransformer {
 	@Override
 	public boolean transform( List< BookPage > pages, BookComponent component, Deque< BookComponent > components ) {
 		if ( component.isObjectComponent() ) {
-			BookComponentObject object = component.getAsObjectComponent();
+			BookComponentObject object = component.asObjectComponent();
 			String tag = object.getTagName();
 			if ( tags.contains( tag ) ) {
 				Style finalStyle = null;
@@ -72,7 +72,7 @@ public class ComponentTransformerStyle implements ComponentTransformer {
 				push( object, new Style( "blank" ) );
 			}
 		} else if ( component.isEndComponent() ) {
-			BookComponentTail tail = component.getAsEndComponent();
+			BookComponentTail tail = component.asEndComponent();
 			BookComponentObject head = tail.getHead();
 			pop( head );
 		}

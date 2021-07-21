@@ -18,7 +18,7 @@ public class ComponentTransformerTail implements ComponentTransformer {
 	@Override
 	public boolean transform( List< BookPage > pages, BookComponent component, Deque< BookComponent > components ) {
 		if ( component.isEndComponent() ) {
-			BookComponentTail tail = component.getAsEndComponent();
+			BookComponentTail tail = component.asEndComponent();
 			
 			System.out.println( "Reached the end of " + tail.getHead().getTagName() );
 		}

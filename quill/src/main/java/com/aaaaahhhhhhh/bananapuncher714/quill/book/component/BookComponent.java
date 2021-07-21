@@ -5,7 +5,7 @@ public abstract class BookComponent {
 		return this instanceof BookComponentText;
 	}
 	
-	public BookComponentText getAsTextComponent() {
+	public BookComponentText asTextComponent() {
 		return ( BookComponentText ) this;
 	}
 	
@@ -13,7 +13,7 @@ public abstract class BookComponent {
 		return this instanceof BookComponentObject;
 	}
 	
-	public BookComponentObject getAsObjectComponent() {
+	public BookComponentObject asObjectComponent() {
 		return ( BookComponentObject ) this;
 	}
 	
@@ -21,7 +21,7 @@ public abstract class BookComponent {
 		return this instanceof BookComponentTail;
 	}
 	
-	public BookComponentTail getAsEndComponent() {
+	public BookComponentTail asEndComponent() {
 		return ( BookComponentTail ) this;
 	}
 }

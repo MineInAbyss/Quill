@@ -3,16 +3,22 @@ package com.aaaaahhhhhhh.bananapuncher714.quill.book.binder;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 
 import com.aaaaahhhhhhh.bananapuncher714.quill.book.Book;
+import com.aaaaahhhhhhh.bananapuncher714.quill.book.BookElement;
+import com.aaaaahhhhhhh.bananapuncher714.quill.book.BookElementBaseComponent;
 import com.aaaaahhhhhhh.bananapuncher714.quill.book.BookPage;
 import com.aaaaahhhhhhh.bananapuncher714.quill.font.BananaFont;
 import com.aaaaahhhhhhh.bananapuncher714.quill.util.Util;
 
 import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.chat.ClickEvent.Action;
 
 /*
  * This class is so slow...
@@ -37,7 +43,8 @@ public class BookBinderIndexMinecraft implements Bookbinder< BookIndex > {
 	@Override
 	public Book parse( BookIndex object ) {
 		Book book = new Book( object.id ).setTitle( object.title ).setAuthor( object.author );
-
+		Map< String, Integer > markTracker = new HashMap< String, Integer >();
+		
 		List< Word > headerWords = new ArrayList< Word >();
 		int headerLines = 0;
 		if ( !object.getHeaders().isEmpty() ) {
@@ -78,6 +85,13 @@ public class BookBinderIndexMinecraft implements Bookbinder< BookIndex > {
 				// At this point, determine if the current word will fit within the page
 				// If not, then move it onto the next page
 				Word word = contentQueue.poll();
+				
+				if ( word instanceof WordMark ) {
+					String mark = ( ( WordMark ) word ).getMark();
+					markTracker.put( mark, book.getPages().size() + 1 );
+					// Skip all the regular page processing whatever
+					continue;
+				}
 				
 				int nextPos = pos;
 				int nextLine = line;
@@ -223,6 +237,27 @@ public class BookBinderIndexMinecraft implements Bookbinder< BookIndex > {
 			}
 		}
 		
+		// Update all page click elements with the proper page
+		Deque< BaseComponent > check = new ArrayDeque< BaseComponent >();
+		check.addAll( book.getPages() );
+		while ( !check.isEmpty() ) {
+			BaseComponent first = check.poll();
+			
+			ClickEvent click = first.getClickEvent();
+			if ( click != null && click.getAction() == Action.CHANGE_PAGE ) {
+				String mark = click.getValue();
+				if ( markTracker.containsKey( mark ) ) {
+					first.setClickEvent( new ClickEvent( click.getAction(), Integer.toString( markTracker.get( mark ) ) ) );
+				} else {
+					// Warning?!
+				}
+			}
+			
+			if ( first.getExtra() != null ) {
+				check.addAll( first.getExtra() );
+			}
+		}
+		
 		return book;
 	}
 	
@@ -251,79 +286,107 @@ public class BookBinderIndexMinecraft implements Bookbinder< BookIndex > {
 	
 	// This method is *supposed* to convert a list of basecomponents into words...
 	// I have no clue if it works, or how to make it simpler
-	private List< Word > splitToWords( List< ? extends BaseComponent > components ) {
+	private List< Word > splitToWords( List< ? extends BookElement > components ) {
 		List< Word > words = new ArrayList< Word >();
 		
 		int whitespace = -1;
 		Word currentWord = null;
 
-		Deque< BaseComponent > queue = new ArrayDeque< BaseComponent >( components );
+		Deque< BookElement > queue = new ArrayDeque< BookElement >( components );
 		while ( !queue.isEmpty() ) {
-			BaseComponent parsing = queue.poll();
+			BookElement parsingElement = queue.poll();
 			
-			// Expand the base component if it contains any subcomponents
-			List< BaseComponent > extra = parsing.getExtra();
-			if ( extra != null ) {
-				for ( int i = extra.size() - 1; i >= 0; i-- ) {
-					queue.addFirst( extra.get( i ) );
+			if ( parsingElement.isBaseComponentElement() ) {
+				BaseComponent parsing = parsingElement.asBaseComponentElement().getComponent();
+				// Expand the base component if it contains any subcomponents
+				List< BaseComponent > extra = parsing.getExtra();
+				if ( extra != null ) {
+					for ( int i = extra.size() - 1; i >= 0; i-- ) {
+						queue.addFirst( new BookElementBaseComponent( extra.get( i ) ) );
+					}
+					parsing.setExtra( new ArrayList< BaseComponent >() );
 				}
-				parsing.setExtra( new ArrayList< BaseComponent >() );
-			}
-			
-			if ( parsing instanceof TextComponent ) {
-				// Now get the current thing or whatever it is
-				TextComponent component = ( TextComponent ) parsing;
-				String content = component.getText();
-				// Now, given content, parse it into words
-				if ( !content.isEmpty() ) {
-					StringBuilder builder = new StringBuilder();
-					// enum that I don't want to make another class for
-					for ( char c : content.toCharArray() ) {
-						if ( c == ' ' ) {
-							if ( whitespace == 0 ) {
-								// It was whitespace, now it's not
-								// Duplicate the current text component
-								TextComponent clone = component.duplicate();
-								// Set the text to whatever it was before
-								clone.setText( builder.toString() );
-								// Construct a new list of components
-								List< TextComponent > componentList = new ArrayList< TextComponent >();
-								// Check if the current word is also a non space word
-								if ( currentWord instanceof WordNonSpace ) {
-									// If so, then combine the components
-									componentList.addAll( ( ( WordNonSpace ) currentWord ).getComponents() );
-								} else if ( currentWord != null ) {
-									// Otherwise, add the current word to the list of words
-									words.add( currentWord );
-								}
-								// Add the cloned component
-								componentList.add( clone );
-								// Create our new word and set it to the current component
-								currentWord = new WordNonSpace( componentList );
-								
-								// Reset the builder
-								builder = new StringBuilder();
-							}
-							builder.append( c );
-							whitespace = 1;
-						} else if ( c == '\n' ) {
-							if ( builder.length() > 0 ) {
-								TextComponent clone = component.duplicate();
-								clone.setText( builder.toString() );
-								List< TextComponent > componentList = new ArrayList< TextComponent >();
-								// If it's a non space builder
+
+				if ( parsing instanceof TextComponent ) {
+					// Now get the current thing or whatever it is
+					TextComponent component = ( TextComponent ) parsing;
+					String content = component.getText();
+					// Now, given content, parse it into words
+					if ( !content.isEmpty() ) {
+						StringBuilder builder = new StringBuilder();
+						// enum that I don't want to make another class for
+						for ( char c : content.toCharArray() ) {
+							if ( c == ' ' ) {
 								if ( whitespace == 0 ) {
-									// Check if it can be merged with the current word
+									// It was whitespace, now it's not
+									// Duplicate the current text component
+									TextComponent clone = component.duplicate();
+									// Set the text to whatever it was before
+									clone.setText( builder.toString() );
+									// Construct a new list of components
+									List< TextComponent > componentList = new ArrayList< TextComponent >();
+									// Check if the current word is also a non space word
 									if ( currentWord instanceof WordNonSpace ) {
-										// Get the components and add it to the list
+										// If so, then combine the components
 										componentList.addAll( ( ( WordNonSpace ) currentWord ).getComponents() );
 									} else if ( currentWord != null ) {
-										// Otherwise, add the current word to the list of words and continue
+										// Otherwise, add the current word to the list of words
 										words.add( currentWord );
 									}
+									// Add the cloned component
 									componentList.add( clone );
+									// Create our new word and set it to the current component
 									currentWord = new WordNonSpace( componentList );
-								} else if ( whitespace == 1 ) {
+
+									// Reset the builder
+									builder = new StringBuilder();
+								}
+								builder.append( c );
+								whitespace = 1;
+							} else if ( c == '\n' ) {
+								if ( builder.length() > 0 ) {
+									TextComponent clone = component.duplicate();
+									clone.setText( builder.toString() );
+									List< TextComponent > componentList = new ArrayList< TextComponent >();
+									// If it's a non space builder
+									if ( whitespace == 0 ) {
+										// Check if it can be merged with the current word
+										if ( currentWord instanceof WordNonSpace ) {
+											// Get the components and add it to the list
+											componentList.addAll( ( ( WordNonSpace ) currentWord ).getComponents() );
+										} else if ( currentWord != null ) {
+											// Otherwise, add the current word to the list of words and continue
+											words.add( currentWord );
+										}
+										componentList.add( clone );
+										currentWord = new WordNonSpace( componentList );
+									} else if ( whitespace == 1 ) {
+										if ( currentWord instanceof WordSpace ) {
+											componentList.addAll( ( ( WordSpace ) currentWord ).getComponents() );
+										} else if ( currentWord != null ) {
+											words.add( currentWord );
+										}
+										componentList.add( clone );
+										currentWord = new WordSpace( componentList );
+									}
+								}
+
+								if ( currentWord != null ) {
+									words.add( currentWord );
+								}
+
+								TextComponent newlineComponent = component.duplicate();
+								newlineComponent.setText( "\n" );
+								words.add( new WordNewline( newlineComponent ) );
+
+								currentWord = null;
+								builder = new StringBuilder();
+								whitespace = -1;
+							} else {
+								if ( whitespace == 1 ) {
+									TextComponent clone = component.duplicate();
+									clone.setText( builder.toString() );
+									List< TextComponent > componentList = new ArrayList< TextComponent >();
 									if ( currentWord instanceof WordSpace ) {
 										componentList.addAll( ( ( WordSpace ) currentWord ).getComponents() );
 									} else if ( currentWord != null ) {
@@ -331,25 +394,30 @@ public class BookBinderIndexMinecraft implements Bookbinder< BookIndex > {
 									}
 									componentList.add( clone );
 									currentWord = new WordSpace( componentList );
+
+									builder = new StringBuilder();
 								}
+								builder.append( c );
+								whitespace = 0;
 							}
-							
-							if ( currentWord != null ) {
-								words.add( currentWord );
-							}
-							
-							TextComponent newlineComponent = component.duplicate();
-							newlineComponent.setText( "\n" );
-							words.add( new WordNewline( newlineComponent ) );
-							
-							currentWord = null;
-							builder = new StringBuilder();
-							whitespace = -1;
-						} else {
-							if ( whitespace == 1 ) {
-								TextComponent clone = component.duplicate();
-								clone.setText( builder.toString() );
-								List< TextComponent > componentList = new ArrayList< TextComponent >();
+						}
+						if ( builder.length() > 0 ) {
+							TextComponent clone = component.duplicate();
+							clone.setText( builder.toString() );
+							List< TextComponent > componentList = new ArrayList< TextComponent >();
+							// If it's a non space builder
+							if ( whitespace == 0 ) {
+								// Check if it can be merged with the current word
+								if ( currentWord instanceof WordNonSpace ) {
+									// Get the components and add it to the list
+									componentList.addAll( ( ( WordNonSpace ) currentWord ).getComponents() );
+								} else if ( currentWord != null ) {
+									// Otherwise, add the current word to the list of words and continue
+									words.add( currentWord );
+								}
+								componentList.add( clone );
+								currentWord = new WordNonSpace( componentList );
+							} else if ( whitespace == 1 ) {
 								if ( currentWord instanceof WordSpace ) {
 									componentList.addAll( ( ( WordSpace ) currentWord ).getComponents() );
 								} else if ( currentWord != null ) {
@@ -357,40 +425,12 @@ public class BookBinderIndexMinecraft implements Bookbinder< BookIndex > {
 								}
 								componentList.add( clone );
 								currentWord = new WordSpace( componentList );
-								
-								builder = new StringBuilder();
 							}
-							builder.append( c );
-							whitespace = 0;
-						}
-					}
-					if ( builder.length() > 0 ) {
-						TextComponent clone = component.duplicate();
-						clone.setText( builder.toString() );
-						List< TextComponent > componentList = new ArrayList< TextComponent >();
-						// If it's a non space builder
-						if ( whitespace == 0 ) {
-							// Check if it can be merged with the current word
-							if ( currentWord instanceof WordNonSpace ) {
-								// Get the components and add it to the list
-								componentList.addAll( ( ( WordNonSpace ) currentWord ).getComponents() );
-							} else if ( currentWord != null ) {
-								// Otherwise, add the current word to the list of words and continue
-								words.add( currentWord );
-							}
-							componentList.add( clone );
-							currentWord = new WordNonSpace( componentList );
-						} else if ( whitespace == 1 ) {
-							if ( currentWord instanceof WordSpace ) {
-								componentList.addAll( ( ( WordSpace ) currentWord ).getComponents() );
-							} else if ( currentWord != null ) {
-								words.add( currentWord );
-							}
-							componentList.add( clone );
-							currentWord = new WordSpace( componentList );
 						}
 					}
 				}
+			} else if ( parsingElement.isMarkElement() ) {
+				words.add( new WordMark( parsingElement.asMarkerComponent().getMark() ) );
 			}
 		}
 		

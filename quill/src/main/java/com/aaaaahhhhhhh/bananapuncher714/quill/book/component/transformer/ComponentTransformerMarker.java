@@ -9,11 +9,10 @@ import com.aaaaahhhhhhh.bananapuncher714.quill.book.BookPage;
 import com.aaaaahhhhhhh.bananapuncher714.quill.book.BookPart;
 import com.aaaaahhhhhhh.bananapuncher714.quill.book.component.BookComponent;
 import com.aaaaahhhhhhh.bananapuncher714.quill.book.component.BookComponentObject;
-import com.aaaaahhhhhhh.bananapuncher714.quill.book.component.BookComponentTail;
 import com.aaaaahhhhhhh.bananapuncher714.quill.catalog.CatalogBuildable;
 
-public class ComponentTransformerExpand implements ComponentTransformer {
-	public ComponentTransformerExpand( CommandSender sender, CatalogBuildable cache, BookPart part ) {
+public class ComponentTransformerMarker implements ComponentTransformer {
+	public ComponentTransformerMarker( CommandSender sender, CatalogBuildable cache, BookPart part ) {
 	}
 	
 	@Override
@@ -21,12 +20,17 @@ public class ComponentTransformerExpand implements ComponentTransformer {
 		if ( component.isObjectComponent() ) {
 			BookComponentObject object = component.asObjectComponent();
 			
-			components.push( new BookComponentTail( object ) );
-			for ( int i = object.getSubElements().size(); i > 0; i-- ) {
-				components.push( object.getSubElements().get( i - 1 ) );
+			if ( object.getTagName().equalsIgnoreCase( "mark" ) ) {
+				String mark = object.getAttributes().get( "id" );
+				if ( mark == null ) {
+					throw new NullPointerException( "No mark id found!" );
+				} else {
+					pages.get( pages.size() - 1 ).addMarker( mark );
+					return true;
+				}
 			}
 		}
-		
 		return false;
 	}
+
 }

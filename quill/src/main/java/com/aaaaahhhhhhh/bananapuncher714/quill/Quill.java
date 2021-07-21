@@ -33,11 +33,13 @@ import com.aaaaahhhhhhh.bananapuncher714.quill.book.component.BookComponentHeadP
 import com.aaaaahhhhhhh.bananapuncher714.quill.book.component.BookComponentParserXML;
 import com.aaaaahhhhhhh.bananapuncher714.quill.book.component.StyleTransformerSupplier;
 import com.aaaaahhhhhhh.bananapuncher714.quill.book.component.transformer.ComponentTransformerBreak;
+import com.aaaaahhhhhhh.bananapuncher714.quill.book.component.transformer.ComponentTransformerGoto;
 import com.aaaaahhhhhhh.bananapuncher714.quill.book.component.transformer.ComponentTransformerClick;
 import com.aaaaahhhhhhh.bananapuncher714.quill.book.component.transformer.ComponentTransformerExpand;
 import com.aaaaahhhhhhh.bananapuncher714.quill.book.component.transformer.ComponentTransformerFormat;
 import com.aaaaahhhhhhh.bananapuncher714.quill.book.component.transformer.ComponentTransformerHover;
 import com.aaaaahhhhhhh.bananapuncher714.quill.book.component.transformer.ComponentTransformerInsert;
+import com.aaaaahhhhhhh.bananapuncher714.quill.book.component.transformer.ComponentTransformerMarker;
 import com.aaaaahhhhhhh.bananapuncher714.quill.book.component.transformer.TextTransformerMineDown;
 import com.aaaaahhhhhhh.bananapuncher714.quill.book.component.transformer.ComponentTransformerNegativeSpaces;
 import com.aaaaahhhhhhh.bananapuncher714.quill.book.component.transformer.ComponentTransformerRedirect;
@@ -166,7 +168,7 @@ public class Quill extends JavaPlugin {
 	private void loadAssets() {
 		Bukkit.getScheduler().runTaskAsynchronously( this , () -> {
 			if ( Files.exists( resourcePackPath ) ) {
-				getLogger().info( "Found resource pack!" );
+				getLogger().info( "Loading the resource pack (This may take a while)..." );
 				Map< String, BananaFont > fonts = new HashMap< String, BananaFont >();
 				try  {
 					ResourcePackZip resourcePack = new ResourcePackZip( resourcePackPath );
@@ -233,7 +235,9 @@ public class Quill extends JavaPlugin {
 			return formatter;
 		}, styleSupplier );
 		
+		catalog.getTransformers().add( ComponentTransformerMarker::new );
 		catalog.getTransformers().add( ComponentTransformerBreak::new );
+		catalog.getTransformers().add( ComponentTransformerGoto::new );
 		catalog.getTransformers().add( ComponentTransformerRedirect::new );
 		catalog.getTransformers().add( ComponentTransformerExpand::new );
 		catalog.getTransformers().add( hoverSupplier );

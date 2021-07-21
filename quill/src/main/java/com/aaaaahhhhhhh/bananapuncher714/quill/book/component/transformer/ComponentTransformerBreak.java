@@ -19,7 +19,7 @@ public class ComponentTransformerBreak implements ComponentTransformer {
 	@Override
 	public boolean transform( List< BookPage > pages, BookComponent component, Deque< BookComponent > components ) {
 		if ( component.isObjectComponent() ) {
-			BookComponentObject object = component.getAsObjectComponent();
+			BookComponentObject object = component.asObjectComponent();
 			if ( object.getTagName().equalsIgnoreCase( "br" ) || object.getTagName().equalsIgnoreCase( "break" ) ) {
 				pages.add( new BookPage() );
 				return true;

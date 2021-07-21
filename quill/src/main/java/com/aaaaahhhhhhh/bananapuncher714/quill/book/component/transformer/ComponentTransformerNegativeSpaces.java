@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.bukkit.command.CommandSender;
 
+import com.aaaaahhhhhhh.bananapuncher714.quill.book.BookElementText;
 import com.aaaaahhhhhhh.bananapuncher714.quill.book.BookPage;
 import com.aaaaahhhhhhh.bananapuncher714.quill.book.BookPart;
 import com.aaaaahhhhhhh.bananapuncher714.quill.book.component.BookComponent;
@@ -21,12 +22,13 @@ public class ComponentTransformerNegativeSpaces implements ComponentTransformer 
 	@Override
 	public boolean transform( List< BookPage > pages, BookComponent component, Deque< BookComponent > components ) {
 		if ( component.isObjectComponent() ) {
-			BookComponentObject object = component.getAsObjectComponent();
+			BookComponentObject object = component.asObjectComponent();
 			String tagName = object.getTagName().toLowerCase();
 			if ( tagName.matches( "_add\\d+" ) ) {
 				int value = Integer.parseInt( tagName.substring( 4 ) );
 				
-				TextComponent spaceComp = pages.get( pages.size() - 1 ).addNewComponent();
+				BookElementText element = pages.get( pages.size() - 1 ).addNewTextElement();
+				TextComponent spaceComp = element.getComponent();
 				spaceComp.setText( Space.getSpaceFor( value ) );
 				spaceComp.setFont( "gifs/space" );
 				
@@ -34,7 +36,8 @@ public class ComponentTransformerNegativeSpaces implements ComponentTransformer 
 			} else if ( tagName.matches( "_sub\\d+" ) ) {
 				int value = Integer.parseInt( tagName.substring( 4 ) );
 				
-				TextComponent spaceComp = pages.get( pages.size() - 1 ).addNewComponent();
+				BookElementText element = pages.get( pages.size() - 1 ).addNewTextElement();
+				TextComponent spaceComp = element.getComponent();
 				spaceComp.setText( Space.getSpaceFor( -value ) );
 				spaceComp.setFont( "gifs/space" );
 				

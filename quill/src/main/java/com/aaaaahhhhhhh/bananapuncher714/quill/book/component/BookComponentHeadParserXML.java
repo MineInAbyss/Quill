@@ -18,7 +18,7 @@ public class BookComponentHeadParserXML implements BookComponentHeadParser< Elem
 
 		BookComponent parsedComponent = parser == null ? null : parser.parse( root );
 		if ( parsedComponent != null && parsedComponent.isObjectComponent() ) {
-			BookComponentObject object = parsedComponent.getAsObjectComponent();
+			BookComponentObject object = parsedComponent.asObjectComponent();
 			
 			String styleAttribute = object.getAttributes().getOrDefault( "styles", "" );
 			String[] styles = styleAttribute.split( "\\s+" );

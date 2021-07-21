@@ -9,6 +9,7 @@ import java.util.function.Supplier;
 import org.bukkit.command.CommandSender;
 
 import com.aaaaahhhhhhh.bananapuncher714.quill.api.NamespacedKey;
+import com.aaaaahhhhhhh.bananapuncher714.quill.book.BookElement;
 import com.aaaaahhhhhhh.bananapuncher714.quill.book.BookPage;
 import com.aaaaahhhhhhh.bananapuncher714.quill.book.BookPart;
 import com.aaaaahhhhhhh.bananapuncher714.quill.book.component.BookComponent;
@@ -53,7 +54,7 @@ public class ComponentTransformerHover implements ComponentTransformer, Consumer
 	public boolean transform( List< BookPage > pages, BookComponent component, Deque< BookComponent > components ) {
 		// Check if the component is a hover component
 		if ( component.isObjectComponent() && currentComponent == null ) {
-			BookComponentObject object = component.getAsObjectComponent();
+			BookComponentObject object = component.asObjectComponent();
 			if ( object.getTagName().equalsIgnoreCase( "hover" ) ) {
 				String componentId = object.getAttributes().get( "component" );
 				if ( componentId == null ) {
@@ -100,12 +101,14 @@ public class ComponentTransformerHover implements ComponentTransformer, Consumer
 				}
 			}
 		} else if ( component.isEndComponent() ) {
-			BookComponentTail end = component.getAsEndComponent();
+			BookComponentTail end = component.asEndComponent();
 			if ( end.getHead() == currentComponent ) {
 				// Apply the component to all text components added since the start of the hover event
 				for ( BookPage page : pages ) {
-					for ( TextComponent subComponent : page.getComponents() ) {
-						subComponent.setHoverEvent( new HoverEvent( HoverEvent.Action.SHOW_TEXT, new Text( new BaseComponent[] { hover } ) ) );
+					for ( BookElement subComponent : page.getComponents() ) {
+						if ( subComponent.isTextElement() ) {
+							subComponent.asTextElement().getComponent().setHoverEvent( new HoverEvent( HoverEvent.Action.SHOW_TEXT, new Text( new BaseComponent[] { hover } ) ) );
+						}
 					}
 				}
 				
@@ -123,8 +126,10 @@ public class ComponentTransformerHover implements ComponentTransformer, Consumer
 				// Combine the pages into a single text component
 				hover = new TextComponent();
 				for ( BookPage page : pages ) {
-					for ( TextComponent subComponent : page.getComponents() ) {
-						hover.addExtra( subComponent );
+					for ( BookElement subComponent : page.getComponents() ) {
+						if ( subComponent.isTextElement() ) {
+							hover.addExtra( subComponent.asTextElement().getComponent() );
+						}
 					}
 				}
 				

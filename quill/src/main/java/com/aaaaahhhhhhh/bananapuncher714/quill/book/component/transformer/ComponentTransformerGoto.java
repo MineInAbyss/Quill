@@ -14,8 +14,8 @@ import com.aaaaahhhhhhh.bananapuncher714.quill.catalog.CatalogBuildable;
 
 import net.md_5.bungee.api.chat.ClickEvent.Action;
 
-public class ComponentTransformerRedirect implements ComponentTransformer {
-	public ComponentTransformerRedirect( CommandSender sender, CatalogBuildable cache, BookPart part ) {
+public class ComponentTransformerGoto implements ComponentTransformer {
+	public ComponentTransformerGoto( CommandSender sender, CatalogBuildable cache, BookPart part ) {
 	}
 	
 	@Override
@@ -23,17 +23,17 @@ public class ComponentTransformerRedirect implements ComponentTransformer {
 		if ( component.isObjectComponent() ) {
 			BookComponentObject object = component.asObjectComponent();
 			
-			if ( object.getTagName().equalsIgnoreCase( "redirect" ) ) {
-				String bookId = object.getAttributes().get( "to" );
-				if ( bookId == null ) {
+			if ( object.getTagName().equalsIgnoreCase( "go" ) ) {
+				String mark = object.getAttributes().get( "to" );
+				if ( mark == null ) {
 					throw new NullPointerException( "No book id found!" );
 				} else {
 					BookComponentObject click = new BookComponentObject( ComponentTransformerClick.ID );
-					click.getAttributes().put( ComponentTransformerClick.ACTION, Action.RUN_COMMAND.name() );
-					click.getAttributes().put( ComponentTransformerClick.VALUE, "/book read " + bookId );
+					click.getAttributes().put( ComponentTransformerClick.ACTION, Action.CHANGE_PAGE.name() );
+					click.getAttributes().put( ComponentTransformerClick.VALUE, mark );
 					components.addFirst( click );
 					if ( object.getSubElements().isEmpty() ) {
-						click.getSubElements().add( new BookComponentText( bookId ) );
+						click.getSubElements().add( new BookComponentText( mark ) );
 					} else {
 						click.getSubElements().addAll( object.getSubElements() );
 					}

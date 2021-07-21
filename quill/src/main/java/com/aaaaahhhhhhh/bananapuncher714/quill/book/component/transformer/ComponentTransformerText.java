@@ -12,6 +12,7 @@ import org.bukkit.command.CommandSender;
 
 import com.aaaaahhhhhhh.bananapuncher714.quill.api.ColorType;
 import com.aaaaahhhhhhh.bananapuncher714.quill.api.TextTransformer;
+import com.aaaaahhhhhhh.bananapuncher714.quill.book.BookElementText;
 import com.aaaaahhhhhhh.bananapuncher714.quill.book.BookPage;
 import com.aaaaahhhhhhh.bananapuncher714.quill.book.BookPart;
 import com.aaaaahhhhhhh.bananapuncher714.quill.book.component.BookComponent;
@@ -36,7 +37,7 @@ public class ComponentTransformerText implements ComponentTransformer, Consumer<
 	@Override
 	public boolean transform( List< BookPage > pages, BookComponent component, Deque< BookComponent > components ) {
 		if ( component instanceof BookComponentText ) {
-			BookComponentText text = component.getAsTextComponent();
+			BookComponentText text = component.asTextComponent();
 			String content = text.getText();
 			for ( TextTransformer< String, String > transformer : transformers ) {
 				content = transformer.transform( sender, content );
@@ -59,7 +60,7 @@ public class ComponentTransformerText implements ComponentTransformer, Consumer<
 			
 			for ( TextComponent parsed : textComponents ) {
 				applyStyle( currentStyle, parsed );
-				pages.get( pages.size() - 1 ).getComponents().add( parsed );
+				pages.get( pages.size() - 1 ).getComponents().add( new BookElementText( parsed ) );
 			}
 		}
 		

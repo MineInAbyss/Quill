@@ -26,7 +26,7 @@ public class ComponentTransformerFormat implements ComponentTransformer, Consume
 	@Override
 	public boolean transform( List< BookPage > pages, BookComponent component, Deque< BookComponent > components ) {
 		if ( component.isObjectComponent() ) {
-			BookComponentObject object = component.getAsObjectComponent();
+			BookComponentObject object = component.asObjectComponent();
 			Style style = supplier.get().getCurrentStyle();
 			if ( style != null ) {
 				if ( object.getSubElements().isEmpty() ) {

@@ -25,7 +25,7 @@ public class ComponentTransformerInsert implements ComponentTransformer {
 	@Override
 	public boolean transform( List< BookPage > pages, BookComponent component, Deque< BookComponent > components ) {
 		if ( component.isObjectComponent() ) {
-			BookComponentObject object = component.getAsObjectComponent();
+			BookComponentObject object = component.asObjectComponent();
 			
 			if ( object.getTagName().equalsIgnoreCase( "insert" ) ) {
 				String componentId = object.getAttributes().get( "id" );
