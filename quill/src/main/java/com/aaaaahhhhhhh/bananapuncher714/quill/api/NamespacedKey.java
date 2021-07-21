@@ -14,7 +14,10 @@ public class NamespacedKey {
 	
 	@Override
 	public String toString() {
-		return String.format( "%s:%s", namespace, key );
+		if ( namespace != null ) {
+			return String.format( "%s:%s", namespace, key );
+		}
+		return key;
 	}
 	
 	@Override

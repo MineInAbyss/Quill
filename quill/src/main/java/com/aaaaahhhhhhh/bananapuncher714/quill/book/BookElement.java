@@ -21,7 +21,15 @@ public abstract class BookElement {
 		return this instanceof BookElementMarker;
 	}
 	
-	public BookElementMarker asMarkerComponent() {
+	public BookElementMarker asMarkerElement() {
 		return ( BookElementMarker ) this;
+	}
+	
+	public boolean isDirectiveElement() {
+		return this instanceof BookElementDirective;
+	}
+	
+	public BookElementDirective asDirectiveElement() {
+		return ( BookElementDirective ) this;
 	}
 }

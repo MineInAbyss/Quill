@@ -2,10 +2,12 @@ package com.aaaaahhhhhhh.bananapuncher714.quill.book.binder;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.function.Function;
 
 import com.aaaaahhhhhhh.bananapuncher714.quill.book.Book;
@@ -44,32 +46,38 @@ public class BookBinderIndexMinecraft implements Bookbinder< BookIndex > {
 	public Book parse( BookIndex object ) {
 		Book book = new Book( object.id ).setTitle( object.title ).setAuthor( object.author );
 		Map< String, Integer > markTracker = new HashMap< String, Integer >();
+		Map< String, ParsedElement > elements = new HashMap< String, ParsedElement >();
+		String header = object.getHeader();
+		String footer = object.getFooter();
 		
-		List< Word > headerWords = new ArrayList< Word >();
-		int headerLines = 0;
-		if ( !object.getHeaders().isEmpty() ) {
-			BookPage page = object.getHeaders().get( 0 );
-			headerWords = splitToWords( page.getComponents() );
-			int[] headerDim = getDimensions( headerWords );
-
-			headerLines = headerDim[ 1 ];
-			if ( headerDim[ 0 ] > 0 ) {
-				headerWords.add( new WordNewline( new TextComponent( "\n" ) ) );
-				headerLines++;
-			}
+		for ( Entry< String, List< BookPage > > entry : object.getComponents().entrySet() ) {
+			List< BookPage > pages = entry.getValue();
+			
+			List< Word > words = splitToWords( pages.get( 0 ).getComponents() );
+			ParsedElement element = new ParsedElement( words );
+			elements.put( entry.getKey(), element );
 		}
 		
-		List< Word > footerWords = new ArrayList< Word >();
-		int footerLines = 0;
-		if ( !object.getFooters().isEmpty() ) {
-			BookPage page = object.getFooters().get( 0 );
-			footerWords = splitToWords( page.getComponents() );
-			int[] footerDim = getDimensions( footerWords );
-
-			footerLines = footerDim[ 1 ];
+		int contentHeight = lines;
+		boolean padHeader = false;
+		ParsedElement headerElement = header == null ? null : elements.get( header );
+		if ( headerElement != null ) {
+			contentHeight -= headerElement.height;
+			padHeader = headerElement.width > 0;
+		}
+		ParsedElement footerElement = footer == null ? null : elements.get( footer );
+		if ( footerElement != null ) {
+			contentHeight -= footerElement.height;
+		}
+		if ( padHeader ) {
+			contentHeight--;
 		}
 		
-		int contentHeight = lines - ( headerLines + footerLines );
+		System.out.println( "Lines " + lines );
+		System.out.println( "content " + contentHeight );
+		System.out.println( "header " + headerElement.height );
+		System.out.println( "footer " + footerElement.height );
+		System.out.println( "pad " + padHeader );
 		
 		// Properly account for the header and footer
 		for ( BookPage page : object.getPages() ) {
@@ -90,6 +98,28 @@ public class BookBinderIndexMinecraft implements Bookbinder< BookIndex > {
 					String mark = ( ( WordMark ) word ).getMark();
 					markTracker.put( mark, book.getPages().size() + 1 );
 					// Skip all the regular page processing whatever
+					continue;
+				} else if ( word instanceof WordDirective ) {
+					WordDirective direc = ( WordDirective ) word;
+					String command = direc.getCommand();
+					Map< String, String > attrib = direc.getAttributes();
+					
+					if ( command.equalsIgnoreCase( "nofooter" ) ) {
+						footer = null;
+					} else if ( command.equalsIgnoreCase( "noheader" ) ) {
+						header = null;
+					} else if ( command.equalsIgnoreCase( "footer" ) ) {
+						String newFooter = attrib.get( "value" );
+						if ( newFooter != null ) {
+							footer = newFooter;
+						}
+					} else if ( command.equalsIgnoreCase( "header" ) ) {
+						String newHeader = attrib.get( "value" );
+						if ( newHeader != null ) {
+							header = newHeader;
+						}
+					}
+					
 					continue;
 				}
 				
@@ -197,9 +227,16 @@ public class BookBinderIndexMinecraft implements Bookbinder< BookIndex > {
 					
 					// Add this page to the book
 					List< Word > pageWords = new ArrayList< Word >();
-					pageWords.addAll( headerWords );
+					if ( headerElement != null ) {
+						pageWords.addAll( headerElement.words );
+					}
+					if ( padHeader ) {
+						pageWords.add( new WordNewline( new TextComponent( "\n" ) ) );
+					}
 					pageWords.addAll( content );
-					pageWords.addAll( footerWords );
+					if ( footerElement != null ) {
+						pageWords.addAll( footerElement.words );
+					}
 					List< TextComponent > extra = combine( pageWords );
 					TextComponent pageComponent = new TextComponent();
 					for ( TextComponent extraComponent : extra ) {
@@ -209,6 +246,23 @@ public class BookBinderIndexMinecraft implements Bookbinder< BookIndex > {
 					
 					lastNewline = true;
 					content.clear();
+					
+					// Recalculate the total lines of content that are availble
+					contentHeight = lines;
+					headerElement = header == null ? null : elements.get( header );
+					if ( headerElement != null ) {
+						contentHeight -= headerElement.height;
+						padHeader = headerElement.width > 0;
+					} else {
+						padHeader = false;
+					}
+					footerElement = footer == null ? null : elements.get( footer );
+					if ( footerElement != null ) {
+						contentHeight -= footerElement.height;
+					}
+					if ( padHeader ) {
+						contentHeight--;
+					}
 					
 					pos = 0;
 					line = 0;
@@ -225,15 +279,38 @@ public class BookBinderIndexMinecraft implements Bookbinder< BookIndex > {
 				}
 				
 				List< Word > pageWords = new ArrayList< Word >();
-				pageWords.addAll( headerWords );
+				if ( headerElement != null ) {
+					pageWords.addAll( headerElement.words );
+				}
+				if ( padHeader ) {
+					pageWords.add( new WordNewline( new TextComponent( "\n" ) ) );
+				}
 				pageWords.addAll( content );
-				pageWords.addAll( footerWords );
+				if ( footerElement != null ) {
+					pageWords.addAll( footerElement.words );
+				}
 				List< TextComponent > extra = combine( pageWords );
 				TextComponent pageComponent = new TextComponent();
 				for ( TextComponent extraComponent : extra ) {
 					pageComponent.addExtra( extraComponent );
 				}
 				book.getPages().add( pageComponent );
+				
+				contentHeight = lines;
+				headerElement = header == null ? null : elements.get( header );
+				if ( headerElement != null ) {
+					contentHeight -= headerElement.height;
+					padHeader = headerElement.width > 0;
+				} else {
+					padHeader = false;
+				}
+				footerElement = footer == null ? null : elements.get( footer );
+				if ( footerElement != null ) {
+					contentHeight -= footerElement.height;
+				}
+				if ( padHeader ) {
+					contentHeight--;
+				}
 			}
 		}
 		
@@ -286,7 +363,7 @@ public class BookBinderIndexMinecraft implements Bookbinder< BookIndex > {
 	
 	// This method is *supposed* to convert a list of basecomponents into words...
 	// I have no clue if it works, or how to make it simpler
-	private List< Word > splitToWords( List< ? extends BookElement > components ) {
+	private List< Word > splitToWords( Collection< ? extends BookElement > components ) {
 		List< Word > words = new ArrayList< Word >();
 		
 		int whitespace = -1;
@@ -430,7 +507,9 @@ public class BookBinderIndexMinecraft implements Bookbinder< BookIndex > {
 					}
 				}
 			} else if ( parsingElement.isMarkElement() ) {
-				words.add( new WordMark( parsingElement.asMarkerComponent().getMark() ) );
+				words.add( new WordMark( parsingElement.asMarkerElement().getMark() ) );
+			} else if ( parsingElement.isDirectiveElement() ) {
+				words.add( parsingElement.asDirectiveElement().toWord() );
 			}
 		}
 		
@@ -441,11 +520,12 @@ public class BookBinderIndexMinecraft implements Bookbinder< BookIndex > {
 		return words;
 	}
 	
-	private int[] getDimensions( List< ? extends Word > words ) {
+	private int[] getDimensions( Collection< ? extends Word > words ) {
 		int pos = 0;
 		int line = 1;
 		for ( Word word : words ) {
 			if ( word instanceof WordNewline ) {
+				pos = 0;
 				line++;
 			} else if ( word instanceof WordSpace ) {
 				WordSpace space = ( WordSpace ) word;
@@ -495,7 +575,7 @@ public class BookBinderIndexMinecraft implements Bookbinder< BookIndex > {
 		return new int[] { pos, line };
 	}
 	
-	private int getLength( List< ? extends BaseComponent > components ) {
+	private int getLength( Collection< ? extends BaseComponent > components ) {
 		int length = 0;
 		for ( BaseComponent component : components ) {
 			if ( component instanceof TextComponent ) {
@@ -514,5 +594,18 @@ public class BookBinderIndexMinecraft implements Bookbinder< BookIndex > {
 			}
 		}
 		return length;
+	}
+	
+	private class ParsedElement {
+		Collection< Word > words;
+		int width;
+		int height;
+		
+		ParsedElement( Collection< Word > words ) {
+			this.words = words;
+			int[] dim = getDimensions( words );
+			width = dim[ 0 ];
+			height = dim[ 1 ];
+		}
 	}
 }

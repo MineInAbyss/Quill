@@ -35,6 +35,7 @@ import com.aaaaahhhhhhh.bananapuncher714.quill.book.component.StyleTransformerSu
 import com.aaaaahhhhhhh.bananapuncher714.quill.book.component.transformer.ComponentTransformerBreak;
 import com.aaaaahhhhhhh.bananapuncher714.quill.book.component.transformer.ComponentTransformerGoto;
 import com.aaaaahhhhhhh.bananapuncher714.quill.book.component.transformer.ComponentTransformerClick;
+import com.aaaaahhhhhhh.bananapuncher714.quill.book.component.transformer.ComponentTransformerDirective;
 import com.aaaaahhhhhhh.bananapuncher714.quill.book.component.transformer.ComponentTransformerExpand;
 import com.aaaaahhhhhhh.bananapuncher714.quill.book.component.transformer.ComponentTransformerFormat;
 import com.aaaaahhhhhhh.bananapuncher714.quill.book.component.transformer.ComponentTransformerHover;
@@ -235,6 +236,7 @@ public class Quill extends JavaPlugin {
 			return formatter;
 		}, styleSupplier );
 		
+		catalog.getTransformers().add( ComponentTransformerDirective::new );
 		catalog.getTransformers().add( ComponentTransformerMarker::new );
 		catalog.getTransformers().add( ComponentTransformerBreak::new );
 		catalog.getTransformers().add( ComponentTransformerGoto::new );

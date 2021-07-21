@@ -432,6 +432,9 @@ public class CatalogBuildable extends Catalog implements Updateable {
 	public BookIndex convert( CommandSender sender, BookPart part ) {
 		BookIndex index = new BookIndex( part.getId(), part.getTitle(), part.getAuthor() );
 		
+		index.setHeader( part.getHeaderId() );
+		index.setFooter( part.getFooterId() );
+		
 		// Create the content
 		List< ComponentTransformer > transformers = this.transformers.stream().map( f -> f.createTransformer( sender, this, part ) ).collect( Collectors.toList() );
 		index.getPages().add( new BookPage() );
@@ -442,27 +445,34 @@ public class CatalogBuildable extends Catalog implements Updateable {
 			for ( int i = 0; i < transformers.size() && !transformers.get( i ).transform( index.getPages(), subComponent, componentList ); i++ );				
 		}
 		
-		// Create the headers
-		BookComponentHead headerComponent = findComponent( part, NamespacedKey.fromString( part.getHeaderId() ) );
-		if ( headerComponent != null ) {
-			index.getHeaders().add( new BookPage() );
-			Deque< BookComponent > headerComponents = new ArrayDeque< BookComponent >();
-			headerComponents.add( headerComponent );
-			while ( !headerComponents.isEmpty() ) {
-				BookComponent subComponent = headerComponents.poll();
-				for ( int i = 0; i < transformers.size() && !transformers.get( i ).transform( index.getHeaders(), subComponent, headerComponents ); i++ );				
+		// Create additional components
+		for ( Entry< String, BookComponentHead > entry : part.getComponents().entrySet() ) {
+			List< BookPage > pages = new ArrayList< BookPage >();
+			pages.add( new BookPage() );
+			Deque< BookComponent > componentQueue = new ArrayDeque< BookComponent >();
+			componentQueue.add( entry.getValue() );
+			while ( !componentQueue.isEmpty() ) {
+				BookComponent subComponent = componentQueue.poll();
+				for ( int i = 0; i < transformers.size() && !transformers.get( i ).transform( pages, subComponent, componentQueue ); i++ );				
 			}
+			index.getComponents().put( entry.getKey(), pages );
 		}
 		
-		// Create the footers
-		BookComponentHead footerComponent = findComponent( part, NamespacedKey.fromString( part.getFooterId() ) );
-		if ( footerComponent != null ) {
-			index.getFooters().add( new BookPage() );
-			Deque< BookComponent > footerComponents = new ArrayDeque< BookComponent >();
-			footerComponents.add( footerComponent );
-			while ( !footerComponents.isEmpty() ) {
-				BookComponent subComponent = footerComponents.poll();
-				for ( int i = 0; i < transformers.size() && !transformers.get( i ).transform( index.getFooters(), subComponent, footerComponents ); i++ );				
+		// Include all include sources of type component
+		for ( IncludeSource source : part.getIncludes() ) {
+			if ( source.type.equalsIgnoreCase( "component" ) ) {
+				BookComponentHead component = findComponent( part, NamespacedKey.fromString( source.id ) );
+				if ( component != null ) {
+					List< BookPage > pages = new ArrayList< BookPage >();
+					pages.add( new BookPage() );
+					Deque< BookComponent > componentQueue = new ArrayDeque< BookComponent >();
+					componentQueue.add( component );
+					while ( !componentQueue.isEmpty() ) {
+						BookComponent subComponent = componentQueue.poll();
+						for ( int i = 0; i < transformers.size() && !transformers.get( i ).transform( pages, subComponent, componentQueue ); i++ );				
+					}
+					index.getComponents().put( source.id, pages );
+				}
 			}
 		}
 		
