@@ -5,6 +5,9 @@
 # The location of the resource pack relative to the plugin directory
 resource-pack: "resourcepack.zip"
 
+# The font for negative spaces
+negative-spaces-font: "default"
+
 # The cache of components, books and stylesheets
 cache:
   auto-update: true

@@ -89,6 +89,8 @@ public class Quill extends JavaPlugin {
 	private boolean catalogAutoUpdate;
 	private long catalogUpdateInterval;
 	
+	private String negativeSpacesFont;
+	
 	private Path resourcePackPath;
 	private Map< String, BananaFont > fonts = new HashMap< String, BananaFont >();
 	
@@ -145,6 +147,7 @@ public class Quill extends JavaPlugin {
 		
 		FileConfiguration config = configuration.getConfiguration();
 		resourcePackPath = getDataFolder().toPath().resolve( config.getString( "resource-pack", "resourcepack.zip" ) );
+		negativeSpacesFont = config.getString( "negative-spaces-font", "default" );
 		catalogAutoUpdate = config.getBoolean( "cache.auto-update", true );
 		catalogUpdateInterval = config.getLong( "cache.update-interval", 10_000 );
 		
@@ -159,6 +162,10 @@ public class Quill extends JavaPlugin {
 		} catch ( IOException e ) {
 			e.printStackTrace();
 		}
+	}
+	
+	public void reloadConfig() {
+		loadConfig();
 	}
 	
 	public void reloadAssets() {
@@ -262,7 +269,7 @@ public class Quill extends JavaPlugin {
 			
 			return textTransformer;
 		} );
-		catalog.getTransformers().add( ComponentTransformerNegativeSpaces::new );
+		catalog.getTransformers().add( ( sender, cache, part ) -> new ComponentTransformerNegativeSpaces( () -> negativeSpacesFont ) );
 //		catalog.getTransformers().add( ComponentTransformerTail::new );
 		
 		// Add the include source suppliers
@@ -338,5 +345,9 @@ public class Quill extends JavaPlugin {
 	
 	public String getMessage( String key ) {
 		return messages.get( key );
+	}
+	
+	public String getNegativeSpacesFont() {
+		return negativeSpacesFont;
 	}
 }

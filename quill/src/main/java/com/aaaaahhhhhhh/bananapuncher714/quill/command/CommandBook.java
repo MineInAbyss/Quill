@@ -50,6 +50,10 @@ public class CommandBook {
 	private void applyToCommand() {
 		this.command = new SubCommand( "book" )
 				.addSenderValidator( new SenderValidatorPermission( "quill.book.command" ) )
+				.add( new SubCommand( "reload" )
+						.addSenderValidator( new SenderValidatorPermission( "quill.book.command.reload" ) )
+						.whenUnknown( new CommandExecutableMessage( ChatColor.RED + "Usage: /book reload" ) )
+						.defaultTo( this::reload ) )
 				.add( new SubCommand( "update" )
 						.addSenderValidator( new SenderValidatorPermission( "quill.book.command.update" ) )
 						.whenUnknown( new CommandExecutableMessage( ChatColor.RED + "Usage: /book update" ) )
@@ -250,6 +254,12 @@ public class CommandBook {
 				.whenUnknown( new CommandExecutableMessage( ChatColor.RED + "Invalid argument!" ) )
 				.defaultTo( new CommandExecutableMessage( ChatColor.RED + "You must provide an argument!" ) )
 				.applyTo( pluginCommand );
+	}
+	
+	private void reload( CommandSender sender, String[] args, CommandContext parameters ) {
+		sender.sendMessage( ChatColor.DARK_AQUA + "Reloading config..." );
+		plugin.reloadConfig();
+		sender.sendMessage( ChatColor.AQUA + "Reloaded config successfully!" );
 	}
 	
 	private void update( CommandSender sender, String[] args, CommandContext parameters ) {

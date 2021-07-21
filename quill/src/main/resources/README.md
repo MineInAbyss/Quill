@@ -2,6 +2,7 @@
 A flexible and expandable system for creating Minecraft books.
 
 ## Commands
+- `/book reload` - Reload the config
 - `/book update` - Updates the cache.
 - `/book updateassets` - Updates the resource pack.
 - `/book list [player]` - Command line variant requires a player. Lists all available books.
@@ -16,6 +17,7 @@ A flexible and expandable system for creating Minecraft books.
 ## Permissions
 - `quill.admin`
 - `quill.book.command`
+- `quill.book.command.reload`
 - `quill.book.command.update`
 - `quill.book.command.updateassets`
 - `quill.book.command.list`

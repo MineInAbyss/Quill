@@ -19,6 +19,7 @@ permissions:
     description: "Admin permission"
     default: op
     children:
+    - quill.book.command.reload
     - quill.book.command.update
     - quill.book.command.updateassets
     - quill.book.command.update.list.other
@@ -28,6 +29,11 @@ permissions:
   quill.book.command:
     description: "Basic command permission"
     default: op
+  quill.book.command.reload:
+    description: "Reload the config"
+    default: op
+    children:
+    - quill.book.command
   quill.book.command.update:
     description: "Update the cache"
     default: op
