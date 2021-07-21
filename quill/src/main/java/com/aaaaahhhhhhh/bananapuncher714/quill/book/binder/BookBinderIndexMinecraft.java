@@ -73,12 +73,6 @@ public class BookBinderIndexMinecraft implements Bookbinder< BookIndex > {
 			contentHeight--;
 		}
 		
-		System.out.println( "Lines " + lines );
-		System.out.println( "content " + contentHeight );
-		System.out.println( "header " + headerElement.height );
-		System.out.println( "footer " + footerElement.height );
-		System.out.println( "pad " + padHeader );
-		
 		// Properly account for the header and footer
 		for ( BookPage page : object.getPages() ) {
 			List< Word > content = new ArrayList< Word >();
