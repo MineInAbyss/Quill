@@ -22,6 +22,7 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.w3c.dom.Node;
 
+import com.google.common.base.Objects;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -211,10 +212,10 @@ public class Util {
 				c1.isUnderlinedRaw() == c2.isUnderlinedRaw() ) {
 			String f1 = c1.getFontRaw();
 			String f2 = c2.getFontRaw();
-			
+
 			if ( !( ( f1 == null || f1.equals( "default" ) ) &&
 					( f2 == null || f2.equals( "default" ) ) ) &&
-					( f1 != null && !f1.equals( f2 ) ) ) {
+					!Objects.equal( f1, f2 ) ) {
 				return false;
 			}
 					
@@ -224,7 +225,7 @@ public class Util {
 				return false;
 			}
 			
-			if ( cc1 == cc2|| cc1.equals( cc2 ) ) {
+			if ( cc1 == cc2 || cc1.equals( cc2 ) ) {
 				ClickEvent ce1 = c1.getClickEvent();
 				ClickEvent ce2 = c2.getClickEvent();
 				if ( ce1 == null ^ ce2 == null ) {

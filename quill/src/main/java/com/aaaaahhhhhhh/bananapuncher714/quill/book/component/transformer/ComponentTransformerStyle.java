@@ -40,7 +40,10 @@ public class ComponentTransformerStyle implements ComponentTransformer {
 				Style finalStyle = null;
 				
 				// Build the style
-				String styleAttrib = object.getAttributes().getOrDefault( "styles", "" );
+				String styleAttrib = object.getAttributes().get( "styles" );
+				if ( styleAttrib == null ) {
+					object.getAttributes().getOrDefault( "style", "" );
+				}
 				String[] listedStyles = styleAttrib.split( "\\s+" );
 				for ( String inheritedStyle : listedStyles ) {
 					if ( !inheritedStyle.isEmpty() ) {
