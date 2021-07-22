@@ -29,6 +29,7 @@ public class ComponentTransformerRedirect implements ComponentTransformer {
 					throw new NullPointerException( "No book id found!" );
 				} else {
 					BookComponentObject click = new BookComponentObject( ComponentTransformerClick.ID );
+					click.getAttributes().putAll( object.getAttributes() );
 					click.getAttributes().put( ComponentTransformerClick.ACTION, Action.RUN_COMMAND.name() );
 					click.getAttributes().put( ComponentTransformerClick.VALUE, "/book read " + bookId );
 					components.addFirst( click );

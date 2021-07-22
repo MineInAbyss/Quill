@@ -204,13 +204,22 @@ public class Util {
 	}
 	
 	public static boolean isSimilar( BaseComponent c1, BaseComponent c2 ) {
-		if ( c1.isBold() == c2.isBold() &&
-				c1.isItalic() == c2.isItalic() &&
-				c1.isObfuscated() == c2.isObfuscated() &&
-				c1.isStrikethrough() == c2.isStrikethrough() &&
-				c1.isUnderlined() == c2.isUnderlined() ) {
-			ChatColor cc1 = c1.getColor();
-			ChatColor cc2 = c2.getColor();
+		if ( c1.isBoldRaw() == c2.isBoldRaw() &&
+				c1.isItalicRaw() == c2.isItalicRaw() &&
+				c1.isObfuscatedRaw() == c2.isObfuscatedRaw() &&
+				c1.isStrikethroughRaw() == c2.isStrikethroughRaw() &&
+				c1.isUnderlinedRaw() == c2.isUnderlinedRaw() ) {
+			String f1 = c1.getFontRaw();
+			String f2 = c2.getFontRaw();
+			
+			if ( !( ( f1 == null || f1.equals( "default" ) ) &&
+					( f2 == null || f2.equals( "default" ) ) ) &&
+					( f1 != null && !f1.equals( f2 ) ) ) {
+				return false;
+			}
+					
+			ChatColor cc1 = c1.getColorRaw();
+			ChatColor cc2 = c2.getColorRaw();
 			if ( cc1 == null ^ cc2 == null ) {
 				return false;
 			}

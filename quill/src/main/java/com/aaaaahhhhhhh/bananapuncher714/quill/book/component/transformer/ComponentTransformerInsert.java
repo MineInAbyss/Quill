@@ -34,6 +34,7 @@ public class ComponentTransformerInsert implements ComponentTransformer {
 				} else {
 					BookComponentHead subComponent = cache.findComponent( part, NamespacedKey.fromString( componentId ) );
 					if ( subComponent != null ) {
+						subComponent.getAttributes().putAll( object.getAttributes() );
 						components.addFirst( subComponent );
 					} else {
 						throw new NullPointerException( String.format( "No component with the id '%s' found!", componentId ) );

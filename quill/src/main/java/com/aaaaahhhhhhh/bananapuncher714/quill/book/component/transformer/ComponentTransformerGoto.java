@@ -29,6 +29,7 @@ public class ComponentTransformerGoto implements ComponentTransformer {
 					throw new NullPointerException( "No book id found!" );
 				} else {
 					BookComponentObject click = new BookComponentObject( ComponentTransformerClick.ID );
+					click.getAttributes().putAll( object.getAttributes() );
 					click.getAttributes().put( ComponentTransformerClick.ACTION, Action.CHANGE_PAGE.name() );
 					click.getAttributes().put( ComponentTransformerClick.VALUE, mark );
 					components.addFirst( click );
