@@ -1,6 +1,10 @@
 # Quill
 A flexible and expandable system for creating Minecraft books.
 
+## Getting started
+When you install the plugin for the first time, it will save the quill guidebook to the catalog. You can get a copy of it with `/book give quill_guidebook` and read it for more information.
+![Quill Guidebook](https://i.imgur.com/FIYC7lt.png)
+
 ## Commands
 - `/book reload` - Reload the config
 - `/book update` - Updates the cache.

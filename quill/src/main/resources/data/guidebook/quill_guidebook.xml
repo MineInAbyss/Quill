@@ -1,0 +1,407 @@
+<book id="quill_guidebook" title="Quill Author's Guide" author="BananaPuncher714">
+  <content header="title_header" footer="title_footer"><insert id="quill_guidebook_content.xml"/></content>
+
+  <components>
+    <!-- Headers and footers -->
+    <component id="title_header" styles="bold">
+      
+   <color v="0x36007d">Quill</color>:
+     The <color v="0x0089c9"><u>Superior</u></color>
+  Book Plugin
+
+</component>
+    <component id="title_footer" styles="bold margin"><hover component="hover_github"><click action="OPEN_URL" value="https://github.com/MineInAbyss/Quill">Visit the Github</click></hover></component>
+    <component id="toc_header_1" styles="bold">
+    Table of
+    Contents
+
+</component>
+    <component id="body_header" styles="bold margin">Quill Guidebook
+
+</component>
+    <component id="body_footer"><go to="table_of_contents" styles="bold"><hover component="hover_toc_return">Return to the TOC</hover></go></component>
+
+    <!-- Convenience components -->
+    <component id="copy_prompt"><u>Click to copy</u></component>
+    <component id="result_prompt"><u>Result:</u></component>
+
+    <!-- Example components -->
+    <component id="example_getting_started_1"><hover component="hover_getting_started_example_1"><click action="COPY_TO_CLIPBOARD" value="&lt;book id=&quot;first_book&quot; title=&quot;My First Book&quot; author=&quot;YourNameHere&quot;&gt;&#10;  &lt;content&gt;Hello, world!&lt;/content&gt;&#10;&lt;/book&gt;"><div styles="example">XML file</div></click></hover></component>
+    <component id="example_components_1"><hover component="hover_components_example_1"><click action="COPY_TO_CLIPBOARD" value="&lt;book id=&quot;first_book&quot; title=&quot;Inserted component&quot; author=&quot;BananaPuncher714&quot;&gt;&#10;  &lt;content&gt;&lt;insert id=&quot;first_component.xml&quot;/&gt;&lt;/content&gt;&#10;&lt;/book&gt;"><div styles="example">component and book files</div></click></hover></component>
+    <component id="example_components_2"><hover component="hover_components_example_2"><click action="COPY_TO_CLIPBOARD" value="&lt;book id=&quot;first_book&quot; title=&quot;Self contained book&quot; author=&quot;BananaPuncher714&quot;&gt;&#10;  &lt;content&gt;Hello, &lt;insert id=&quot;name_component&quot;/&gt;!&lt;/content&gt;&#10;  &lt;components&gt;&#10;    &lt;component id=&quot;name_component&quot;&gt;BananaPuncher714&lt;/component&gt;&#10;  &lt;/components&gt;&#10;&lt;/book&gt;"><div styles="example">For example</div></click></hover></component>
+    <component id="example_includes_1"><hover component="hover_includes_example_1"><click action="COPY_TO_CLIPBOARD" value="&lt;book id=&quot;book_a&quot; title=&quot;Book A&quot; author=&quot;BananaPuncher714&quot;&gt;&#10;  &lt;content&gt;Fetched component: &lt;insert id=&quot;book_b:shared_component&quot;/&gt;&lt;/content&gt;&#10;  &lt;inludes&gt;
+    &lt;include type=&quot;book&quot;&gt;book_b&lt;/include&gt;&#10;  &lt;/inludes&gt;&#10;&lt;/book&gt;"><div styles="example">book A</div></click></hover></component>
+    <component id="example_includes_2"><hover component="hover_includes_example_2"><click action="COPY_TO_CLIPBOARD" value="&lt;book id=&quot;book_b&quot; title=&quot;Book B&quot; author=&quot;BananaPuncher714&quot;&gt;&#10;  &lt;content&gt;Sharing components&lt;/content&gt;&#10;  &lt;components&gt;&#10;    &lt;component id=&quot;shared_component&quot;&gt;A component from book B&lt;/component&gt;&#10;  &lt;/components&gt;&#10;&lt;/book&gt;"><div styles="example">book B</div></click></hover></component>
+    <component id="example_styles_1"><hover component="hover_styles_example_1"><click action="COPY_TO_CLIPBOARD" value="&lt;book id=&quot;styling&quot; title=&quot;Styled Book&quot; author=&quot;BananaPuncher714&quot;&gt;&#10;  &lt;content&gt;Example text: &lt;insert id=&quot;styled_component&quot;/&gt;&lt;/content&gt;&#10;  &lt;components&gt;&#10;    &lt;component id=&quot;styled_component&quot; styles=&quot;red_underline bold&quot;&gt;Red, underlined and bold&lt;/component&gt;&#10;  &lt;/components&gt;&#10;  &lt;styles&gt;&#10;    &lt;style id=&quot;red_underline&quot;&gt;&#10;      &lt;formatting&gt;&#10;        &lt;format type=&quot;color&quot;&gt;0xFF0000&lt;/format&gt;&#10;        &lt;format type=&quot;underline&quot;&gt;true&lt;/format&gt;&#10;      &lt;/formatting&gt;&#10;    &lt;/style&gt;&#10;    &lt;style id=&quot;bold&quot;&gt;&#10;      &lt;formatting&gt;&#10;        &lt;format type=&quot;bold&quot;&gt;true&lt;/format&gt;&#10;      &lt;/formatting&gt;&#10;    &lt;/style&gt;&#10;  &lt;/styles&gt;&#10;&lt;/book&gt;"><div styles="example">add some styles</div></click></hover></component>
+    <component id="example_stylesheets_1"><hover component="hover_stylesheets_example_1"><click action="COPY_TO_CLIPBOARD" value="&lt;stylesheet id=&quot;example_stylesheet&quot;&gt;&#10;  &lt;styles&gt;&#10;    &lt;style id=&quot;h1&quot;&gt;&#10;      &lt;formatting&gt;&#10;        &lt;format type=&quot;bold&quot;&gt;true&lt;/format&gt;&#10;        &lt;format type=&quot;underline&quot;&gt;true&lt;/format&gt;&#10;      &lt;/formatting&gt;&#10;    &lt;/style&gt;&#10;  &lt;/styles&gt;&#10;&lt;/stylesheet&gt;"><div styles="example">Here's an example</div></click></hover></component>
+    <component id="example_stylesheets_2"><hover component="hover_stylesheets_example_2"><click action="COPY_TO_CLIPBOARD" value="&lt;book id=&quot;styling2&quot; title=&quot;Include stylesheet&quot; author=&quot;BananaPuncher714&quot;&gt;&#10;  &lt;content style=&quot;h1&quot;&gt;H1 style&lt;/content&gt;&#10;  &lt;inludes&gt;&#10;    &lt;include type=&quot;stylesheet&quot;&gt;example_stylesheet&lt;/include&gt;&#10;  &lt;/inludes&gt;&#10;&lt;/book&gt;"><div styles="example">stylesheet files</div></click></hover></component>
+    <component id="example_stylesheets_3"><hover component="hover_stylesheets_example_3"><click action="COPY_TO_CLIPBOARD" value="&lt;stylesheet id=&quot;parent_stylesheet&quot;&gt;&#10;  &lt;styles&gt;&#10;    &lt;style id=&quot;h1&quot;&gt;&#10;      &lt;formatting&gt;&#10;        &lt;format type=&quot;bold&quot;&gt;true&lt;/format&gt;&#10;        &lt;format type=&quot;underline&quot;&gt;true&lt;/format&gt;&#10;      &lt;/formatting&gt;&#10;    &lt;/style&gt;&#10;  &lt;/styles&gt;&#10;&lt;/stylesheet&gt;"><div styles="example">include other stylesheets</div></click></hover></component>
+    <component id="example_stylesheets_4"><hover component="hover_stylesheets_example_4"><click action="COPY_TO_CLIPBOARD" value="&lt;stylesheet id=&quot;child_stylesheet&quot;&gt;&#10;  &lt;includes&gt;&#10;    &lt;include type=&quot;stylesheet&quot;&gt;parent_stylesheet&lt;/include&gt;&#10;  &lt;/includes&gt;&#10;  &lt;styles&gt;&#10;    &lt;style id=&quot;h1_modified&quot; extends=&quot;h1&quot;&gt;&#10;      &lt;formatting&gt;&#10;        &lt;format type=&quot;color&quot;&gt;0x0b753e&lt;/format&gt;&#10;      &lt;/formatting&gt;&#10;    &lt;/style&gt;&#10;  &lt;/styles&gt;&#10;&lt;/stylesheet&gt;"><div styles="example">inherit directly</div></click></hover></component>
+    <component id="example_haf_1"><hover component="hover_haf_example_1"><click action="COPY_TO_CLIPBOARD" value="&lt;book id=&quot;header_and_footer&quot; title=&quot;Showcasing headers and footers&quot; author=&quot;BananaPuncher714&quot;&gt;&#10;  &lt;content footer=&quot;custom_footer&quot;&gt;Book content&lt;/content&gt;&#10;  &lt;components&gt;&#10;    &lt;component id=&quot;header&quot;&gt;This goes at the top of the book&lt;/component&gt;&#10;    &lt;component id=&quot;custom_footer&quot;&gt;This is always at the bottom&lt;/component&gt;&#10;  &lt;/components&gt;&#10;&lt;/book&gt;"><div styles="example">header and footer attribute</div></click></hover></component>
+    <component id="example_div_1"><hover component="hover_div_example_1"><click action="COPY_TO_CLIPBOARD" value="&lt;book id=&quot;div_example&quot; title=&quot;Styling with div&quot; author=&quot;BananaPuncher714&quot;&gt;&#10;  &lt;content&gt;Formatted div element: &lt;div styles=&quot;blue&quot;&gt;Blue text&lt;/div&gt;&lt;/content&gt;&#10;  &lt;styles&gt;&#10;    &lt;style id=&quot;blue&quot;&gt;&#10;      &lt;formatting&gt;&#10;        &lt;format type=&quot;color&quot;&gt;0x0000FF&lt;/format&gt;&#10;      &lt;/formatting&gt;&#10;    &lt;/style&gt;&#10;  &lt;/styles&gt;&#10;&lt;/book&gt;"><div styles="example">div element</div></click></hover></component>
+    <component id="example_mark_1"><hover component="hover_mark_example_1"><click action="COPY_TO_CLIPBOARD" value="&lt;book id=&quot;mark_example&quot; title=&quot;Navigating with mark and go&quot; author=&quot;BananaPuncher714&quot;&gt;&#10;  &lt;content&gt;&lt;mark id=&quot;start&quot;/&gt;&lt;go to=&quot;start&quot;&gt;Click me to go to the last page!&lt;/go&gt;&lt;br/&gt;&lt;br/&gt;&lt;br/&gt;&lt;br/&gt;&lt;mark id=&quot;end&quot;/&gt;&lt;go to=&quot;start&quot;&gt;Click me to return to the first page!&lt;/go&gt;&lt;/content&gt;&#10;&lt;/book&gt;"><div styles="example">mark and go elements</div></click></hover></component>
+    <component id="example_click_events_1"><hover component="hover_click_events_example_1"><click action="COPY_TO_CLIPBOARD" value="&lt;click action=&quot;OPEN_URL&quot; value=&quot;https://www.youtube.com/watch?v=dQw4w9WgXcQ&quot;&gt;&lt;color v=&quot;0x0b753e&quot;&gt;opens a youtube link&lt;/color&gt;&lt;/click&gt;"><div styles="example">this</div></click></hover></component>
+    <component id="example_click_events_2"><hover component="hover_click_events_example_2"><click action="COPY_TO_CLIPBOARD" value="&lt;click action=&quot;COPY_TO_CLIPBOARD&quot; value=&quot;&amp;lt;click action=&amp;quot;OPEN_URL&amp;quot; value=&amp;quot;https://www.youtube.com/watch?v=dQw4w9WgXcQ&amp;quot;&amp;gt;&amp;lt;color v=&amp;quot;0x0b753e&amp;quot;&amp;gt;opens a youtube link&amp;lt;/color&amp;gt;&amp;lt;/click&amp;gt;&quot;&gt;&lt;color v=&quot;0x0b753e&quot;&gt;copies the previous element&apos;s code&lt;/color&gt;&lt;/click&gt;"><div styles="example">this</div></click></hover></component>
+    <component id="click_direc_nofooter"><hover component="hover_direc_nofooter"><click action="COPY_TO_CLIPBOARD" value="&lt;direc command=&quot;nofooter&quot;/&gt;"><div styles="example">nofooter</div></click></hover></component>
+    <component id="click_direc_noheader"><hover component="hover_direc_noheader"><click action="COPY_TO_CLIPBOARD" value="&lt;direc command=&quot;noheader&quot;/&gt;"><div styles="example">noheader</div></click></hover></component>
+    <component id="click_direc_footer"><hover component="hover_direc_footer"><click action="COPY_TO_CLIPBOARD" value="&lt;direc command=&quot;header&quot; value=&quot;header_component&quot;/&gt;"><div styles="example">footer</div></click></hover></component>
+    <component id="click_direc_header"><hover component="hover_direc_header"><click action="COPY_TO_CLIPBOARD" value="&lt;direc command=&quot;header&quot; value=&quot;header_component&quot;/&gt;"><div styles="example">header</div></click></hover></component>
+
+    <!-- Hover components -->
+    <!-- Copy examples -->
+    <component id="hover_getting_started_example_1"><insert id="copy_prompt"/>
+<color v="0x80F000"><b>example_book.xml</b></color>
+<div styles="xml_bracket">&lt;</div><div styles="xml_element">book</div> <div styles="xml_attribute">id</div>=<div styles="xml_string">&quot;first_book&quot;</div> <div styles="xml_attribute">title</div>=<div styles="xml_string">&quot;My First Book&quot;</div> <div styles="xml_attribute">author</div>=<div styles="xml_string">&quot;YourNameHere&quot;</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+  </div><div styles="xml_bracket">&lt;</div><div styles="xml_element">content</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">Hello, world!</div><div styles="xml_bracket">&lt;/</div><div styles="xml_element">content</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+</div><div styles="xml_bracket">&lt;/</div><div styles="xml_element">book</div><div styles="xml_bracket">&gt;</div>
+
+<insert id="result_prompt"/>
+Hello, world!</component>
+    <component id="hover_components_example_1"><insert id="copy_prompt"/>
+<color v="0x80F000"><b>first_component.xml</b></color>
+<div styles="xml_content">Hello, world!</div>
+
+<color v="0x80F000"><b>example_book.xml</b></color>
+<div styles="xml_bracket">&lt;</div><div styles="xml_element">book</div> <div styles="xml_attribute">id</div>=<div styles="xml_string">&quot;inserted_component&quot;</div> <div styles="xml_attribute">title</div>=<div styles="xml_string">&quot;Inserted component&quot;</div> <div styles="xml_attribute">author</div>=<div styles="xml_string">&quot;BananaPuncher714&quot;</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+  </div><div styles="xml_bracket">&lt;</div><div styles="xml_element">content</div><div styles="xml_bracket">&gt;</div><div styles="xml_bracket">&lt;</div><div styles="xml_element">insert</div> <div styles="xml_attribute">id</div>=<div styles="xml_string">&quot;first_component.xml&quot;</div><div styles="xml_bracket">/&gt;</div><div styles="xml_bracket">&lt;/</div><div styles="xml_element">content</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+</div><div styles="xml_bracket">&lt;/</div><div styles="xml_element">book</div><div styles="xml_bracket">&gt;</div>
+
+<insert id="result_prompt"/>
+Hello, world!</component>
+    <component id="hover_components_example_2"><insert id="copy_prompt"/>
+<color v="0x80F000"><b>example_book.xml</b></color>
+<div styles="xml_bracket">&lt;</div><div styles="xml_element">book</div> <div styles="xml_attribute">id</div>=<div styles="xml_string">&quot;self_contained&quot;</div> <div styles="xml_attribute">title</div>=<div styles="xml_string">&quot;Self contained book&quot;</div> <div styles="xml_attribute">author</div>=<div styles="xml_string">&quot;BananaPuncher714&quot;</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+  </div><div styles="xml_bracket">&lt;</div><div styles="xml_element">content</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">Hello, </div><div styles="xml_bracket">&lt;</div><div styles="xml_element">insert</div> <div styles="xml_attribute">id</div>=<div styles="xml_string">&quot;name_component&quot;</div><div styles="xml_bracket">/&gt;</div><div styles="xml_content">!</div><div styles="xml_bracket">&lt;/</div><div styles="xml_element">content</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+  </div><div styles="xml_bracket">&lt;</div><div styles="xml_element">components</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+    </div><div styles="xml_bracket">&lt;</div><div styles="xml_element">component</div> <div styles="xml_attribute">id</div>=<div styles="xml_string">&quot;name_component&quot;</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">BananaPuncher714</div><div styles="xml_bracket">&lt;/</div><div styles="xml_element">component</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+  </div><div styles="xml_bracket">&lt;/</div><div styles="xml_element">components</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+</div><div styles="xml_bracket">&lt;/</div><div styles="xml_element">book</div><div styles="xml_bracket">&gt;</div>
+
+<insert id="result_prompt"/>
+Hello, BananaPuncher714!</component>
+    <component id="hover_includes_example_1"><u>Click to copy </u><color v="0x80F000"><b>book_a.xml</b></color><insert id="hover_includes_example_base"/></component>
+    <component id="hover_includes_example_2"><u>Click to copy </u><color v="0x80F000"><b>book_b.xml</b></color><insert id="hover_includes_example_base"/></component>
+    <component id="hover_includes_example_base">
+<color v="0x80F000"><b>book_a.xml</b></color>
+<div styles="xml_bracket">&lt;</div><div styles="xml_element">book</div> <div styles="xml_attribute">id</div>=<div styles="xml_string">&quot;book_a&quot;</div> <div styles="xml_attribute">title</div>=<div styles="xml_string">&quot;Book A&quot;</div> <div styles="xml_attribute">author</div>=<div styles="xml_string">&quot;BananaPuncher714&quot;</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+  </div><div styles="xml_bracket">&lt;</div><div styles="xml_element">content</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">Fetched component: </div><div styles="xml_bracket">&lt;</div><div styles="xml_element">insert</div> <div styles="xml_attribute">id</div>=<div styles="xml_string">&quot;book_b:shared_component&quot;</div><div styles="xml_bracket">/&gt;</div><div styles="xml_bracket">&lt;/</div><div styles="xml_element">content</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+  </div><div styles="xml_bracket">&lt;</div><div styles="xml_element">inludes</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+    </div><div styles="xml_bracket">&lt;</div><div styles="xml_element">include</div> <div styles="xml_attribute">type</div>=<div styles="xml_string">&quot;book&quot;</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">book_b</div><div styles="xml_bracket">&lt;/</div><div styles="xml_element">include</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+  </div><div styles="xml_bracket">&lt;/</div><div styles="xml_element">inludes</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+</div><div styles="xml_bracket">&lt;/</div><div styles="xml_element">book</div><div styles="xml_bracket">&gt;</div>
+
+<color v="0x80F000"><b>book_b.xml</b></color>
+<div styles="xml_bracket">&lt;</div><div styles="xml_element">book</div> <div styles="xml_attribute">id</div>=<div styles="xml_string">&quot;book_b&quot;</div> <div styles="xml_attribute">title</div>=<div styles="xml_string">&quot;Book B&quot;</div> <div styles="xml_attribute">author</div>=<div styles="xml_string">&quot;BananaPuncher714&quot;</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+  </div><div styles="xml_bracket">&lt;</div><div styles="xml_element">content</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">Sharing components</div><div styles="xml_bracket">&lt;/</div><div styles="xml_element">content</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+  </div><div styles="xml_bracket">&lt;</div><div styles="xml_element">components</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+    </div><div styles="xml_bracket">&lt;</div><div styles="xml_element">component</div> <div styles="xml_attribute">id</div>=<div styles="xml_string">&quot;shared_component&quot;</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">A component from book B</div><div styles="xml_bracket">&lt;/</div><div styles="xml_element">component</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+  </div><div styles="xml_bracket">&lt;/</div><div styles="xml_element">components</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+</div><div styles="xml_bracket">&lt;/</div><div styles="xml_element">book</div><div styles="xml_bracket">&gt;</div>
+
+<insert id="result_prompt"/>
+Fetched component: A component from book B</component>
+
+    <component id="hover_styles_example_1"><insert id="copy_prompt"/>
+<color v="0x80F000"><b>example_book.xml</b></color>
+<div styles="xml_bracket">&lt;</div><div styles="xml_element">book</div> <div styles="xml_attribute">id</div>=<div styles="xml_string">&quot;styling&quot;</div> <div styles="xml_attribute">title</div>=<div styles="xml_string">&quot;Styled Book&quot;</div> <div styles="xml_attribute">author</div>=<div styles="xml_string">&quot;BananaPuncher714&quot;</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+  </div><div styles="xml_bracket">&lt;</div><div styles="xml_element">content</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">Example text: </div><div styles="xml_bracket">&lt;</div><div styles="xml_element">insert</div> <div styles="xml_attribute">id</div>=<div styles="xml_string">&quot;styled_component&quot;</div><div styles="xml_bracket">/&gt;</div><div styles="xml_bracket">&lt;/</div><div styles="xml_element">content</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+  </div><div styles="xml_bracket">&lt;</div><div styles="xml_element">components</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+    </div><div styles="xml_bracket">&lt;</div><div styles="xml_element">component</div> <div styles="xml_attribute">id</div>=<div styles="xml_string">&quot;styled_component&quot;</div> <div styles="xml_attribute">styles</div>=<div styles="xml_string">&quot;red_underline bold&quot;</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">Red, underlined and bold</div><div styles="xml_bracket">&lt;/</div><div styles="xml_element">component</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+  </div><div styles="xml_bracket">&lt;/</div><div styles="xml_element">components</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+  </div><div styles="xml_bracket">&lt;</div><div styles="xml_element">styles</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+    </div><div styles="xml_bracket">&lt;</div><div styles="xml_element">style</div> <div styles="xml_attribute">id</div>=<div styles="xml_string">&quot;red_underline&quot;</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+      </div><div styles="xml_bracket">&lt;</div><div styles="xml_element">formatting</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+        </div><div styles="xml_bracket">&lt;</div><div styles="xml_element">format</div> <div styles="xml_attribute">type</div>=<div styles="xml_string">&quot;color&quot;</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">0xFF0000</div><div styles="xml_bracket">&lt;/</div><div styles="xml_element">format</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+        </div><div styles="xml_bracket">&lt;</div><div styles="xml_element">format</div> <div styles="xml_attribute">type</div>=<div styles="xml_string">&quot;underline&quot;</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">true</div><div styles="xml_bracket">&lt;/</div><div styles="xml_element">format</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+      </div><div styles="xml_bracket">&lt;/</div><div styles="xml_element">formatting</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+    </div><div styles="xml_bracket">&lt;/</div><div styles="xml_element">style</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+    </div><div styles="xml_bracket">&lt;</div><div styles="xml_element">style</div> <div styles="xml_attribute">id</div>=<div styles="xml_string">&quot;bold&quot;</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+      </div><div styles="xml_bracket">&lt;</div><div styles="xml_element">formatting</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+        </div><div styles="xml_bracket">&lt;</div><div styles="xml_element">format</div> <div styles="xml_attribute">type</div>=<div styles="xml_string">&quot;bold&quot;</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">true</div><div styles="xml_bracket">&lt;/</div><div styles="xml_element">format</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+      </div><div styles="xml_bracket">&lt;/</div><div styles="xml_element">formatting</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+    </div><div styles="xml_bracket">&lt;/</div><div styles="xml_element">style</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+  </div><div styles="xml_bracket">&lt;/</div><div styles="xml_element">styles</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+</div><div styles="xml_bracket">&lt;/</div><div styles="xml_element">book</div><div styles="xml_bracket">&gt;</div>
+
+<insert id="result_prompt"/>
+Example text: <color v="0xFF0000"><u><b>Red, underlined and bold</b></u></color></component>
+    <component id="hover_styles_example_2"><div styles="xml_bracket">&lt;</div><div styles="xml_element">style</div> <div styles="xml_attribute">id</div>=<div styles="xml_string">&quot;red_underline&quot;</div> <div styles="xml_attribute">extends</div>=<div styles="xml_string">&quot;bold&quot;</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+  </div><div styles="xml_bracket">&lt;</div><div styles="xml_element">formatting</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+    </div><div styles="xml_bracket">&lt;</div><div styles="xml_element">format</div> <div styles="xml_attribute">type</div>=<div styles="xml_string">&quot;color&quot;</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">0xFF0000</div><div styles="xml_bracket">&lt;/</div><div styles="xml_element">format</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+    </div><div styles="xml_bracket">&lt;</div><div styles="xml_element">format</div> <div styles="xml_attribute">type</div>=<div styles="xml_string">&quot;underline&quot;</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">true</div><div styles="xml_bracket">&lt;/</div><div styles="xml_element">format</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+  </div><div styles="xml_bracket">&lt;/</div><div styles="xml_element">formatting</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+</div><div styles="xml_bracket">&lt;/</div><div styles="xml_element">style</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+</div><div styles="xml_bracket">&lt;</div><div styles="xml_element">style</div> <div styles="xml_attribute">id</div>=<div styles="xml_string">&quot;bold&quot;</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+  </div><div styles="xml_bracket">&lt;</div><div styles="xml_element">formatting</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+    </div><div styles="xml_bracket">&lt;</div><div styles="xml_element">format</div> <div styles="xml_attribute">type</div>=<div styles="xml_string">&quot;bold&quot;</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">true</div><div styles="xml_bracket">&lt;/</div><div styles="xml_element">format</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+  </div><div styles="xml_bracket">&lt;/</div><div styles="xml_element">formatting</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+</div><div styles="xml_bracket">&lt;/</div><div styles="xml_element">style</div><div styles="xml_bracket">&gt;</div>
+</component>
+    <component id="hover_stylesheets_example_1"><u>Click to copy</u> <color v="0x80F000"><b>example_book.xml</b></color><insert id="hover_stylesheets_example_base_1"/></component>
+    <component id="hover_stylesheets_example_2"><u>Click to copy</u> <color v="0x80F000"><b>example_stylesheet.xml</b></color><insert id="hover_stylesheets_example_base_1"/></component>
+    <component id="hover_stylesheets_example_base_1">
+<color v="0x80F000"><b>example_book.xml</b></color>
+<div styles="xml_bracket">&lt;</div><div styles="xml_element">book</div> <div styles="xml_attribute">id</div>=<div styles="xml_string">&quot;styling_with_stylesheets&quot;</div> <div styles="xml_attribute">title</div>=<div styles="xml_string">&quot;Include stylesheet&quot;</div> <div styles="xml_attribute">author</div>=<div styles="xml_string">&quot;BananaPuncher714&quot;</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+  </div><div styles="xml_bracket">&lt;</div><div styles="xml_element">content</div> <div styles="xml_attribute">style</div>=<div styles="xml_string">&quot;h1&quot;</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">H1 style</div><div styles="xml_bracket">&lt;/</div><div styles="xml_element">content</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+  </div><div styles="xml_bracket">&lt;</div><div styles="xml_element">inludes</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+    </div><div styles="xml_bracket">&lt;</div><div styles="xml_element">include</div> <div styles="xml_attribute">type</div>=<div styles="xml_string">&quot;stylesheet&quot;</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">example_stylesheet</div><div styles="xml_bracket">&lt;/</div><div styles="xml_element">include</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+  </div><div styles="xml_bracket">&lt;/</div><div styles="xml_element">inludes</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+</div><div styles="xml_bracket">&lt;/</div><div styles="xml_element">book</div><div styles="xml_bracket">&gt;</div>
+
+<color v="0x80F000"><b>example_stylesheet.xml</b></color>
+<div styles="xml_bracket">&lt;</div><div styles="xml_element">stylesheet</div> <div styles="xml_attribute">id</div>=<div styles="xml_string">&quot;example_stylesheet&quot;</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+  </div><div styles="xml_bracket">&lt;</div><div styles="xml_element">styles</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+    </div><div styles="xml_bracket">&lt;</div><div styles="xml_element">style</div> <div styles="xml_attribute">id</div>=<div styles="xml_string">&quot;h1&quot;</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+      </div><div styles="xml_bracket">&lt;</div><div styles="xml_element">formatting</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+        </div><div styles="xml_bracket">&lt;</div><div styles="xml_element">format</div> <div styles="xml_attribute">type</div>=<div styles="xml_string">&quot;bold&quot;</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">true</div><div styles="xml_bracket">&lt;/</div><div styles="xml_element">format</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+        </div><div styles="xml_bracket">&lt;</div><div styles="xml_element">format</div> <div styles="xml_attribute">type</div>=<div styles="xml_string">&quot;underline&quot;</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">true</div><div styles="xml_bracket">&lt;/</div><div styles="xml_element">format</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+      </div><div styles="xml_bracket">&lt;/</div><div styles="xml_element">formatting</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+    </div><div styles="xml_bracket">&lt;/</div><div styles="xml_element">style</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+  </div><div styles="xml_bracket">&lt;/</div><div styles="xml_element">styles</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+</div><div styles="xml_bracket">&lt;/</div><div styles="xml_element">stylesheet</div><div styles="xml_bracket">&gt;</div>
+
+<insert id="result_prompt"/>
+<b><u>H1 style</u></b></component>
+    <component id="hover_stylesheets_example_3"><u>Click to copy</u> <color v="0x80F000"><b>parent_stylesheet.xml</b></color><insert id="hover_stylesheets_example_base_2"/></component>
+    <component id="hover_stylesheets_example_4"><u>Click to copy</u> <color v="0x80F000"><b>child_stylesheet.xml</b></color><insert id="hover_stylesheets_example_base_2"/></component>
+    <component id="hover_stylesheets_example_base_2">
+<color v="0x80F000"><b>parent_stylesheet.xml</b></color>
+<div styles="xml_bracket">&lt;</div><div styles="xml_element">stylesheet</div> <div styles="xml_attribute">id</div>=<div styles="xml_string">&quot;parent_stylesheet&quot;</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+  </div><div styles="xml_bracket">&lt;</div><div styles="xml_element">styles</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+    </div><div styles="xml_bracket">&lt;</div><div styles="xml_element">style</div> <div styles="xml_attribute">id</div>=<div styles="xml_string">&quot;h1&quot;</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+      </div><div styles="xml_bracket">&lt;</div><div styles="xml_element">formatting</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+        </div><div styles="xml_bracket">&lt;</div><div styles="xml_element">format</div> <div styles="xml_attribute">type</div>=<div styles="xml_string">&quot;bold&quot;</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">true</div><div styles="xml_bracket">&lt;/</div><div styles="xml_element">format</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+        </div><div styles="xml_bracket">&lt;</div><div styles="xml_element">format</div> <div styles="xml_attribute">type</div>=<div styles="xml_string">&quot;underline&quot;</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">true</div><div styles="xml_bracket">&lt;/</div><div styles="xml_element">format</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+      </div><div styles="xml_bracket">&lt;/</div><div styles="xml_element">formatting</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+    </div><div styles="xml_bracket">&lt;/</div><div styles="xml_element">style</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+  </div><div styles="xml_bracket">&lt;/</div><div styles="xml_element">styles</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+</div><div styles="xml_bracket">&lt;/</div><div styles="xml_element">stylesheet</div><div styles="xml_bracket">&gt;</div>
+
+<color v="0x80F000"><b>child_stylesheet.xml</b></color>
+<div styles="xml_bracket">&lt;</div><div styles="xml_element">stylesheet</div> <div styles="xml_attribute">id</div>=<div styles="xml_string">&quot;child_stylesheet&quot;</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+  </div><div styles="xml_bracket">&lt;</div><div styles="xml_element">includes</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+    </div><div styles="xml_bracket">&lt;</div><div styles="xml_element">include</div> <div styles="xml_attribute">type</div>=<div styles="xml_string">&quot;stylesheet&quot;</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">parent_stylesheet</div><div styles="xml_bracket">&lt;/</div><div styles="xml_element">include</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+  </div><div styles="xml_bracket">&lt;/</div><div styles="xml_element">includes</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+  </div><div styles="xml_bracket">&lt;</div><div styles="xml_element">styles</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+    </div><div styles="xml_bracket">&lt;</div><div styles="xml_element">style</div> <div styles="xml_attribute">id</div>=<div styles="xml_string">&quot;h1_modified&quot;</div> <div styles="xml_attribute">extends</div>=<div styles="xml_string">&quot;h1&quot;</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+      </div><div styles="xml_bracket">&lt;</div><div styles="xml_element">formatting</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+        </div><div styles="xml_bracket">&lt;</div><div styles="xml_element">format</div> <div styles="xml_attribute">type</div>=<div styles="xml_string">&quot;color&quot;</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">0x3030FF</div><div styles="xml_bracket">&lt;/</div><div styles="xml_element">format</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+      </div><div styles="xml_bracket">&lt;/</div><div styles="xml_element">formatting</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+    </div><div styles="xml_bracket">&lt;/</div><div styles="xml_element">style</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+  </div><div styles="xml_bracket">&lt;/</div><div styles="xml_element">styles</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+</div><div styles="xml_bracket">&lt;/</div><div styles="xml_element">stylesheet</div><div styles="xml_bracket">&gt;</div></component>
+    <component id="hover_haf_example_1"><insert id="copy_prompt"/>
+<color v="0x80F000"><b>example_book.xml</b></color>
+<div styles="xml_bracket">&lt;</div><div styles="xml_element">book</div> <div styles="xml_attribute">id</div>=<div styles="xml_string">&quot;header_and_footer&quot;</div> <div styles="xml_attribute">title</div>=<div styles="xml_string">&quot;Showcasing headers and footers&quot;</div> <div styles="xml_attribute">author</div>=<div styles="xml_string">&quot;BananaPuncher714&quot;</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+  </div><div styles="xml_bracket">&lt;</div><div styles="xml_element">content</div> <div styles="xml_attribute">footer</div>=<div styles="xml_string">&quot;custom_footer&quot;</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">Book content</div><div styles="xml_bracket">&lt;/</div><div styles="xml_element">content</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+  </div><div styles="xml_bracket">&lt;</div><div styles="xml_element">components</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+    </div><div styles="xml_bracket">&lt;</div><div styles="xml_element">component</div> <div styles="xml_attribute">id</div>=<div styles="xml_string">&quot;header&quot;</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">This goes at the top of the book</div><div styles="xml_bracket">&lt;/</div><div styles="xml_element">component</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+    </div><div styles="xml_bracket">&lt;</div><div styles="xml_element">component</div> <div styles="xml_attribute">id</div>=<div styles="xml_string">&quot;custom_footer&quot;</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">This is always at the bottom</div><div styles="xml_bracket">&lt;/</div><div styles="xml_element">component</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+  </div><div styles="xml_bracket">&lt;/</div><div styles="xml_element">components</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+</div><div styles="xml_bracket">&lt;/</div><div styles="xml_element">book</div><div styles="xml_bracket">&gt;</div>
+
+<insert id="result_prompt"/>
+This goes at the top
+of the book
+Book content
+
+
+
+
+
+
+
+
+
+This is always at the
+bottom</component>
+    <component id="hover_haf_example_2"><div styles="xml_bracket">&lt;</div><div styles="xml_element">book</div> <div styles="xml_attribute">id</div>=<div styles="xml_string">&quot;header_and_footer&quot;</div> <div styles="xml_attribute">title</div>=<div styles="xml_string">&quot;Showcasing headers and footers&quot;</div> <div styles="xml_attribute">author</div>=<div styles="xml_string">&quot;BananaPuncher714&quot;</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+  </div><div styles="xml_bracket">&lt;</div><div styles="xml_element">content</div> <div styles="xml_attribute">footer</div>=<div styles="xml_string">&quot;external_component.xml&quot;</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">Book content</div><div styles="xml_bracket">&lt;/</div><div styles="xml_element">content</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+  </div><div styles="xml_bracket">&lt;</div><div styles="xml_element">components</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+    </div><div styles="xml_bracket">&lt;</div><div styles="xml_element">component</div> <div styles="xml_attribute">id</div>=<div styles="xml_string">&quot;header&quot;</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">This goes at the top of the book</div><div styles="xml_bracket">&lt;/</div><div styles="xml_element">component</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+  </div><div styles="xml_bracket">&lt;/</div><div styles="xml_element">components</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+  </div><div styles="xml_bracket">&lt;</div><div styles="xml_element">includes</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+    </div><div styles="xml_bracket">&lt;</div><div styles="xml_element">include</div> <div styles="xml_attribute">type</div>=<div styles="xml_string">&quot;component&quot;</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">external_component.xml</div><div styles="xml_bracket">&lt;/</div><div styles="xml_element">include</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+  </div><div styles="xml_bracket">&lt;/</div><div styles="xml_element">includes</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+</div><div styles="xml_bracket">&lt;/</div><div styles="xml_element">book</div><div styles="xml_bracket">&gt;</div></component>
+    <component id="hover_div_example_1"><insert id="copy_prompt"/>
+<color v="0x80F000"><b>example_book.xml</b></color>
+<div styles="xml_bracket">&lt;</div><div styles="xml_element">book</div> <div styles="xml_attribute">id</div>=<div styles="xml_string">&quot;div_example&quot;</div> <div styles="xml_attribute">title</div>=<div styles="xml_string">&quot;Styling with div&quot;</div> <div styles="xml_attribute">author</div>=<div styles="xml_string">&quot;BananaPuncher714&quot;</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+  </div><div styles="xml_bracket">&lt;</div><div styles="xml_element">content</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">Formatted div element: </div><div styles="xml_bracket">&lt;</div><div styles="xml_element">div</div> <div styles="xml_attribute">styles</div>=<div styles="xml_string">&quot;blue&quot;</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">Blue text</div><div styles="xml_bracket">&lt;/</div><div styles="xml_element">div</div><div styles="xml_bracket">&gt;</div><div styles="xml_bracket">&lt;/</div><div styles="xml_element">content</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+  </div><div styles="xml_bracket">&lt;</div><div styles="xml_element">styles</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+    </div><div styles="xml_bracket">&lt;</div><div styles="xml_element">style</div> <div styles="xml_attribute">id</div>=<div styles="xml_string">&quot;blue&quot;</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+      </div><div styles="xml_bracket">&lt;</div><div styles="xml_element">formatting</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+        </div><div styles="xml_bracket">&lt;</div><div styles="xml_element">format</div> <div styles="xml_attribute">type</div>=<div styles="xml_string">&quot;color&quot;</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">0x0000FF</div><div styles="xml_bracket">&lt;/</div><div styles="xml_element">format</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+      </div><div styles="xml_bracket">&lt;/</div><div styles="xml_element">formatting</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+    </div><div styles="xml_bracket">&lt;/</div><div styles="xml_element">style</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+  </div><div styles="xml_bracket">&lt;/</div><div styles="xml_element">styles</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+</div><div styles="xml_bracket">&lt;/</div><div styles="xml_element">book</div><div styles="xml_bracket">&gt;</div>
+
+<insert id="result_prompt"/>
+Formatted div element: <color v="0x0000FF">Blue text</color></component>
+    <component id="hover_mark_example_1"><insert id="copy_prompt"/>
+<color v="0x80F000"><b>example_book.xml</b></color>
+<div styles="xml_bracket">&lt;</div><div styles="xml_element">book</div> <div styles="xml_attribute">id</div>=<div styles="xml_string">&quot;mark_example&quot;</div> <div styles="xml_attribute">title</div>=<div styles="xml_string">&quot;Navigating with mark and go&quot;</div> <div styles="xml_attribute">author</div>=<div styles="xml_string">&quot;BananaPuncher714&quot;</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+  </div><div styles="xml_bracket">&lt;</div><div styles="xml_element">content</div><div styles="xml_bracket">&gt;</div><div styles="xml_bracket">&lt;</div><div styles="xml_element">mark</div> <div styles="xml_attribute">id</div>=<div styles="xml_string">&quot;start&quot;</div><div styles="xml_bracket">/&gt;</div><div styles="xml_bracket">&lt;</div><div styles="xml_element">go</div> <div styles="xml_attribute">to</div>=<div styles="xml_string">&quot;start&quot;</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">Click me to go to the last page!</div><div styles="xml_bracket">&lt;/</div><div styles="xml_element">go</div><div styles="xml_bracket">&gt;</div><div styles="xml_bracket">&lt;</div><div styles="xml_element">br</div><div styles="xml_bracket">/&gt;</div><div styles="xml_bracket">&lt;</div><div styles="xml_element">br</div><div styles="xml_bracket">/&gt;</div><div styles="xml_bracket">&lt;</div><div styles="xml_element">br</div><div styles="xml_bracket">/&gt;</div><div styles="xml_bracket">&lt;</div><div styles="xml_element">br</div><div styles="xml_bracket">/&gt;</div><div styles="xml_bracket">&lt;</div><div styles="xml_element">mark</div> <div styles="xml_attribute">id</div>=<div styles="xml_string">&quot;end&quot;</div><div styles="xml_bracket">/&gt;</div><div styles="xml_bracket">&lt;</div><div styles="xml_element">go</div> <div styles="xml_attribute">to</div>=<div styles="xml_string">&quot;start&quot;</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">Click me to return to the first page!</div><div styles="xml_bracket">&lt;/</div><div styles="xml_element">go</div><div styles="xml_bracket">&gt;</div><div styles="xml_bracket">&lt;/</div><div styles="xml_element">content</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">
+</div><div styles="xml_bracket">&lt;/</div><div styles="xml_element">book</div><div styles="xml_bracket">&gt;</div></component>
+    <component id="hover_click_events_example_1"><insert id="copy_prompt"/>
+<div styles="xml_bracket">&lt;</div><div styles="xml_element">click</div> <div styles="xml_attribute">action</div>=<div styles="xml_string">&quot;OPEN_URL&quot;</div> <div styles="xml_attribute">value</div>=<div styles="xml_string">&quot;https://www.youtube.com/watch?v=dQw4w9WgXcQ&quot;</div><div styles="xml_bracket">&gt;</div><div styles="xml_bracket">&lt;</div><div styles="xml_element">color</div> <div styles="xml_attribute">v</div>=<div styles="xml_string">&quot;0x0b753e&quot;</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">opens a youtube link</div><div styles="xml_bracket">&lt;/</div><div styles="xml_element">color</div><div styles="xml_bracket">&gt;</div><div styles="xml_bracket">&lt;/</div><div styles="xml_element">click</div><div styles="xml_bracket">&gt;</div></component>
+    <component id="hover_click_events_example_2"><insert id="copy_prompt"/>
+<div styles="xml_bracket">\&lt;</div><div styles="xml_element">click</div> <div styles="xml_attribute">action</div>=<div styles="xml_string">&quot;COPY_TO_CLIPBOARD&quot;</div> <div styles="xml_attribute">value</div>=<div styles="xml_string">&quot;...&quot;</div><div styles="xml_bracket">&gt;</div><div styles="xml_bracket">\&lt;</div><div styles="xml_element">color</div> <div styles="xml_attribute">v</div>=<div styles="xml_string">&quot;0x0b753e&quot;</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">copies the previous element\&apos;s code</div><div styles="xml_bracket">\&lt;/</div><div styles="xml_element">color</div><div styles="xml_bracket">&gt;</div><div styles="xml_bracket">\&lt;/</div><div styles="xml_element">click</div><div styles="xml_bracket">&gt;</div>
+</component>
+    <component id="hover_hover_events_example_1">Like other elements, hover elements follow the same format,
+except they require another component as an argument.
+
+<div styles="xml_bracket">&lt;</div><div styles="xml_element">hover</div> <div styles="xml_attribute">component</div>=<div styles="xml_string">&quot;some_component&quot;</div><div styles="xml_bracket">&gt;</div><div styles="xml_content">Text that shows the component upon hover</div><div styles="xml_bracket">&lt;/</div><div styles="xml_element">hover</div><div styles="xml_bracket">&gt;</div></component>
+    <component id="hover_hover_events_example_2"><i>Looks familiar?</i>
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⣤⣤⣤⣤⣤⣶⣦⣤⣄⡀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⢀⣴⣿⡿⠛⠉⠙⠛⠛⠛⠛⠻⢿⣿⣷⣤⡀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⣼⣿⠋⠀⠀⠀⠀⠀⠀⠀⢀⣀⣀⠈⢻⣿⣿⡄⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⣸⣿⡏⠀⠀⠀⣠⣶⣾⣿⣿⣿⠿⠿⠿⢿⣿⣿⣿⣄⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⣿⣿⠁⠀⠀⢰⣿⣿⣯⠁⠀⠀⠀⠀⠀⠀⠀⠈⠙⢿⣷⡄⠀
+⠀⠀⣀⣤⣴⣶⣶⣿⡟⠀⠀⠀⢸⣿⣿⣿⣆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣷⠀
+⠀⢰⣿⡟⠋⠉⣹⣿⡇⠀⠀⠀⠘⣿⣿⣿⣿⣷⣦⣤⣤⣤⣶⣶⣶⣶⣿⣿⣿⠀
+⠀⢸⣿⡇⠀⠀⣿⣿⡇⠀⠀⠀⠀⠹⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠃⠀
+⠀⣸⣿⡇⠀⠀⣿⣿⡇⠀⠀⠀⠀⠀⠉⠻⠿⣿⣿⣿⣿⡿⠿⠿⠛⢻⣿⡇⠀⠀
+⠀⣿⣿⠁⠀⠀⣿⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣧⠀⠀
+⠀⣿⣿⠀⠀⠀⣿⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣿⠀⠀
+⠀⣿⣿⠀⠀⠀⣿⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣿⠀⠀
+⠀⢿⣿⡆⠀⠀⣿⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⡇⠀⠀
+⠀⠸⣿⣧⡀⠀⣿⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⠃⠀⠀
+⠀⠀⠛⢿⣿⣿⣿⣿⣇⠀⠀⠀⠀⠀⣰⣿⣿⣷⣶⣶⣶⣶⠶⠀⢠⣿⣿⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⣿⣿⠀⠀⠀⠀⠀⣿⣿⡇⠀⣽⣿⡏⠁⠀⠀⢸⣿⡇⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⣿⣿⠀⠀⠀⠀⠀⣿⣿⡇⠀⢹⣿⡆⠀⠀⠀⣸⣿⠇⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⢿⣿⣦⣄⣀⣠⣴⣿⣿⠁⠀⠈⠻⣿⣿⣿⣿⡿⠏⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠈⠛⠻⠿⠿⠿⠿⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀</component>
+
+    <!-- TOC descriptions -->
+    <component id="hover_toc_about_quill">Information about Quill</component>
+    <component id="hover_toc_getting_started">Learn how to create your first book</component>
+    <component id="hover_toc_components">Creating reusable parts for building your book</component>
+    <component id="hover_toc_inserting_components">Store components in separate files</component>
+    <component id="hover_toc_includes">Include components from other books and sources</component>
+    <component id="hover_toc_styling">Make your text look fancy</component>
+    <component id="hover_toc_stylesheets">Store styles in separate files</component>
+    <component id="hover_toc_headers_and_footers">Give your book a custom header and footer</component>
+    <component id="hover_toc_div_elements">Make styling your book easier</component>
+    <component id="hover_toc_page_breaks">Stop manually adding newlines for a new page</component>
+    <component id="hover_toc_marking">Learn how to create and visit bookmarks</component>
+    <component id="hover_toc_click_events">Give your users something to click</component>
+    <component id="hover_toc_hover_events">Put more information on the page</component>
+    <component id="hover_toc_directives">Advanced bookbinder techniques</component>
+    <component id="hover_toc_formatting">Easier inline styling</component>
+    <component id="hover_toc_negative_spaces">Move text like magic</component>
+    <component id="hover_toc_placeholder_api">Almost every server has this, <i>right!?</i></component>
+    <component id="hover_toc_minedown">Even ##easier## styling?!</component>
+    <component id="hover_toc_emotes">What's this? A Mine in Abyss special? :thinking:</component>
+    <component id="hover_toc_return">Click to return to the <b>Table of Contents</b></component>
+
+    <!-- Stuff -->
+    <component id="hover_direc_nofooter"><insert id="copy_prompt"/>
+<div styles="xml_bracket">&lt;</div><div styles="xml_element">direc</div> <div styles="xml_attribute">command</div>=<div styles="xml_string">&quot;nofooter&quot;</div><div styles="xml_bracket">/&gt;</div>
+
+This directive removes the footer starting with the next page.</component>
+    <component id="hover_direc_noheader"><insert id="copy_prompt"/>
+<div styles="xml_bracket">&lt;</div><div styles="xml_element">direc</div> <div styles="xml_attribute">command</div>=<div styles="xml_string">&quot;nofooter&quot;</div><div styles="xml_bracket">/&gt;</div>
+
+This directive removes the header starting with the next page.</component>
+    <component id="hover_direc_footer"><insert id="copy_prompt"/>
+<div styles="xml_bracket">&lt;</div><div styles="xml_element">direc</div> <div styles="xml_attribute">command</div>=<div styles="xml_string">&quot;footer&quot;</div> <div styles="xml_attribute">value</div>=<div styles="xml_string">&quot;footer_component&quot;</div><div styles="xml_bracket">/&gt;</div>
+
+This directive sets the footer starting with the next page.
+It requires a valid component id. If using an external component
+from file, then it <b>must</b> be included by the book.</component>
+    <component id="hover_direc_header"><insert id="copy_prompt"/>
+<div styles="xml_bracket">&lt;</div><div styles="xml_element">direc</div> <div styles="xml_attribute">command</div>=<div styles="xml_string">&quot;header&quot;</div> <div styles="xml_attribute">value</div>=<div styles="xml_string">&quot;header_component&quot;</div><div styles="xml_bracket">/&gt;</div>
+
+This directive sets the header starting with the next page.
+It requires a valid component id. If using an external component
+from file, then it <b>must</b> be included by the book.</component>
+
+    <component id="hover_formatting_bold">You can use these elements:
+<color v="0x00FFFF"><div styles="xml_bracket">&lt;</div>bold<div styles="xml_bracket">&gt;</div></color><b>bold text</b><color v="0x00FFFF"><div styles="xml_bracket">&lt;</div>/bold<div styles="xml_bracket">&gt;</div></color>
+<color v="0x00FFFF"><div styles="xml_bracket">&lt;</div>b<div styles="xml_bracket">&gt;</div></color><b>bold text</b><color v="0x00FFFF"><div styles="xml_bracket">&lt;</div>/b<div styles="xml_bracket">&gt;</div></color>
+regular text <color v="0x00FFFF"><div styles="xml_bracket">&lt;</div>bold<div styles="xml_bracket">/&gt;</div></color><b>bold text</b>
+regular text <color v="0x00FFFF"><div styles="xml_bracket">&lt;</div>b<div styles="xml_bracket">/&gt;</div></color><b>bold text</b>
+<b>bold text</b> <color v="0x00FFFF"><div styles="xml_bracket">&lt;</div>unbold<div styles="xml_bracket">/&gt;</div></color>regular text
+<b>bold text</b> <color v="0x00FFFF"><div styles="xml_bracket">&lt;</div>ub<div styles="xml_bracket">/&gt;</div></color>regular text</component>
+    <component id="hover_formatting_italic">You can use these elements:
+<color v="0x00FFFF"><div styles="xml_bracket">&lt;</div>italic<div styles="xml_bracket">&gt;</div></color><i>italic text</i><color v="0x00FFFF"><div styles="xml_bracket">&lt;</div>/italic<div styles="xml_bracket">&gt;</div></color>
+<color v="0x00FFFF"><div styles="xml_bracket">&lt;</div>i<div styles="xml_bracket">&gt;</div></color><i>italic text</i><color v="0x00FFFF"><div styles="xml_bracket">&lt;</div>/i<div styles="xml_bracket">&gt;</div></color>
+regular text <color v="0x00FFFF"><div styles="xml_bracket">&lt;</div>italic<div styles="xml_bracket">/&gt;</div></color><i>italic text</i>
+regular text <color v="0x00FFFF"><div styles="xml_bracket">&lt;</div>i<div styles="xml_bracket">/&gt;</div></color><i>italic text</i>
+<i>italic text</i> <color v="0x00FFFF"><div styles="xml_bracket">&lt;</div>unitalic<div styles="xml_bracket">/&gt;</div></color>regular text
+<i>italic text</i> <color v="0x00FFFF"><div styles="xml_bracket">&lt;</div>ui<div styles="xml_bracket">/&gt;</div></color>regular text</component>
+    <component id="hover_formatting_magic">You can use these elements:
+<color v="0x00FFFF"><div styles="xml_bracket">&lt;</div>magic<div styles="xml_bracket">&gt;</div></color><m>magic text</m><color v="0x00FFFF"><div styles="xml_bracket">&lt;</div>/magic<div styles="xml_bracket">&gt;</div></color>
+<color v="0x00FFFF"><div styles="xml_bracket">&lt;</div>m<div styles="xml_bracket">&gt;</div></color><m>magic text</m><color v="0x00FFFF"><div styles="xml_bracket">&lt;</div>/m<div styles="xml_bracket">&gt;</div></color>
+regular text <color v="0x00FFFF"><div styles="xml_bracket">&lt;</div>magic<div styles="xml_bracket">/&gt;</div></color><m>magic text</m>
+regular text <color v="0x00FFFF"><div styles="xml_bracket">&lt;</div>m<div styles="xml_bracket">/&gt;</div></color><m>magic text</m>
+<m>magic text</m> <color v="0x00FFFF"><div styles="xml_bracket">&lt;</div>unmagic<div styles="xml_bracket">/&gt;</div></color>regular text
+<m>magic text</m> <color v="0x00FFFF"><div styles="xml_bracket">&lt;</div>um<div styles="xml_bracket">/&gt;</div></color>regular text</component>
+    <component id="hover_formatting_strikethrough">You can use these elements:
+<color v="0x00FFFF"><div styles="xml_bracket">&lt;</div>strikethrough<div styles="xml_bracket">&gt;</div></color><s>strikethrough text</s><color v="0x00FFFF"><div styles="xml_bracket">&lt;</div>/strikethrough<div styles="xml_bracket">&gt;</div></color>
+<color v="0x00FFFF"><div styles="xml_bracket">&lt;</div>s<div styles="xml_bracket">&gt;</div></color><s>strikethrough text</s><color v="0x00FFFF"><div styles="xml_bracket">&lt;</div>/s<div styles="xml_bracket">&gt;</div></color>
+regular text <color v="0x00FFFF"><div styles="xml_bracket">&lt;</div>strikethrough<div styles="xml_bracket">/&gt;</div></color><s>strikethrough text</s>
+regular text <color v="0x00FFFF"><div styles="xml_bracket">&lt;</div>s<div styles="xml_bracket">/&gt;</div></color><s>strikethrough text</s>
+<s>strikethrough text</s> <color v="0x00FFFF"><div styles="xml_bracket">&lt;</div>unstrikethrough<div styles="xml_bracket">/&gt;</div></color>regular text
+<s>strikethrough text</s> <color v="0x00FFFF"><div styles="xml_bracket">&lt;</div>us<div styles="xml_bracket">/&gt;</div></color>regular text</component>
+    <component id="hover_formatting_underline">You can use these elements:
+<color v="0x00FFFF"><div styles="xml_bracket">&lt;</div>underline<div styles="xml_bracket">&gt;</div></color><u>underlined text</u><color v="0x00FFFF"><div styles="xml_bracket">&lt;</div>/underline<div styles="xml_bracket">&gt;</div></color>
+<color v="0x00FFFF"><div styles="xml_bracket">&lt;</div>u<div styles="xml_bracket">&gt;</div></color><u>underlined text</u><color v="0x00FFFF"><div styles="xml_bracket">&lt;</div>/u<div styles="xml_bracket">&gt;</div></color>
+regular text <color v="0x00FFFF"><div styles="xml_bracket">&lt;</div>underline<div styles="xml_bracket">/&gt;</div></color><u>underlined text</u>
+regular text <color v="0x00FFFF"><div styles="xml_bracket">&lt;</div>u<div styles="xml_bracket">/&gt;</div></color><u>underlined text</u>
+<u>underlined text</u> <color v="0x00FFFF"><div styles="xml_bracket">&lt;</div>derline<div styles="xml_bracket">/&gt;</div></color>regular text
+<u>underlined text</u> <color v="0x00FFFF"><div styles="xml_bracket">&lt;</div>n<div styles="xml_bracket">/&gt;</div></color>regular text</component>
+    <component id="hover_formatting_reset">You can use these elements:
+<b><i><u>formatted text</u></i></b> <color v="0x00FFFF"><div styles="xml_bracket">&lt;</div>reset<div styles="xml_bracket">/&gt;</div></color>regular text
+<b><i><u>formatted text</u></i></b> <color v="0x00FFFF"><div styles="xml_bracket">&lt;</div>r<div styles="xml_bracket">/&gt;</div></color>regular text</component>
+    <component id="hover_formatting_font">You can use these elements:
+<div styles="xml_bracket">&lt;</div><div styles="xml_element">font</div> <div styles="xml_attribute">value</div>=<div styles="xml_string">&quot;custom_font&quot;</div><div styles="xml_bracket">&gt;</div>custom font text<div styles="xml_bracket">&lt;/</div><div styles="xml_element">font</div><div styles="xml_bracket">&gt;</div>
+<div styles="xml_bracket">&lt;</div><div styles="xml_element">font</div> <div styles="xml_attribute">v</div>=<div styles="xml_string">&quot;custom_font&quot;</div><div styles="xml_bracket">&gt;</div>custom font text<div styles="xml_bracket">&lt;/</div><div styles="xml_element">font</div><div styles="xml_bracket">&gt;</div>
+<div styles="xml_bracket">&lt;</div><div styles="xml_element">font</div><div styles="xml_bracket">&gt;</div>regular font text<div styles="xml_bracket">&lt;/</div><div styles="xml_element">font</div><div styles="xml_bracket">&gt;</div>
+regular font text <div styles="xml_bracket">&lt;</div><div styles="xml_element">font</div> <div styles="xml_attribute">value</div>=<div styles="xml_string">&quot;custom_font&quot;</div><div styles="xml_bracket">/&gt;</div>custom font text
+regular font text <div styles="xml_bracket">&lt;</div><div styles="xml_element">font</div> <div styles="xml_attribute">v</div>=<div styles="xml_string">&quot;custom_font&quot;</div><div styles="xml_bracket">/&gt;</div>custom font text
+custom font text <div styles="xml_bracket">&lt;</div><div styles="xml_element">font</div><div styles="xml_bracket">/&gt;</div>regular font text</component>
+    <component id="hover_formatting_color">You can use these elements:
+<div styles="xml_bracket">&lt;</div><div styles="xml_element">color</div> <div styles="xml_attribute">value</div>=<div styles="xml_string">&quot;0xFF0000&quot;</div><div styles="xml_bracket">&gt;</div><color v="0xf020d0">colored text</color><div styles="xml_bracket">&lt;/</div><div styles="xml_element">color</div><div styles="xml_bracket">&gt;</div>
+<div styles="xml_bracket">&lt;</div><div styles="xml_element">color</div> <div styles="xml_attribute">v</div>=<div styles="xml_string">&quot;0xFF0000&quot;</div><div styles="xml_bracket">&gt;</div><color v="0xf020d0">colored text</color><div styles="xml_bracket">&lt;/</div><div styles="xml_element">color</div><div styles="xml_bracket">&gt;</div>
+<div styles="xml_bracket">&lt;</div><div styles="xml_element">color</div><div styles="xml_bracket">&gt;</div>regular text<div styles="xml_bracket">&lt;/</div><div styles="xml_element">color</div><div styles="xml_bracket">&gt;</div>
+regular text <div styles="xml_bracket">&lt;</div><div styles="xml_element">color</div> <div styles="xml_attribute">value</div>=<div styles="xml_string">&quot;0xFF0000&quot;</div><div styles="xml_bracket">/&gt;</div><color v="0xf020d0">colored text</color>
+regular text <div styles="xml_bracket">&lt;</div><div styles="xml_element">color</div> <div styles="xml_attribute">v</div>=<div styles="xml_string">&quot;0xFF0000&quot;</div><div styles="xml_bracket">/&gt;</div><color v="0xf020d0">colored text</color>
+<color v="0xf020d0">colored text</color> <div styles="xml_bracket">&lt;</div><div styles="xml_element">color</div><div styles="xml_bracket">/&gt;</div>regular text
+
+The color value can be in these formats:
+- 0x<color v="0x008800">FFFFFF</color>
+- #<color v="0x008800">FFFFFF</color>
+- (<color v="0xFF0000">r</color>, <color v="0x00FF00">g</color>, <color v="0x0000FF">b</color>)
+- <color v="0x008800">16777215</color></component>
+
+    <component id="hover_github">Click to visit the Quill Repository. :michirusmug:</component>
+    <component id="hover_style_true_false"><color v="0x00FF00">true</color>/<color v="0xFF0000">false</color></component>
+    <component id="hover_style_font_id">The name of a font</component>
+    <component id="hover_style_color">A color value in one of these formats:
+- 0x<color v="0x008800">FFFFFF</color>
+- #<color v="0x008800">FFFFFF</color>
+- (<color v="0xFF0000">r</color>, <color v="0x00FF00">g</color>, <color v="0x0000FF">b</color>)
+- <color v="0x008800">16777215</color></component>
+
+    <!-- Links -->
+    <component id="link_mcstacker" styles="link"><hover component="hover_link_mcstacker"><click action="OPEN_URL" value="https://mcstacker.net/">MCStacker</click></hover></component>
+    <component id="hover_link_mcstacker">Click to visit the <b>MCStacker</b> website</component>
+    <component id="link_minedown" styles="link"><hover component="hover_link_minedown"><click action="OPEN_URL" value="https://github.com/Phoenix616/MineDown">MineDown</click></hover></component>
+    <component id="hover_link_minedown">Click to visit the <b>MineDown</b> github</component>
+    <component id="link_negative_spaces" styles="link"><hover component="hover_link_negative_spaces"><click action="OPEN_URL" value="https://www.spigotmc.org/threads/negative-space-font-resource-pack.440952/">Negative Spaces</click></hover></component>
+    <component id="hover_link_negative_spaces">Click to visit the <b>Negative Spaces</b> webpage</component>
+    <component id="link_emotes" styles="link"><hover component="hover_link_emotes"><click action="OPEN_URL" value="https://github.com/MineInAbyss/BondrewdLikesHisEmotes">emote plugin</click></hover></component>
+    <component id="hover_link_emotes">Click to visit the <b>BondrewdLikesHisEmotes</b> github</component>
+    <component id="link_placeholderapi" styles="link"><hover component="hover_link_placeholderapi"><click action="OPEN_URL" value="https://www.spigotmc.org/resources/placeholderapi.6245/">PlaceholderAPI</click></hover></component>
+    <component id="hover_link_placeholderapi">Click to visit the <b>PlaceholderAPI</b> webpage</component>
+    <component id="link_mineinabyss" styles="link"><hover component="hover_link_mineinabyss"><click action="OPEN_URL" value="https://mineinabyss.com/">Mine in Abyss</click></hover></component>
+    <component id="hover_link_mineinabyss">Click to visit the <b>Mine in Abyss</b> website</component>
+
+  </components>
+  <includes>
+    <include type="stylesheet">quill_guidebook_stylesheet</include>
+  </includes>
+</book>

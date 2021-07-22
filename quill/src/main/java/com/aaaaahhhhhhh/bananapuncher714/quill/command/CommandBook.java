@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
@@ -374,28 +375,33 @@ public class CommandBook {
 	private void readFor( CommandSender lender, CommandSender reader, NamespacedKey key ) {
 		Library library = plugin.getLibrary();
 		if ( library != null ) {
-			Optional< Book > optionalBook = library.getBook( lender, key );
-			if ( optionalBook.isPresent() ) {
-				Book book = optionalBook.get();
-				if ( reader instanceof Player ) {
-					Player player = ( Player ) reader;
-					
-					ItemStack bookItem = new ItemStack( Material.WRITTEN_BOOK );
-					BookMeta meta = ( BookMeta ) bookItem.getItemMeta();
-					meta.setAuthor( book.getAuthor() );
-					meta.setTitle( book.getTitle() );
-					for ( BaseComponent page : book.getPages() ) {
-						meta.spigot().addPage( new BaseComponent[] { page } );
-					}
-					bookItem.setItemMeta( meta );
+			Bukkit.getScheduler().runTaskAsynchronously( plugin, () -> {
+				// Can take some time to build
+				Optional< Book > optionalBook = library.getBook( lender, key );
+				Bukkit.getScheduler().runTask( plugin, () -> {
+					if ( optionalBook.isPresent() ) {
+						Book book = optionalBook.get();
+						if ( reader instanceof Player ) {
+							Player player = ( Player ) reader;
 
-					player.openBook( bookItem );
-				} else {
-					reader.sendMessage( ChatColor.RED + "Can only display books to players!" );
-				}
-			} else {
-				reader.sendMessage( ChatColor.RED + "Unknown book!" );
-			}
+							ItemStack bookItem = new ItemStack( Material.WRITTEN_BOOK );
+							BookMeta meta = ( BookMeta ) bookItem.getItemMeta();
+							meta.setAuthor( book.getAuthor() );
+							meta.setTitle( book.getTitle() );
+							for ( BaseComponent page : book.getPages() ) {
+								meta.spigot().addPage( new BaseComponent[] { page } );
+							}
+							bookItem.setItemMeta( meta );
+
+							player.openBook( bookItem );
+						} else {
+							reader.sendMessage( ChatColor.RED + "Can only display books to players!" );
+						}
+					} else {
+						reader.sendMessage( ChatColor.RED + "Unknown book!" );
+					}
+				} );
+			} );
 		} else {
 			reader.sendMessage( ChatColor.RED + "The library does not exist!" );
 		}
@@ -427,28 +433,33 @@ public class CommandBook {
 	private void giveFor( CommandSender lender, CommandSender reader, NamespacedKey key ) {
 		Library library = plugin.getLibrary();
 		if ( library != null ) {
-			Optional< Book > optionalBook = library.getBook( lender, key );
-			if ( optionalBook.isPresent() ) {
-				Book book = optionalBook.get();
-				if ( reader instanceof Player ) {
-					Player player = ( Player ) reader;
-					
-					ItemStack bookItem = new ItemStack( Material.WRITTEN_BOOK );
-					BookMeta meta = ( BookMeta ) bookItem.getItemMeta();
-					meta.setAuthor( book.getAuthor() );
-					meta.setTitle( book.getTitle() );
-					for ( BaseComponent page : book.getPages() ) {
-						meta.spigot().addPage( new BaseComponent[] { page } );
+			Bukkit.getScheduler().runTaskAsynchronously( plugin, () -> {
+				// Can take some time to build
+				Optional< Book > optionalBook = library.getBook( lender, key );
+				Bukkit.getScheduler().runTask( plugin, () -> {
+					if ( optionalBook.isPresent() ) {
+						Book book = optionalBook.get();
+						if ( reader instanceof Player ) {
+							Player player = ( Player ) reader;
+							
+							ItemStack bookItem = new ItemStack( Material.WRITTEN_BOOK );
+							BookMeta meta = ( BookMeta ) bookItem.getItemMeta();
+							meta.setAuthor( book.getAuthor() );
+							meta.setTitle( book.getTitle() );
+							for ( BaseComponent page : book.getPages() ) {
+								meta.spigot().addPage( new BaseComponent[] { page } );
+							}
+							bookItem.setItemMeta( meta );
+		
+							player.getInventory().addItem( bookItem );
+						} else {
+							reader.sendMessage( ChatColor.RED + "Can only give books to players!" );
+						}
+					} else {
+						reader.sendMessage( ChatColor.RED + "Unknown book!" );
 					}
-					bookItem.setItemMeta( meta );
-
-					player.getInventory().addItem( bookItem );
-				} else {
-					reader.sendMessage( ChatColor.RED + "Can only give books to players!" );
-				}
-			} else {
-				reader.sendMessage( ChatColor.RED + "Unknown book!" );
-			}
+				} );
+			} );
 		} else {
 			reader.sendMessage( ChatColor.RED + "The library does not exist!" );
 		}

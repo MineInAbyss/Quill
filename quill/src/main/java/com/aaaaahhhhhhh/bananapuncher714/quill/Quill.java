@@ -12,6 +12,7 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.imageio.ImageIO;
 import javax.xml.parsers.ParserConfigurationException;
@@ -92,7 +93,7 @@ public class Quill extends JavaPlugin {
 	private String negativeSpacesFont;
 	
 	private Path resourcePackPath;
-	private Map< String, BananaFont > fonts = new HashMap< String, BananaFont >();
+	private Map< String, BananaFont > fonts = new ConcurrentHashMap< String, BananaFont >();
 	
 	private CommandBook command;
 	
@@ -126,10 +127,9 @@ public class Quill extends JavaPlugin {
 	}
 	
 	private void initialize() {
-		FileUtil.saveToFile( getResource( "data/example/base_stylesheet.xml" ), new File( getDataFolder(), "catalogs/" + DEFAULT_CATALOG_NAMESPACE + "/styles/base_stylesheet.xml" ), false );
-		FileUtil.saveToFile( getResource( "data/example/guide_stylesheet.xml" ), new File( getDataFolder(), "catalogs/" + DEFAULT_CATALOG_NAMESPACE + "/styles/guide_stylesheet.xml" ), false );
-		FileUtil.saveToFile( getResource( "data/example/guide_content.xml" ), new File( getDataFolder(), "catalogs/" + DEFAULT_CATALOG_NAMESPACE + "/components/guide_content.xml" ), false );
-		FileUtil.saveToFile( getResource( "data/example/plugin_guidebook.xml" ), new File( getDataFolder(), "catalogs/" + DEFAULT_CATALOG_NAMESPACE + "/books/plugin_guidebook.xml" ), false );
+		FileUtil.saveToFile( getResource( "data/guidebook/quill_guidebook_stylesheet.xml" ), new File( getDataFolder(), "catalogs/" + DEFAULT_CATALOG_NAMESPACE + "/styles/quill_guidebook_stylesheet.xml" ), false );
+		FileUtil.saveToFile( getResource( "data/guidebook/quill_guidebook_content.xml" ), new File( getDataFolder(), "catalogs/" + DEFAULT_CATALOG_NAMESPACE + "/components/quill_guidebook_content.xml" ), false );
+		FileUtil.saveToFile( getResource( "data/guidebook/quill_guidebook.xml" ), new File( getDataFolder(), "catalogs/" + DEFAULT_CATALOG_NAMESPACE + "/books/quill_guidebook.xml" ), false );
 	}
 	
 	private void loadConfig() {
@@ -174,6 +174,12 @@ public class Quill extends JavaPlugin {
 	}
 	
 	private void loadAssets() {
+		if ( !this.fonts.containsKey( "default" ) ) {
+			BananaFont font = new BananaFont();
+			enhanceFont( font );
+			this.fonts.put( "default", font );
+		}
+		
 		Bukkit.getScheduler().runTaskAsynchronously( this , () -> {
 			if ( Files.exists( resourcePackPath ) ) {
 				getLogger().info( "Loading the resource pack (This may take a while)..." );

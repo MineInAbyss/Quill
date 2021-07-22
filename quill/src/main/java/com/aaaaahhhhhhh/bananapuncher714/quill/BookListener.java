@@ -2,6 +2,7 @@ package com.aaaaahhhhhhh.bananapuncher714.quill;
 
 import java.util.Optional;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -23,11 +24,11 @@ import net.md_5.bungee.api.chat.TextComponent;
 
 public class BookListener implements Listener {
 	private Quill plugin;
-	
+
 	protected BookListener( Quill plugin ) {
 		this.plugin = plugin;
 	}
-	
+
 	@EventHandler
 	private void onEvent( PlayerInteractEvent event ) {
 		if ( event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_AIR ) {
@@ -38,29 +39,34 @@ public class BookListener implements Listener {
 				if ( meta.getPersistentDataContainer().has( key, PersistentDataType.STRING ) ) {
 					event.setCancelled( true );
 					String id = meta.getPersistentDataContainer().get( key, PersistentDataType.STRING );
-				
+
 					NamespacedKey bookId = NamespacedKey.fromString( id );
-					
+
 					Player player = event.getPlayer();
 					Library library = plugin.getLibrary();
 					if ( library != null ) {
-						Optional< Book > optionalBook = plugin.getLibrary().getBook( player, bookId );
-						if ( optionalBook.isPresent() ) {
-							Book book = optionalBook.get();
-							
-							ItemStack bookItem = new ItemStack( Material.WRITTEN_BOOK );
-							BookMeta bookMeta = ( BookMeta ) bookItem.getItemMeta();
-							bookMeta.setAuthor( book.getAuthor() );
-							bookMeta.setTitle( book.getTitle() );
-							for ( BaseComponent page : book.getPages() ) {
-								bookMeta.spigot().addPage( new BaseComponent[] { page } );
-							}
-							bookItem.setItemMeta( bookMeta );
-							
-							player.openBook( bookItem );
-						} else {
-							player.spigot().sendMessage( ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText( plugin.getMessage("cannot-read"  ) ) );
-						}
+						Bukkit.getScheduler().runTaskAsynchronously( plugin, () -> {
+							// Can take some time to build
+							Optional< Book > optionalBook = library.getBook( player, bookId );
+							Bukkit.getScheduler().runTask( plugin, () -> {
+								if ( optionalBook.isPresent() ) {
+									Book book = optionalBook.get();
+
+									ItemStack bookItem = new ItemStack( Material.WRITTEN_BOOK );
+									BookMeta bookMeta = ( BookMeta ) bookItem.getItemMeta();
+									bookMeta.setAuthor( book.getAuthor() );
+									bookMeta.setTitle( book.getTitle() );
+									for ( BaseComponent page : book.getPages() ) {
+										bookMeta.spigot().addPage( new BaseComponent[] { page } );
+									}
+									bookItem.setItemMeta( bookMeta );
+
+									player.openBook( bookItem );
+								} else {
+									player.spigot().sendMessage( ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText( plugin.getMessage("cannot-read"  ) ) );
+								}
+							} );
+						} );
 					} else {
 						player.sendMessage( ChatColor.RED + "The library does not exist!" );
 					}

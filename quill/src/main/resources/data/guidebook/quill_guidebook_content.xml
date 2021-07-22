@@ -1,0 +1,161 @@
+Welcome to the Quill Guidebook<div styles="sidenote">v2</div>! This book will teach you how to create and format books.<direc command="header" value="toc_header_1"/><direc command="nofooter"/><br/><!--
+
+Use comments to preserve newlines and whitespace, and split sections
+
+--><mark id="table_of_contents"/>▶ <go to="about_quill"><hover component="hover_toc_about_quill">About Quill</hover></go>
+▶ <go to="getting_started"><hover component="hover_toc_getting_started">Getting started</hover></go>
+▶ <go to="components"><hover component="hover_toc_components">Components</hover></go>
+▶ <go to="inserting_components"><hover component="hover_toc_inserting_components">Component files</hover></go>
+▶ <go to="includes">I<hover component="hover_toc_includes">ncludes</hover></go>
+▶ <go to="styling"><hover component="hover_toc_styling">Styling</hover></go>
+▶ <go to="stylesheets"><hover component="hover_toc_stylesheets">Stylesheets</hover></go>
+▶ <go to="headers_and_footers"><hover component="hover_toc_headers_and_footers">Headers/footers</hover></go>
+▶ <go to="div_elements"><hover component="hover_toc_div_elements">Div elements</hover></go>
+▶ <go to="page_breaks"><hover component="hover_toc_page_breaks">Page breaks</hover></go>
+▶ <go to="marking"><hover component="hover_toc_marking">Marking</hover></go>
+▶ <go to="click_events"><hover component="hover_toc_click_events">Click elements</hover></go>
+▶ <go to="hover_events"><hover component="hover_toc_hover_events">Hover elements</hover></go>
+▶ <go to="directives"><hover component="hover_toc_directives">Directives</hover></go>
+▶ <go to="formatting"><hover component="hover_toc_formatting">Formatting</hover></go>
+▶ <go to="negative_spaces"><hover component="hover_toc_negative_spaces">Negative Spaces</hover></go>
+▶ <go to="placeholder_api"><hover component="hover_toc_placeholder_api">Placeholder API</hover></go>
+▶ <go to="minedown"><hover component="hover_toc_minedown">MineDown</hover></go>
+▶ <go to="emotes"><hover component="hover_toc_emotes">Emotes</hover></go><direc command="header" value="body_header"/><direc command="footer" value="body_footer"/><br/><!--
+
+
+--><mark id="about_quill"/><div styles="h1">About Quill</div>
+
+Quill allows server owners to create <b>sophisticated books</b> with relative ease using multiple files and a structured format. It was created for <insert id="link_mineinabyss"/>, because using <insert id="link_mcstacker"/> is <i>not</i> a good alternative. Quill uses <u>XML</u> files by default.<br/><!--
+
+
+--><mark id="getting_started"/><div styles="h1">Getting started</div>
+
+Create a new <insert id="example_getting_started_1"/> and save it in <div styles="file">/plugins/Quill/catalogs/quill/books/</div>. You can load it in with <div styles="command">/book update</div> if it hasn't already been automatically updated. To check if it was successful, it should show up when you run <div styles="command">/book list</div>. To get an actual book item, you can execute <div styles="command">/book give &lt;book id&gt;</div>, or whatever you named it. If you want to read a virtual copy, you can execute <div styles="command">/book read &lt;book id&gt;</div>.
+
+Congratulations! You've written your first book.<br/><!--
+
+
+--><mark id="components"/><div styles="h1">Components</div>
+
+It can get very annoying keeping everything in a single file, especially if you have a lot of text. Instead, you can use components. Components are useful because not only are they separate files, but they can be reused.
+
+In the previous example, the content element is a book component. You can put components in their own files in <div styles="file">/plugins/Quill/catalogs/quill/components</div> and include them with an insert element. For example, the <insert id="example_components_1"/>. This will fetch the file in the components folder, parse it and include it in the book.
+
+One thing to note about the component files are, <i>everything</i> is used. Every newline and space will be included.<br/><!--
+
+
+--><mark id="inserting_components"/><div styles="h1">Component files</div>
+
+Books can include components, if you don't want to make a new file. You can keep small components like headers, footers, hover text and such directly in the book file. <insert id="example_components_2"/>. This will produce a book that prints <div styles="quote">Hello, BananaPuncher714!</div>.
+
+Generally, it is a <i>very</i> good idea to use underscores and lowercase for the id. Spaces sometimes break things.<br/><!--
+
+
+--><mark id="includes"/><div styles="h1">Includes</div>
+
+Sometimes other books might have a component that you want to use, and don't want to copy and paste it over and over again. You can use includes to tell Quill that you're going to be using components from another book. For example, if you have <insert id="example_includes_1"/> and you want to import a component from <insert id="example_includes_2"/>. Includes need to specify a <div styles="emphasis">type</div>, and the <div styles="emphasis">id</div> of what they're including.<br/><!--
+
+
+--><mark id="styling"/><div styles="h1">Styling</div>
+
+Including components and stuff is great and all, but it doesn't make much of a difference if there isn't anything cool to look at. You can <insert id="example_styles_1"/> for <color v="0xFF0000">red</color>, <u>underlined</u> and <b>bold</b> text.
+
+Components and the content element can use multiple styles, with the last style taking precendence. Styles can also <hover component="hover_styles_example_2"><div styles="hoverable">inherit other styles</div></hover> with the inherit or extend attribute.<br/><!--
+
+
+--><mark id="stylesheets"/><div styles="h1">Stylesheets</div>
+
+Much like components, you can choose to move styles into <insert id="example_stylesheets_2"/>. They are a separate file saved in <div styles="file">/plugins/Quill/catalogs/quill/styles/</div>. Books can then <insert id="example_stylesheets_1"/> with an include element of type <div styles="emphasis">stylesheet</div> and the id of the stylesheet.
+
+Stylesheets also have the option to use includes to <insert id="example_stylesheets_3"/>, but cannot include styles from books. The styles can then <insert id="example_stylesheets_4"/> from any included stylesheets. Styles offer these formatting types:
+▹ <hover component="hover_style_true_false"><b>bold</b></hover>
+▹ <hover component="hover_style_true_false"><i>italic</i></hover>
+▹ <hover component="hover_style_true_false"><u>underline</u></hover>
+▹ <hover component="hover_style_true_false"><m>magic</m></hover>
+▹ <hover component="hover_style_true_false"><s>strikethrough</s></hover>
+▹ <hover component="hover_style_font_id">font</hover>
+▹ <hover component="hover_style_color"><color v="0xFF00FF">color</color></hover><br/><!--
+
+--><mark id="headers_and_footers"/><div styles="h1">Headers and Footers</div>
+
+Quill offers custom header and footers for books, with the content's <insert id="example_haf_1"/>. By default, any components with the id header and footer will be used unless otherwise specified. If the header or footer are from another file, they <b>must</b> be <hover component="hover_haf_example_2"><div styles="hoverable">explicitly included</div></hover>.<br/><!--
+
+
+--><mark id="div_elements"/><div styles="h1">Div elements</div>
+
+If you want to style a small portion of text, it doesn't make sense to create an entirely new component just so you can add a style to it. Instead, you can use the <insert id="example_div_1"/>, which lets you apply styles however you want.<br/><!--
+
+
+--><mark id="page_breaks"/><div styles="h1">Page breaks</div>
+
+If you want to create a new page, you can use the <div styles="xml_bracket">&lt;br/&gt;</div> element to force a page break.<br/><!--
+
+
+--><mark id="marking"/><div styles="h1">Marking</div>
+
+Once you have enough content in your book, it may be difficult to navigate it properly. You can use <insert id="example_mark_1"/> to save and jump to bookmarks. Something you can make with them is a <b>table of contents</b>, or a <b>choose your own adventure</b> style story.<br/><!--
+
+
+--><mark id="click_events"/><div styles="h1">Click elements</div>
+
+Now that you know how to style elements and navigate the book, it would be nice to make it interactive rather than just something to read. You can use click elements to perform various actions, such as running a command, copying to clipboard, or opening a link. For example, <insert id="example_click_events_1"/> will give you text that <click action="OPEN_URL" value="https://www.youtube.com/watch?v=dQw4w9WgXcQ"><color v="0x0b753e">opens a youtube link</color></click>, and <insert id="example_click_events_2"/> will give you text that <click action="COPY_TO_CLIPBOARD" value="&lt;click action=&quot;OPEN_URL&quot; value=&quot;https://www.youtube.com/watch?v=dQw4w9WgXcQ&quot;&gt;&lt;color v=&quot;0x0b753e&quot;&gt;opens a youtube link&lt;/color&gt;&lt;/click&gt;"><color v="0x0b753e">copies the previous element's code</color></click>. Click elements also support the style attribute, so you don't have to make a new div for the clickable text.<br/><!--
+
+
+--><mark id="hover_events"/><div styles="h1">Hover elements</div>
+
+Sometimes there just isn't enough space on a single page to cram all your information, or perhaps the pictures you're using are just too big. You can use <hover component="hover_hover_events_example_1"><div styles="hoverable">hover elements</div></hover> to add a lot more information than just 14 lines, like <hover component="hover_hover_events_example_2"><div styles="hoverable">this</div></hover>!<br/><!--
+
+
+--><mark id="directives"/><div styles="h1">Directives</div>
+
+Directives are commands that tell Quill how to build your book, quite similar to the mark element. They don't actually appear in the final product, but can do useful things like swap footers and headers for certain sections.
+
+Most directives take effect on the next page, so if using a page break, be sure to put the directives in <i>front</i> of the break element.
+
+Currently implemented directives are:
+▹ <insert id="click_direc_nofooter"/>
+▹ <insert id="click_direc_noheader"/>
+▹ <insert id="click_direc_footer"/>
+▹ <insert id="click_direc_header"/><br/><!--
+
+
+--><mark id="formatting"/><div styles="h1">Formatting</div>
+
+Creating a new style for every combination of formatting features is sort of oppressive, so here are some quick and convenient elements:
+▹ <hover component="hover_formatting_bold"><b>bold</b></hover>
+▹ <hover component="hover_formatting_italic"><i>italic</i></hover>
+▹ <hover component="hover_formatting_magic"><m>magic</m></hover>
+▹ <hover component="hover_formatting_strikethrough"><s>strikethrough</s></hover>
+▹ <hover component="hover_formatting_underline"><u>underline</u></hover>
+▹ <hover component="hover_formatting_reset">reset</hover>
+▹ <hover component="hover_formatting_font">font</hover>
+▹ <hover component="hover_formatting_color"><color v="0xFF00FF">color</color></hover><br/><!--
+
+
+--><mark id="negative_spaces"/><div styles="h1">Negative spaces</div>
+
+If your resourcepack uses <insert id="link_negative_spaces"/>, you can move text using elements like <div styles="xml_bracket">&lt;_add27/&gt;</div> or <div styles="xml_bracket">&lt;_sub11/&gt;</div>.
+<_sub166/><color v="0xFFFFFF">You can shift text to the</color>
+<_sub166/><color v="0xFFFFFF">left of the book like this.</color><br/><!--
+
+
+--><mark id="placeholder_api"/><div styles="h1">Placeholder API</div>
+
+Quill supports placeholders, so all you have to do is use them like normal, and they'll get replaced if <insert id="link_placeholderapi"/> is installed. Hello, %player_name%!<br/><!--
+
+
+--><mark id="minedown"/><div styles="h1">MineDown</div>
+
+If you <i>really</i> don't like any of the formatting options above, or want a simpler solution with more creativity, Quill comes bundled with <insert id="link_minedown"/>. You can include <insert id="link_minedown"/> formatted text directly in the components, and they'll get parsed like normal.
+
+However, if using the inline formats, then <div styles="emphasis">&amp;</div> symbols <b>must</b> be followed by <div styles="emphasis">amp;</div>. It also supports [GRADIENTS!](rainbow)<br/><!--
+
+
+--><mark id="emotes"/><div styles="h1">Emotes</div> :monke: :habowidest:
+
+Quill was designed for <color v="0x6e0000">Boy</color>, so that he could suffer in another way while creating content for <insert id="link_mineinabyss"/>. :michirusmug: If you have their <insert id="link_emotes"/> installed, then any emote codes in the book will get automatically converted. :flushed:<br/><!--
+
+
+--><mark id="end"/><div styles="h1">End</div>
+
+That's all there is, for now. For more information, check out <insert id="link_mineinabyss"/>!

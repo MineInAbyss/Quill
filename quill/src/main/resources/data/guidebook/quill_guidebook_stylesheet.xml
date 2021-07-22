@@ -1,0 +1,86 @@
+<stylesheet id="quill_guidebook_stylesheet">
+  <styles>
+    <style id="bold">
+      <formatting>
+        <format type="bold">true</format>
+      </formatting>
+    </style>
+    <style id="example">
+      <formatting>
+        <format type="color">0x3030FF</format>
+      </formatting>
+    </style>
+    <style id="hoverable">
+      <formatting>
+        <format type="color">0x309C30</format>
+      </formatting>
+    </style>
+    <style id="margin">
+      <formatting>
+        <format type="color">0x7070DD</format>
+      </formatting>
+    </style>
+    <style id="emphasis">
+      <formatting>
+        <format type="italic">true</format>
+        <format type="color">0xe39700</format>
+      </formatting>
+    </style>
+    <style id="quote">
+      <formatting>
+        <format type="color">0x008094</format>
+      </formatting>
+    </style>
+    <style id="file">
+      <formatting>
+        <format type="underline">true</format>
+        <format type="color">0x940068</format>
+      </formatting>
+    </style>
+    <style id="command">
+      <formatting>
+        <format type="color">0xab0000</format>
+      </formatting>
+    </style>
+    <style id="h1" extends="bold">
+      <formatting>
+        <format type="color">0x830087</format>
+      </formatting>
+    </style>
+    <style id="link" extends="bold">
+      <formatting>
+        <format type="color">0x008d34</format>
+      </formatting>
+    </style>
+    <style id="xml_bracket">
+      <formatting>
+        <format type="color">0x757575</format>
+      </formatting>
+    </style>
+    <style id="xml_string">
+      <formatting>
+        <format type="color">0xfffb00</format>
+      </formatting>
+    </style>
+    <style id="xml_content">
+      <formatting>
+        <format type="color">0xffffff</format>
+      </formatting>
+    </style>
+    <style id="xml_element">
+      <formatting>
+        <format type="color">0x94fffa</format>
+      </formatting>
+    </style>
+    <style id="xml_attribute">
+      <formatting>
+        <format type="color">0x00f576</format>
+      </formatting>
+    </style>
+    <style id="sidenote">
+      <formatting>
+        <format type="color">0x999999</format>
+      </formatting>
+    </style>
+  </styles>
+</stylesheet>
